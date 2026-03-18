@@ -628,7 +628,7 @@
       height:100%;
     }
 
-   /* =========================
+/* =========================
    ENVELOPPE CENTRÉE
 ========================= */
 .envelope-scene{
@@ -639,8 +639,8 @@
   z-index:240;
   pointer-events:none;
   opacity:0;
-  transition:opacity .35s ease;
-  background:radial-gradient(circle at center, rgba(18,59,122,.08), rgba(18,59,122,0) 52%);
+  transition:opacity .3s ease;
+  background:rgba(233,238,245,.72);
   backdrop-filter:blur(3px);
 }
 
@@ -650,147 +650,96 @@
 
 .envelope-wrap{
   position:relative;
-  width:480px;
-  height:380px;
-  transform:translateY(22px) scale(.82) rotateX(10deg);
+  width:460px;
+  height:300px;
   opacity:0;
+  transform:translateY(18px) scale(.96);
   transition:
-    opacity .38s ease,
-    transform .55s cubic-bezier(.2,.9,.2,1);
+    opacity .35s ease,
+    transform .45s cubic-bezier(.2,.8,.2,1);
   pointer-events:none;
-  transform-style:preserve-3d;
 }
 
 .envelope-wrap.show{
   opacity:1;
-  transform:translateY(0) scale(1) rotateX(0deg);
-}
-
-.envelope-wrap.sent-ready{
-  animation:envelopeFloat 2.8s ease-in-out infinite;
-}
-
-.envelope-note{
-  text-align:center;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:1.4px;
-  text-transform:uppercase;
-  color:var(--primary-dark);
-  margin-bottom:14px;
-  opacity:.95;
-  transform:translateY(0);
-  transition:opacity .3s ease, transform .3s ease;
+  transform:translateY(0) scale(1);
 }
 
 .envelope{
   position:relative;
   width:100%;
-  height:300px;
-  perspective:1400px;
-}
-
-.envelope-glow{
-  position:absolute;
-  left:50%;
-  top:62%;
-  width:310px;
-  height:85px;
-  transform:translate(-50%, -50%);
-  border-radius:50%;
-  background:radial-gradient(circle, rgba(18,59,122,.16) 0%, rgba(18,59,122,.08) 35%, rgba(18,59,122,0) 72%);
-  filter:blur(14px);
-  z-index:0;
-  opacity:.75;
+  height:100%;
 }
 
 .envelope-shadow{
   position:absolute;
   left:50%;
   bottom:8px;
-  width:280px;
-  height:38px;
+  width:250px;
+  height:30px;
   transform:translateX(-50%);
   border-radius:50%;
-  background:rgba(18,59,122,.16);
+  background:rgba(18,59,122,.14);
   filter:blur(16px);
   z-index:0;
-  opacity:.42;
-  transition:transform .45s ease, opacity .45s ease;
-}
-
-.envelope-wrap.sent-ready .envelope-shadow{
-  transform:translateX(-50%) scale(1.05);
-  opacity:.5;
+  opacity:.45;
 }
 
 .envelope-back{
   position:absolute;
-  left:26px;
-  right:26px;
-  bottom:22px;
-  height:210px;
-  background:linear-gradient(180deg, #fdfefe 0%, #e8f1fd 100%);
-  border:1px solid #ccdae9;
-  border-radius:24px;
-  box-shadow:
-    0 22px 50px rgba(18,59,122,.14),
-    inset 0 1px 0 rgba(255,255,255,.95);
+  left:35px;
+  right:35px;
+  bottom:26px;
+  height:180px;
+  background:linear-gradient(180deg, #fcfdff 0%, #edf3fc 100%);
+  border:1px solid #d7e1ef;
+  border-radius:20px;
   z-index:1;
+  box-shadow:0 18px 38px rgba(18,59,122,.12);
 }
 
 .envelope-paper{
   position:absolute;
   left:50%;
-  top:8px;
-  transform:translateX(-50%) translateY(-150px) scale(.97);
-  width:76%;
-  height:190px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.98), rgba(247,250,255,.98)),
-    repeating-linear-gradient(
-      180deg,
-      transparent 0 21px,
-      rgba(18,59,122,.05) 21px 22px
-    );
-  border-radius:16px 16px 8px 8px;
-  border:1px solid #d7e3f1;
-  box-shadow:
-    0 18px 34px rgba(18,59,122,.14),
-    inset 0 1px 0 rgba(255,255,255,.95);
-  padding:18px 20px 14px;
+  top:18px;
+  transform:translateX(-50%) translateY(-95px);
+  width:72%;
+  height:155px;
+  background:#fff;
+  border:1px solid #dde6f2;
+  border-radius:14px 14px 6px 6px;
   z-index:2;
+  box-shadow:0 14px 30px rgba(18,59,122,.12);
+  padding:18px 18px 12px;
   transition:
-    transform .8s cubic-bezier(.2,.9,.2,1),
-    height .55s ease,
-    opacity .45s ease,
-    box-shadow .45s ease;
-  pointer-events:none;
+    transform .75s cubic-bezier(.2,.85,.2,1),
+    height .42s ease,
+    box-shadow .42s ease;
   overflow:hidden;
 }
 
-.envelope-paper::after{
+.envelope-paper::before{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(120deg, transparent 0 35%, rgba(255,255,255,.65) 50%, transparent 65% 100%);
-  transform:translateX(-135%);
-  opacity:.85;
-  pointer-events:none;
+  background:linear-gradient(115deg, transparent 0 35%, rgba(255,255,255,.75) 50%, transparent 65% 100%);
+  transform:translateX(-130%);
+  opacity:0;
 }
 
 .envelope-wrap.paper-in .envelope-paper{
-  transform:translateX(-50%) translateY(-18px) scale(1);
+  transform:translateX(-50%) translateY(-8px);
 }
 
 .envelope-wrap.sealed .envelope-paper{
-  transform:translateX(-50%) translateY(30px) scale(.985);
-  height:140px;
-  box-shadow:0 10px 20px rgba(18,59,122,.09);
+  transform:translateX(-50%) translateY(24px);
+  height:118px;
+  box-shadow:0 8px 18px rgba(18,59,122,.08);
 }
 
-.envelope-wrap.sent-ready .envelope-paper::after{
-  animation:paperShine 1.3s ease .15s 1;
+.envelope-wrap.done .envelope-paper::before{
+  opacity:1;
+  animation:paperSweep 1s ease 1;
 }
 
 .paper-name{
@@ -817,8 +766,8 @@
   display:grid;
   gap:8px;
   opacity:0;
-  transform:translateY(10px);
-  transition:opacity .34s ease, transform .34s ease;
+  transform:translateY(8px);
+  transition:opacity .28s ease, transform .28s ease;
 }
 
 .envelope-wrap.paper-in .paper-contact{
@@ -832,50 +781,36 @@
   font-weight:700;
   background:#f6f9fe;
   border:1px solid var(--line);
-  border-radius:12px;
-  padding:9px 10px;
+  border-radius:10px;
+  padding:8px 10px;
 }
 
 .envelope-front{
   position:absolute;
-  left:26px;
-  right:26px;
-  bottom:22px;
-  height:210px;
-  background:linear-gradient(180deg, #edf5ff 0%, #d7e6fa 100%);
+  left:35px;
+  right:35px;
+  bottom:26px;
+  height:180px;
+  background:linear-gradient(180deg, #edf4ff 0%, #dce8f8 100%);
   clip-path:polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
-  border-bottom-left-radius:24px;
-  border-bottom-right-radius:24px;
+  border-bottom-left-radius:20px;
+  border-bottom-right-radius:20px;
   z-index:4;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
-}
-
-.envelope-front::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:18px;
-  width:130px;
-  height:12px;
-  transform:translateX(-50%);
-  border-radius:999px;
-  background:rgba(255,255,255,.3);
-  filter:blur(8px);
 }
 
 .envelope-flap{
   position:absolute;
-  left:26px;
-  right:26px;
-  top:66px;
-  height:138px;
-  background:linear-gradient(180deg, #fbfdff 0%, #dfeafb 100%);
-  clip-path:polygon(0 0, 50% 84%, 100% 0, 100% 100%, 0 100%);
+  left:35px;
+  right:35px;
+  top:92px;
+  height:110px;
+  background:linear-gradient(180deg, #f8fbff 0%, #e3edf9 100%);
+  clip-path:polygon(0 0, 50% 86%, 100% 0, 100% 100%, 0 100%);
   transform-origin:top center;
-  transform:rotateX(-172deg);
-  transition:transform .82s cubic-bezier(.2,.8,.2,1);
+  transform:rotateX(-178deg);
+  transition:transform .7s cubic-bezier(.2,.8,.2,1);
   z-index:5;
-  filter:drop-shadow(0 10px 16px rgba(18,59,122,.10));
+  filter:drop-shadow(0 8px 12px rgba(18,59,122,.08));
   backface-visibility:hidden;
 }
 
@@ -883,70 +818,27 @@
   transform:rotateX(0deg);
 }
 
-.envelope-seal{
-  position:absolute;
-  left:50%;
-  top:152px;
-  width:52px;
-  height:52px;
-  transform:translateX(-50%) scale(.2);
-  border-radius:50%;
-  background:
-    radial-gradient(circle at 30% 30%, #ffdfdf 0%, #d24a4a 35%, #a81c2b 72%, #7f1021 100%);
-  border:2px solid rgba(255,255,255,.45);
-  box-shadow:
-    0 10px 22px rgba(120,18,33,.25),
-    inset 0 2px 3px rgba(255,255,255,.35),
-    inset 0 -4px 8px rgba(0,0,0,.14);
-  z-index:7;
-  opacity:0;
-  transition:
-    transform .38s cubic-bezier(.2,.9,.2,1),
-    opacity .3s ease;
-}
-
-.envelope-seal::before{
-  content:"AC";
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  font-size:13px;
-  font-weight:900;
-  letter-spacing:.6px;
-  color:#fff6f6;
-  text-shadow:0 1px 2px rgba(0,0,0,.18);
-}
-
-.envelope-wrap.sent-ready .envelope-seal{
-  opacity:1;
-  transform:translateX(-50%) scale(1);
-  animation:sealPop .45s cubic-bezier(.2,1.2,.2,1);
-}
-
 .front-contact-card{
   position:absolute;
   left:50%;
-  bottom:30px;
-  transform:translateX(-50%) translateY(16px) scale(.96);
-  width:72%;
-  background:rgba(255,255,255,.84);
-  backdrop-filter:blur(8px);
+  bottom:34px;
+  transform:translateX(-50%) translateY(12px);
+  width:66%;
+  background:rgba(255,255,255,.92);
   border:1px solid rgba(18,59,122,.10);
   border-radius:18px;
-  padding:12px 12px;
+  padding:12px;
   z-index:6;
   opacity:0;
   transition:
-    opacity .36s ease,
-    transform .45s cubic-bezier(.2,.9,.2,1);
-  pointer-events:none;
-  box-shadow:0 12px 26px rgba(18,59,122,.08);
+    opacity .35s ease,
+    transform .4s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 10px 24px rgba(18,59,122,.08);
 }
 
-.envelope-wrap.sent-ready .front-contact-card{
+.envelope-wrap.done .front-contact-card{
   opacity:1;
-  transform:translateX(-50%) translateY(0) scale(1);
+  transform:translateX(-50%) translateY(0);
 }
 
 .front-contact-card .front-title{
@@ -962,7 +854,7 @@
 .front-links{
   display:flex;
   flex-direction:column;
-  gap:7px;
+  gap:8px;
 }
 
 .front-link-like{
@@ -977,20 +869,9 @@
   padding:8px 10px;
 }
 
-@keyframes envelopeFloat{
-  0%,100%{ transform:translateY(0) scale(1); }
-  50%{ transform:translateY(-5px) scale(1.003); }
-}
-
-@keyframes sealPop{
-  0%{ transform:translateX(-50%) scale(.35); }
-  60%{ transform:translateX(-50%) scale(1.12); }
-  100%{ transform:translateX(-50%) scale(1); }
-}
-
-@keyframes paperShine{
-  0%{ transform:translateX(-135%); }
-  100%{ transform:translateX(135%); }
+@keyframes paperSweep{
+  0%{ transform:translateX(-130%); }
+  100%{ transform:translateX(130%); }
 }
 
     /* =========================
@@ -1557,37 +1438,34 @@
     </div>
   </div>
 
-  <div class="envelope-scene" id="envelopeScene" aria-hidden="true">
-    <div class="envelope-wrap" id="envelopeWrap">
-      <div class="envelope-note">Candidature prête à partir</div>
+ <div class="envelope-scene" id="envelopeScene" aria-hidden="true">
+  <div class="envelope-wrap" id="envelopeWrap">
+    <div class="envelope" aria-hidden="true">
+      <div class="envelope-shadow"></div>
+      <div class="envelope-back"></div>
 
- <div class="envelope">
-  <div class="envelope-glow"></div>
-  <div class="envelope-shadow"></div>
+      <div class="envelope-paper">
+        <div class="paper-name">Alexis Campos</div>
+        <div class="paper-role">Alternant technicien informatique</div>
+        <div class="paper-sep"></div>
 
-  <div class="envelope-back"></div>
+        <div class="paper-contact">
+          <div class="paper-contact-item">✉️ alexiscampos4@hotmail.com</div>
+          <div class="paper-contact-item">📞 +33 6 10 49 81 40</div>
+          <div class="paper-contact-item">🔗 LinkedIn</div>
+        </div>
+      </div>
 
-  <div class="envelope-paper">
-    <div class="paper-name">Alexis Campos</div>
-    <div class="paper-role">Alternant technicien informatique</div>
-    <div class="paper-sep"></div>
+      <div class="envelope-front"></div>
+      <div class="envelope-flap"></div>
 
-    <div class="paper-contact">
-      <div class="paper-contact-item">✉️ alexiscampos4@hotmail.com</div>
-      <div class="paper-contact-item">📞 +33 6 10 49 81 40</div>
-      <div class="paper-contact-item">🔗 LinkedIn</div>
-    </div>
-  </div>
-
-  <div class="envelope-front"></div>
-  <div class="envelope-flap"></div>
-  <div class="envelope-seal"></div>
-
-  <div class="front-contact-card">
-    <div class="front-title">Coordonnées</div>
-    <div class="front-links">
-      <div class="front-link-like">alexiscampos4@hotmail.com</div>
-      <div class="front-link-like">+33 6 10 49 81 40</div>
+      <div class="front-contact-card">
+        <div class="front-title">Coordonnées</div>
+        <div class="front-links">
+          <div class="front-link-like">alexiscampos4@hotmail.com</div>
+          <div class="front-link-like">+33 6 10 49 81 40</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1715,13 +1593,7 @@ function typeAllText() {
 
 function resetFx() {
   envelopeScene.classList.remove('show');
-  envelopeWrap.classList.remove(
-    'show',
-    'paper-in',
-    'sealed',
-    'sent-ready',
-    'details-visible'
-  );
+  envelopeWrap.classList.remove('show', 'paper-in', 'sealed', 'done');
   blackholeScene.classList.remove('show');
   fragmentLayer.innerHTML = '';
 }
@@ -1739,7 +1611,7 @@ async function launchInterested() {
 
   const rect = cvContent.getBoundingClientRect();
   const targetX = (window.innerWidth / 2) - (rect.left + rect.width / 2);
-  const targetY = (window.innerHeight / 2) - (rect.top + rect.height / 2) - 22;
+  const targetY = (window.innerHeight / 2) - (rect.top + rect.height / 2) - 20;
 
   cvContent.style.setProperty('--foldX', `${targetX}px`);
   cvContent.style.setProperty('--foldY', `${targetY}px`);
@@ -1754,13 +1626,13 @@ async function launchInterested() {
   });
 
   await wait(760);
-  envelopeWrap.classList.add('paper-in', 'details-visible');
+  envelopeWrap.classList.add('paper-in');
 
-  await wait(720);
+  await wait(650);
   envelopeWrap.classList.add('sealed');
 
-  await wait(520);
-  envelopeWrap.classList.add('sent-ready');
+  await wait(480);
+  envelopeWrap.classList.add('done');
   cvContent.classList.add('invisible-only');
 }
       function createFragmentCanvas(sourceCanvas, sx, sy, sw, sh) {
