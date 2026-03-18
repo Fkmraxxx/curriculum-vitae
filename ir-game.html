@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet IR Game - Alexis Campos</title>
+  <style>
+    :root{
+      --bg:#e9eef5;
+      --page:#ffffff;
+      --primary:#123b7a;
+      --primary-dark:#0d2e60;
+      --text:#182231;
+      --muted:#5e6b7c;
+      --line:#d8e0ea;
+      --soft:#f5f8fc;
+      --chip:#edf3ff;
+      --good:#1f8f56;
+      --shadow:0 18px 45px rgba(18,59,122,.10);
+      --radius:20px;
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0; }
+
+    html{ scroll-behavior:smooth; }
+
+    body{
+      font-family:"Segoe UI", Arial, sans-serif;
+      background:linear-gradient(180deg, #eef3f9 0%, #e7edf6 100%);
+      color:var(--text);
+      line-height:1.55;
+      padding:24px;
+    }
+
+    a{ color:inherit; }
+
+    .page{
+      max-width:1180px;
+      margin:0 auto;
+    }
+
+    .hero{
+      background:var(--page);
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      margin-bottom:22px;
+    }
+
+    .hero-topbar{
+      height:10px;
+      background:linear-gradient(90deg, var(--primary-dark), var(--primary));
+    }
+
+    .hero-body{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:22px;
+      padding:28px;
+      align-items:center;
+    }
+
+    .eyebrow{
+      display:inline-block;
+      background:var(--chip);
+      color:var(--primary-dark);
+      border:1px solid #cddaf0;
+      border-radius:999px;
+      padding:7px 12px;
+      font-size:11px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:1.4px;
+      margin-bottom:14px;
+    }
+
+    h1{
+      font-size:42px;
+      line-height:.95;
+      color:var(--primary-dark);
+      font-weight:900;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .hero-subtitle{
+      font-size:18px;
+      font-weight:700;
+      color:var(--primary);
+      margin-bottom:14px;
+    }
+
+    .hero-text{
+      font-size:15.5px;
+      color:var(--muted);
+      margin-bottom:18px;
+      max-width:700px;
+    }
+
+    .hero-tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .tag{
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:7px 11px;
+      font-size:12px;
+      font-weight:700;
+      color:var(--muted);
+    }
+
+    .hero-card{
+      background:linear-gradient(180deg, #f7faff 0%, #eef4fd 100%);
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:22px;
+    }
+
+    .hero-card h2{
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      color:var(--primary-dark);
+      margin-bottom:14px;
+    }
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      min-height:95px;
+    }
+
+    .stat strong{
+      display:block;
+      font-size:24px;
+      color:var(--primary-dark);
+      margin-bottom:5px;
+    }
+
+    .stat span{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .section{
+      background:var(--page);
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:24px;
+      margin-bottom:18px;
+    }
+
+    .section-title{
+      font-size:15px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      color:var(--primary-dark);
+      margin-bottom:16px;
+      font-weight:900;
+    }
+
+    .section p{
+      color:var(--muted);
+      font-size:15px;
+      margin-bottom:12px;
+    }
+
+    .section p:last-child{ margin-bottom:0; }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .card{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:20px;
+      padding:18px;
+    }
+
+    .card h3{
+      font-size:15px;
+      color:var(--text);
+      margin-bottom:10px;
+    }
+
+    .card p{
+      font-size:14px;
+      margin-bottom:0;
+    }
+
+    .role-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:16px;
+    }
+
+    .role-card{
+      background:linear-gradient(180deg, #ffffff 0%, #f9fbfe 100%);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:18px;
+    }
+
+    .role-card .icon{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:var(--chip);
+      color:var(--primary-dark);
+      font-size:20px;
+      margin-bottom:12px;
+      border:1px solid #d3def1;
+    }
+
+    .role-card h3{
+      font-size:15px;
+      margin-bottom:8px;
+      color:var(--text);
+    }
+
+    .role-card p{
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .feature-list{
+      list-style:none;
+      display:grid;
+      gap:12px;
+    }
+
+    .feature-list li{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      padding:14px 16px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .feature-list strong{
+      color:var(--text);
+    }
+
+    .media-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .media-box{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:#fff;
+      overflow:hidden;
+    }
+
+    .media-box video,
+    .media-box img{
+      width:100%;
+      display:block;
+      background:#dde6f3;
+    }
+
+    .media-caption{
+      padding:14px 16px;
+      font-size:13px;
+      color:var(--muted);
+      border-top:1px solid var(--line);
+    }
+
+    .highlight{
+      background:linear-gradient(180deg, #f7fbff 0%, #eff5fe 100%);
+      border:1px solid #d8e4f4;
+      border-radius:18px;
+      padding:16px;
+      margin-top:16px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .highlight strong{
+      color:var(--primary-dark);
+    }
+
+    .tech-grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+    }
+
+    .tech-item{
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      text-align:center;
+      font-size:13px;
+      font-weight:800;
+      color:var(--primary-dark);
+    }
+
+    .footer-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      margin-top:20px;
+      margin-bottom:8px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:180px;
+      padding:13px 18px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:800;
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+      box-shadow:0 10px 25px rgba(18,59,122,.10);
+    }
+
+    .btn:hover{ transform:translateY(-2px); }
+
+    .btn-primary{
+      background:linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color:#fff;
+    }
+
+    .btn-light{
+      background:#fff;
+      color:var(--primary-dark);
+      border:1px solid var(--line);
+    }
+
+    .note{
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+    @media (max-width: 980px){
+      .hero-body,
+      .grid-2,
+      .role-grid,
+      .media-grid,
+      .tech-grid{
+        grid-template-columns:1fr;
+      }
+
+      h1{ font-size:34px; }
+      body{ padding:16px; }
+    }
+
+    @media (max-width: 640px){
+      .section,
+      .hero-body{ padding:18px; }
+
+      .hero-stats{ grid-template-columns:1fr 1fr; }
+
+      h1{ font-size:28px; }
+      .hero-subtitle{ font-size:16px; }
+      .hero-text,
+      .section p{ font-size:14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-topbar"></div>
+      <div class="hero-body">
+        <div>
+          <div class="eyebrow">Projet STI2D • SIN / ITEC</div>
+          <h1>IR GAME</h1>
+          <div class="hero-subtitle">Projet de spécialité STI2D orienté jeu infrarouge, affichage LED et cible mobile</div>
+          <p class="hero-text">
+            IR Game est un projet réalisé dans le cadre de la spécialité <strong>SIN en STI2D</strong>, avec une approche transversale réunissant les différentes compétences du cursus.
+            Le principe était de concevoir un système de jeu interactif autour d’un <strong>pistolet infrarouge</strong>, d’une <strong>cible mobile</strong> et d’un <strong>affichage sur panneau LED</strong>, afin de mettre en pratique l’électronique, la programmation, l’intégration et la partie mécanique.
+          </p>
+          <div class="hero-tags">
+            <span class="tag">STI2D - spécialité SIN</span>
+            <span class="tag">Travail en équipe</span>
+            <span class="tag">Panneau LED</span>
+            <span class="tag">Infrarouge</span>
+            <span class="tag">Interruption INTB0</span>
+            <span class="tag">Prototype fonctionnel</span>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <h2>Vue d’ensemble</h2>
+          <div class="hero-stats">
+            <div class="stat">
+              <strong>5</strong>
+              <span>élèves mobilisés sur le projet</span>
+            </div>
+            <div class="stat">
+              <strong>3</strong>
+              <span>élèves en SIN</span>
+            </div>
+            <div class="stat">
+              <strong>2</strong>
+              <span>élèves en ITEC</span>
+            </div>
+            <div class="stat">
+              <strong>1</strong>
+              <span>objectif : créer un système de tir interactif complet</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-title">Contexte du projet</div>
+      <p>
+        Ce projet a été mené comme <strong>projet de spécialité SIN en STI2D</strong>, avec une logique de collaboration entre plusieurs profils. L’idée était de construire un système cohérent et concret, mêlant la partie <strong>numérique</strong>, la <strong>gestion des signaux</strong>, l’<strong>affichage</strong> et la <strong>conception mécanique</strong>.
+      </p>
+      <p>
+        L’équipe était composée de <strong>3 élèves en SIN</strong> et <strong>2 élèves en ITEC</strong>. Les élèves d’ITEC se chargeaient principalement de la <strong>modélisation et de la conception du pistolet infrarouge</strong>. Côté SIN, le travail portait sur la partie électronique, la programmation et le comportement global du système.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Organisation de l’équipe</div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Pôle ITEC</h3>
+          <p>
+            Les 2 élèves d’ITEC ont travaillé sur la partie <strong>modélisation du pistolet infrarouge</strong>, avec la réflexion sur la forme, l’intégration du matériel et l’aspect mécanique du prototype.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Pôle SIN</h3>
+          <p>
+            Les 3 élèves de SIN se sont réparti la partie numérique : <strong>affichage sur panneau LED</strong>, <strong>détection infrarouge</strong> et <strong>cible mobile</strong>. L’objectif était d’obtenir un ensemble capable de réagir au tir et d’afficher correctement les informations attendues.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Mon rôle dans IR Game</div>
+      <div class="role-grid">
+        <article class="role-card">
+          <div class="icon">💡</div>
+          <h3>Affichage sur panneau LED</h3>
+          <p>
+            J’ai travaillé avec un autre élève de SIN sur la partie <strong>affichage sur panneau LED</strong>. Le but était de rendre le système lisible, visible et exploitable pendant les essais, afin d’afficher les informations utiles liées au fonctionnement du projet.
+          </p>
+        </article>
+
+        <article class="role-card">
+          <div class="icon">📡</div>
+          <h3>Système infrarouge</h3>
+          <p>
+            Je me suis occupé <strong>seul</strong> de la partie <strong>infrarouge</strong>, avec une gestion basée sur une <strong>interruption matérielle INTB0</strong>. Cette partie était importante car elle permettait de détecter l’événement de tir et de déclencher la réaction du système de manière plus propre et réactive.
+          </p>
+        </article>
+
+        <article class="role-card">
+          <div class="icon">🎯</div>
+          <h3>Coordination du fonctionnement</h3>
+          <p>
+            Mon travail consistait aussi à assurer la cohérence entre la détection infrarouge et le reste du projet. Un autre élève de SIN s’occupait du <strong>chariot mouvant pour la cible</strong>, ce qui permettait d’ajouter une dimension dynamique au système.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Fonctionnement technique</div>
+      <ul class="feature-list">
+        <li><strong>Détection du tir :</strong> le système infrarouge permet d’identifier l’action de tir et d’envoyer l’information au programme.</li>
+        <li><strong>Gestion par interruption :</strong> l’utilisation de <strong>INTB0</strong> permet une réaction plus immédiate qu’un simple traitement en boucle, ce qui améliore la réactivité du prototype.</li>
+        <li><strong>Affichage :</strong> le panneau LED sert à visualiser le comportement du système et à rendre le prototype compréhensible pendant les tests et démonstrations.</li>
+        <li><strong>Cible mobile :</strong> le chariot mouvant ajoute une difficulté supplémentaire et rend le projet plus réaliste et plus interactif.</li>
+        <li><strong>Travail inter-spécialités :</strong> le projet montre bien le lien entre la partie conception mécanique, l’intégration physique et la programmation embarquée.</li>
+      </ul>
+
+      <div class="highlight">
+        <strong>Point fort du projet :</strong> IR Game m’a permis de travailler sur un cas concret mêlant <strong>programmation embarquée</strong>, <strong>gestion d’entrées/sorties</strong>, <strong>détection d’événements</strong> et <strong>travail en équipe</strong>, tout en ayant une responsabilité claire sur une partie essentielle du système.
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Illustrations et démonstration</div>
+      <div class="media-grid">
+        <article class="media-box">
+          <video controls preload="metadata" poster="flowcode7.jpg">
+            <source src="static/flowcode7.mp4" type="video/mp4" />
+            Votre navigateur ne prend pas en charge la lecture vidéo.
+          </video>
+          <div class="media-caption">
+            <strong>Vidéo de test du panneau LED :</strong> cette démonstration permet d’illustrer le comportement du système pendant les essais et la partie affichage développée dans le cadre du projet.
+          </div>
+        </article>
+
+        <article class="media-box">
+          <img src="static/flowcode7.jpg" alt="Illustration Flowcode 7 du projet IR Game" />
+          <div class="media-caption">
+            <strong>Illustration Flowcode 7 :</strong> 
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Compétences mobilisées</div>
+      <div class="tech-grid">
+        <div class="tech-item">Programmation</div>
+        <div class="tech-item">Logique embarquée</div>
+        <div class="tech-item">Interruption matérielle</div>
+        <div class="tech-item">Affichage LED</div>
+        <div class="tech-item">Infrarouge</div>
+        <div class="tech-item">Tests prototype</div>
+        <div class="tech-item">Travail d’équipe</div>
+        <div class="tech-item">Projet STI2D</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Bilan personnel</div>
+      <p>
+        Ce projet m’a permis de mieux comprendre la logique de développement d’un système complet, depuis l’idée jusqu’aux essais. J’ai pu approfondir la partie <strong>gestion de signaux</strong> et <strong>réactivité système</strong>, tout en participant à une réalisation concrète avec plusieurs intervenants.
+      </p>
+      <p>
+        Il montre également ma capacité à prendre en charge une partie technique en autonomie, ici le <strong>système infrarouge</strong>, tout en collaborant avec d’autres élèves sur les éléments complémentaires comme l’affichage et la cible mobile.
+      </p>
+    </section>
+
+    <div class="footer-actions">
+      <a class="btn btn-primary" href="index.html">Retour au CV</a>
+    </div>
+  </div>
+</body>
+</html>
