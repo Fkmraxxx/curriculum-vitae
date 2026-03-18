@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet Hyper-V - Alexis Campos</title>
+
+  <style>
+    :root{
+      --bg:#e9eef5;
+      --page:#ffffff;
+      --primary:#123b7a;
+      --primary-dark:#0d2e60;
+      --primary-soft:#dbe8fb;
+      --text:#182231;
+      --muted:#5e6b7c;
+      --line:#d8e0ea;
+      --soft:#f5f8fc;
+      --chip:#edf3ff;
+      --good:#1f8f56;
+      --good-soft:#e9f8f0;
+      --warn:#c7831c;
+      --warn-soft:#fff6e7;
+      --linux:#f2f7ff;
+      --windows:#f7fbff;
+      --shadow:0 18px 45px rgba(18,59,122,.10);
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    html, body{
+      width:100%;
+      min-height:100%;
+    }
+
+    body{
+      font-family:"Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(18,59,122,.06), transparent 35%),
+        linear-gradient(180deg, #eef3f9 0%, #e7edf5 100%);
+      color:var(--text);
+      padding:22px;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page{
+      width:min(1200px, 100%);
+      margin:0 auto;
+      background:var(--page);
+      border-radius:26px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(18,59,122,.06);
+    }
+
+    .topbar{
+      height:8px;
+      background:linear-gradient(90deg, var(--primary-dark), var(--primary), #2a69b3);
+    }
+
+    .hero{
+      position:relative;
+      padding:34px 34px 28px;
+      background:
+        radial-gradient(circle at right top, rgba(18,59,122,.10), transparent 32%),
+        linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border-bottom:1px solid var(--line);
+    }
+
+    .hero-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .back-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:13px;
+      font-weight:800;
+      color:var(--primary-dark);
+      background:var(--soft);
+      border:1px solid var(--line);
+      padding:10px 14px;
+      border-radius:999px;
+      transition:.18s ease;
+    }
+
+    .back-link:hover{
+      background:#eef5ff;
+      border-color:#bfd0ea;
+      transform:translateY(-1px);
+    }
+
+    .hero-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      border:1px solid var(--line);
+      background:var(--soft);
+      color:var(--muted);
+    }
+
+    .badge.primary{
+      background:var(--primary);
+      color:#fff;
+      border-color:transparent;
+    }
+
+    .hero h1{
+      font-size:42px;
+      line-height:1;
+      font-weight:900;
+      color:var(--primary-dark);
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .hero p{
+      max-width:940px;
+      font-size:15px;
+      line-height:1.7;
+      color:var(--muted);
+    }
+
+    .content{
+      padding:28px 28px 34px;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:20px;
+      box-shadow:0 8px 24px rgba(18,59,122,.04);
+    }
+
+    .card-title{
+      font-size:15px;
+      text-transform:uppercase;
+      letter-spacing:1.8px;
+      color:var(--primary-dark);
+      font-weight:900;
+      margin-bottom:14px;
+    }
+
+    .lead{
+      font-size:14px;
+      line-height:1.7;
+      color:var(--muted);
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .chip{
+      font-size:12px;
+      font-weight:800;
+      color:var(--primary-dark);
+      background:var(--chip);
+      border:1px solid #cfdbef;
+      border-radius:999px;
+      padding:7px 10px;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+
+    .mini-card{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:15px 14px;
+      background:linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    .mini-card h3{
+      font-size:13px;
+      font-weight:900;
+      color:var(--text);
+      margin-bottom:8px;
+    }
+
+    .mini-card p{
+      font-size:12.8px;
+      line-height:1.6;
+      color:var(--muted);
+    }
+
+    .section{
+      margin-top:18px;
+    }
+
+    .section-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+
+    .section h2{
+      font-size:18px;
+      font-weight:900;
+      color:var(--primary-dark);
+      letter-spacing:.3px;
+    }
+
+    .section-sub{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .infra-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:12px;
+    }
+
+    .infra-box{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px 14px;
+      background:#fff;
+    }
+
+    .infra-box.windows{
+      background:linear-gradient(180deg, var(--windows) 0%, #ffffff 100%);
+    }
+
+    .infra-box.linux{
+      background:linear-gradient(180deg, var(--linux) 0%, #ffffff 100%);
+    }
+
+    .infra-box.network{
+      background:linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    }
+
+    .infra-box.security{
+      background:linear-gradient(180deg, #f4f8ff 0%, #ffffff 100%);
+    }
+
+    .infra-icon{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      font-size:20px;
+      margin-bottom:10px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+
+    .infra-box h3{
+      font-size:14px;
+      font-weight:900;
+      color:var(--text);
+      margin-bottom:8px;
+    }
+
+    .infra-box p{
+      font-size:12.8px;
+      line-height:1.6;
+      color:var(--muted);
+    }
+
+    .diagram-card{
+      padding:22px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at top right, rgba(18,59,122,.05), transparent 30%),
+        linear-gradient(180deg, #fbfdff 0%, #f6f9fe 100%);
+    }
+
+    .diagram-wrap{
+      width:100%;
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:#fff;
+      padding:14px;
+    }
+
+    svg{
+      display:block;
+      width:100%;
+      min-width:980px;
+      height:auto;
+    }
+
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .legend-item{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      font-weight:700;
+      color:var(--muted);
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 11px;
+    }
+
+    .legend-dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      display:inline-block;
+    }
+
+    .dot-network{ background:#2f6ec9; }
+    .dot-windows{ background:#1f8f56; }
+    .dot-linux{ background:#8d5bd1; }
+    .dot-security{ background:#d4891d; }
+
+    .list-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .list-card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      background:#fff;
+    }
+
+    .list-card h3{
+      font-size:14px;
+      font-weight:900;
+      color:var(--primary-dark);
+      margin-bottom:10px;
+    }
+
+    .list{
+      padding-left:18px;
+    }
+
+    .list li{
+      font-size:13px;
+      line-height:1.7;
+      color:var(--muted);
+      margin-bottom:7px;
+    }
+
+    .list li:last-child{
+      margin-bottom:0;
+    }
+
+    .footer{
+      margin-top:20px;
+      padding:18px 22px 24px;
+      border-top:1px solid var(--line);
+      background:#fbfdff;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .footer-text{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .footer-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color:#fff;
+      padding:11px 16px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      box-shadow:0 10px 24px rgba(18,59,122,.16);
+    }
+
+    .footer-btn:hover{
+      transform:translateY(-1px);
+    }
+
+    @media (max-width: 1050px){
+      .grid-2,
+      .infra-grid,
+      .list-grid{
+        grid-template-columns:1fr;
+      }
+
+      .mini-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hero h1{
+        font-size:34px;
+      }
+    }
+
+    @media (max-width: 700px){
+      body{
+        padding:12px;
+      }
+
+      .hero,
+      .content{
+        padding:20px;
+      }
+
+      .footer{
+        padding:16px 20px 20px;
+      }
+
+      .hero h1{
+        font-size:28px;
+      }
+
+      .hero p{
+        font-size:14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topbar"></div>
+
+    <header class="hero">
+      <div class="hero-top">
+        <a class="back-link" href="index.html">← Retour au CV</a>
+
+        <div class="hero-badges">
+          <span class="badge primary">Projet infrastructure</span>
+          <span class="badge">Hyper-V</span>
+          <span class="badge">Windows Server</span>
+          <span class="badge">pfSense</span>
+          <span class="badge">AD / DNS / DHCP / Fichiers</span>
+        </div>
+      </div>
+
+      <h1>Projet Hyper-V</h1>
+      <p>
+        Ce projet consistait à concevoir et déployer un laboratoire d’infrastructure complet sur mon PC de base à l’aide d’Hyper-V.
+        L’objectif était de mettre en place un environnement proche d’un vrai SI d’entreprise, avec plusieurs machines virtuelles
+        Windows et Linux, une intégration au domaine Active Directory, la gestion du DHCP, du DNS, des fichiers, des stratégies
+        de groupe (GPO), ainsi qu’une passerelle pfSense permettant de relier l’ensemble du lab à Internet de manière contrôlée.
+      </p>
+    </header>
+
+    <section class="content">
+      <div class="grid-2">
+        <article class="card">
+          <div class="card-title">Présentation du projet</div>
+          <p class="lead">
+            J’ai réalisé ce projet afin de me familiariser avec l’administration système et réseau dans un environnement virtualisé.
+            Le laboratoire reposait sur Hyper-V installé sur ma machine hôte, avec plusieurs serveurs Windows Server dédiés à des rôles
+            précis : contrôleur de domaine Active Directory, DNS, DHCP, serveur de fichiers, ainsi que des postes clients Windows joints
+            au domaine. J’ai également utilisé des VMs Linux et mis en place une intégration réseau complète via pfSense, afin d’obtenir
+            un fonctionnement réaliste avec accès au vrai Internet, segmentation logique et gestion de la connectivité.
+          </p>
+
+          <div class="chips">
+            <span class="chip">Hyper-V sur PC hôte</span>
+            <span class="chip">Windows Server</span>
+            <span class="chip">DHCP</span>
+            <span class="chip">AD DS</span>
+            <span class="chip">DNS</span>
+            <span class="chip">Serveur de fichiers</span>
+            <span class="chip">GPO</span>
+            <span class="chip">pfSense</span>
+            <span class="chip">Windows / Linux</span>
+            <span class="chip">Mises à jour Windows</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-title">Objectifs techniques</div>
+
+          <div class="mini-grid">
+            <div class="mini-card">
+              <h3>Virtualisation</h3>
+              <p>Créer un lab stable sous Hyper-V avec plusieurs VMs, vSwitch internes et connectivité réaliste.</p>
+            </div>
+
+            <div class="mini-card">
+              <h3>Services Microsoft</h3>
+              <p>Déployer un domaine Active Directory avec DNS, DHCP, comptes utilisateurs, groupes et droits.</p>
+            </div>
+
+            <div class="mini-card">
+              <h3>Administration</h3>
+              <p>Mettre en place des GPO simples et plus avancées pour simuler une gestion centralisée d’entreprise.</p>
+            </div>
+
+            <div class="mini-card">
+              <h3>Réseau & sécurité</h3>
+              <p>Utiliser pfSense pour relier le laboratoire à Internet, contrôler le trafic et structurer le réseau.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>Infrastructure mise en place</h2>
+          <div class="section-sub">Environnement de test complet sur machine personnelle</div>
+        </div>
+
+        <div class="infra-grid">
+          <div class="infra-box network">
+            <div class="infra-icon">🖥️</div>
+            <h3>PC hôte + Hyper-V</h3>
+            <p>
+              Installation d’Hyper-V sur le PC principal avec création de switches virtuels, gestion des ressources et organisation
+              des différentes machines virtuelles.
+            </p>
+          </div>
+
+          <div class="infra-box windows">
+            <div class="infra-icon">🪟</div>
+            <h3>Windows Server</h3>
+            <p>
+              Déploiement de serveurs dédiés aux rôles AD DS, DNS, DHCP, fichiers et administration du domaine.
+            </p>
+          </div>
+
+          <div class="infra-box linux">
+            <div class="infra-icon">🐧</div>
+            <h3>VMs Linux</h3>
+            <p>
+              Ajout de machines Linux dans le laboratoire pour tester la connectivité, les échanges réseau et l’intégration globale.
+            </p>
+          </div>
+
+          <div class="infra-box security">
+            <div class="infra-icon">🛡️</div>
+            <h3>pfSense</h3>
+            <p>
+              Utilisation d’un pare-feu / routeur virtuel pour fournir une passerelle entre le laboratoire interne et le vrai Internet.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>Schéma du réseau du projet</h2>
+          <div class="section-sub">Architecture logique du laboratoire Hyper-V</div>
+        </div>
+
+        <article class="card diagram-card">
+          <div class="diagram-wrap">
+            <svg viewBox="0 0 1180 720" xmlns="http://www.w3.org/2000/svg" aria-label="Schéma réseau Hyper-V">
+              <defs>
+                <linearGradient id="bgPanel" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#fbfdff"/>
+                  <stop offset="100%" stop-color="#f3f7fd"/>
+                </linearGradient>
+
+                <linearGradient id="hostGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="100%" stop-color="#f6f9fe"/>
+                </linearGradient>
+
+                <linearGradient id="networkGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#eaf2ff"/>
+                  <stop offset="100%" stop-color="#dbe8fb"/>
+                </linearGradient>
+
+                <linearGradient id="winGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#eef9f3"/>
+                  <stop offset="100%" stop-color="#dff2e8"/>
+                </linearGradient>
+
+                <linearGradient id="linuxGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f4effd"/>
+                  <stop offset="100%" stop-color="#e8defb"/>
+                </linearGradient>
+
+                <linearGradient id="secGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#fff6e8"/>
+                  <stop offset="100%" stop-color="#ffebc8"/>
+                </linearGradient>
+
+                <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6ec9"/>
+                </marker>
+
+                <marker id="arrowDark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#123b7a"/>
+                </marker>
+
+                <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#123b7a" flood-opacity=".10"/>
+                </filter>
+              </defs>
+
+              <rect x="0" y="0" width="1180" height="720" rx="26" fill="url(#bgPanel)"/>
+
+              <!-- Internet -->
+              <rect x="930" y="52" width="190" height="92" rx="20" fill="url(#networkGrad)" stroke="#cbdcf5" stroke-width="2" filter="url(#softShadow)"/>
+              <text x="1025" y="88" text-anchor="middle" font-size="24" font-weight="700" fill="#123b7a">☁️ Internet</text>
+              <text x="1025" y="114" text-anchor="middle" font-size="13" fill="#4f6073">Accès réel vers le WAN</text>
+
+              <!-- Host -->
+              <rect x="40" y="60" width="840" height="600" rx="28" fill="url(#hostGrad)" stroke="#d8e0ea" stroke-width="2"/>
+              <text x="72" y="104" font-size="28" font-weight="900" fill="#0d2e60">PC hôte / Hyper-V</text>
+              <text x="72" y="130" font-size="14" fill="#5e6b7c">Lab virtualisé complet exécuté sur la machine principale</text>
+
+              <!-- Hyper-V manager -->
+              <rect x="70" y="165" width="250" height="92" rx="18" fill="url(#networkGrad)" stroke="#cbdcf5" stroke-width="2" filter="url(#softShadow)"/>
+              <text x="195" y="200" text-anchor="middle" font-size="23" font-weight="800" fill="#123b7a">🖥️ Hyper-V</text>
+              <text x="195" y="226" text-anchor="middle" font-size="12.5" fill="#4f6073">Gestion des VMs / ressources / vSwitch</text>
+
+              <!-- vSwitch -->
+              <rect x="350" y="165" width="240" height="92" rx="18" fill="url(#networkGrad)" stroke="#cbdcf5" stroke-width="2" filter="url(#softShadow)"/>
+              <text x="470" y="200" text-anchor="middle" font-size="23" font-weight="800" fill="#123b7a">🔀 vSwitch LAN</text>
+              <text x="470" y="226" text-anchor="middle" font-size="12.5" fill="#4f6073">Réseau interne du laboratoire</text>
+
+              <!-- pfSense -->
+              <rect x="640" y="165" width="190" height="92" rx="18" fill="url(#secGrad)" stroke="#f0d19c" stroke-width="2" filter="url(#softShadow)"/>
+              <text x="735" y="198" text-anchor="middle" font-size="23" font-weight="800" fill="#8a5a08">🛡️ pfSense</text>
+              <text x="735" y="224" text-anchor="middle" font-size="12.5" fill="#7a6644">WAN / LAN / passerelle</text>
+
+              <!-- AD server -->
+              <rect x="75" y="330" width="240" height="120" rx="20" fill="url(#winGrad)" stroke="#cde7d7" stroke-width="2" filter="url(#softShadow)"/>
+              <text x="195" y="365" text-anchor="middle" font-size="22" font-weight="800" fill="#1f6c44">🪟 SRV-AD</text>
+              <text x="195" y="391" text-anchor="middle" font-size="13" fill="#4f6073">Active Directory</text>
+              <text x="195" y="412" text-anchor="middle" font-size="13" fill="#4f6073">DNS • DHCP</text>
+              <text x="195" y="433" text-anchor="middle" font-size="12" fill="#5e6b7c">Gestion des comptes, groupes et domaine</text>
+
+              <!-- File server -->
+              <rect x="350" y="330" width="240" height="120" rx="20" fill="url(#winGrad)" stroke="#cde7d7" stroke-width="2" filter="url(#softShadow)"/>
+              <text x="470" y="365" text-anchor="middle" font-size="22" font-weight="800" fill="#1f6c44">🗂️ SRV-FICHIERS</text>
+              <text x="470" y="391" text-anchor="middle" font-size="13" fill="#4f6073">Partages réseau</text>
+              <text x="470" y="412" text-anchor="middle" font-size="13" fill="#4f6073">Droits NTFS / accès par groupes</text>
+              <text x="470" y="433" text-anchor="middle" font-size="12" fill="#5e6b7c">Gestion des ressources centralisées</text>
+
+              <!-- Windows client -->
+              <rect x="625" y="330" width="220" height="120" rx="20" fill="url(#winGrad)" stroke="#cde7d7" stroke-width="2" filter="url(#softShadow)"/>
+              <text x="735" y="365" text-anchor="middle" font-size="22" font-weight="800" fill="#1f6c44">💻 POSTE CLIENT</text>
+              <text x="735" y="391" text-anchor="middle" font-size="13" fill="#4f6073">Windows joint au domaine</text>
+              <text x="735" y="412" text-anchor="middle" font-size="13" fill="#4f6073">Authentification centralisée</text>
+              <text x="735" y="433" text-anchor="middle" font-size="12" fill="#5e6b7c">Tests des utilisateurs et des GPO</text>
+
+              <!-- Linux VMs -->
+              <rect x="220" y="500" width="250" height="105" rx="20" fill="url(#linuxGrad)" stroke="#dacdfa" stroke-width="2" filter="url(#softShadow)"/>
+              <text x="345" y="535" text-anchor="middle" font-size="22" font-weight="800" fill="#6f46bb">🐧 VMs Linux</text>
+              <text x="345" y="561" text-anchor="middle" font-size="13" fill="#4f6073">Tests réseau / services / connectivité</text>
+              <text x="345" y="582" text-anchor="middle" font-size="12" fill="#5e6b7c">Coexistence Linux / Windows dans le lab</text>
+
+              <!-- GPO / Updates -->
+              <rect x="540" y="500" width="250" height="105" rx="20" fill="url(#secGrad)" stroke="#f0d19c" stroke-width="2" filter="url(#softShadow)"/>
+              <text x="665" y="535" text-anchor="middle" font-size="22" font-weight="800" fill="#8a5a08">⚙️ GPO / Updates</text>
+              <text x="665" y="561" text-anchor="middle" font-size="13" fill="#4f6073">Politiques simples et avancées</text>
+              <text x="665" y="582" text-anchor="middle" font-size="12" fill="#5e6b7c">Configuration, sécurité et Windows Update</text>
+
+              <!-- Lines -->
+              <line x1="320" y1="211" x2="350" y2="211" stroke="#2f6ec9" stroke-width="4" marker-end="url(#arrowBlue)"/>
+              <line x1="590" y1="211" x2="640" y2="211" stroke="#2f6ec9" stroke-width="4" marker-end="url(#arrowBlue)"/>
+              <line x1="830" y1="211" x2="930" y2="98" stroke="#123b7a" stroke-width="4" marker-end="url(#arrowDark)"/>
+
+              <line x1="470" y1="257" x2="195" y2="330" stroke="#2f6ec9" stroke-width="4" marker-end="url(#arrowBlue)"/>
+              <line x1="470" y1="257" x2="470" y2="330" stroke="#2f6ec9" stroke-width="4" marker-end="url(#arrowBlue)"/>
+              <line x1="470" y1="257" x2="735" y2="330" stroke="#2f6ec9" stroke-width="4" marker-end="url(#arrowBlue)"/>
+
+              <line x1="195" y1="450" x2="195" y2="470" stroke="#2f6ec9" stroke-width="3.5"/>
+              <line x1="195" y1="470" x2="345" y2="500" stroke="#2f6ec9" stroke-width="3.5" marker-end="url(#arrowBlue)"/>
+
+              <line x1="735" y1="450" x2="665" y2="500" stroke="#2f6ec9" stroke-width="3.5" marker-end="url(#arrowBlue)"/>
+              <line x1="195" y1="450" x2="665" y2="500" stroke="#123b7a" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrowDark)"/>
+
+              <!-- labels -->
+              <text x="872" y="170" font-size="12" font-weight="700" fill="#123b7a">Accès WAN</text>
+              <text x="220" y="288" font-size="12" font-weight="700" fill="#2f6ec9">Services d’infrastructure</text>
+              <text x="635" y="287" font-size="12" font-weight="700" fill="#2f6ec9">Postes et tests</text>
+              <text x="508" y="490" font-size="12" font-weight="700" fill="#123b7a">Administration & politiques</text>
+            </svg>
+          </div>
+
+          <div class="legend">
+            <span class="legend-item"><span class="legend-dot dot-network"></span>Réseau / Hyper-V / connectivité</span>
+            <span class="legend-item"><span class="legend-dot dot-windows"></span>Machines Windows</span>
+            <span class="legend-item"><span class="legend-dot dot-linux"></span>Machines Linux</span>
+            <span class="legend-item"><span class="legend-dot dot-security"></span>Firewall / sécurité / GPO</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>Ce que comprenait le projet</h2>
+          <div class="section-sub">Fonctionnalités et manipulations réalisées</div>
+        </div>
+
+        <div class="list-grid">
+          <article class="list-card">
+            <h3>Administration Windows Server</h3>
+            <ul class="list">
+              <li>Installation de plusieurs serveurs Windows Server sous Hyper-V.</li>
+              <li>Création d’un domaine Active Directory avec utilisateurs, groupes et unités d’organisation.</li>
+              <li>Configuration du DNS pour la résolution interne du domaine.</li>
+              <li>Mise en place du DHCP pour attribuer automatiquement les adresses IP aux clients.</li>
+              <li>Création d’un serveur de fichiers avec partages réseau et droits d’accès.</li>
+              <li>Intégration de postes Windows au domaine pour simuler un parc d’entreprise.</li>
+            </ul>
+          </article>
+
+          <article class="list-card">
+            <h3>GPO, sécurité et maintenance</h3>
+            <ul class="list">
+              <li>Mise en place de GPO simples : fond d’écran, restrictions, configuration utilisateur.</li>
+              <li>Mise en place de GPO plus avancées : sécurité, scripts, paramètres machine, règles d’administration.</li>
+              <li>Tests de propagation des stratégies sur les postes joints au domaine.</li>
+              <li>Gestion des mises à jour Windows afin de maintenir les serveurs et clients à jour.</li>
+              <li>Validation du bon fonctionnement de l’authentification, des droits et des accès réseau.</li>
+              <li>Approche orientée bonnes pratiques d’administration et de supervision d’un environnement Microsoft.</li>
+            </ul>
+          </article>
+
+          <article class="list-card">
+            <h3>Réseau virtualisé</h3>
+            <ul class="list">
+              <li>Création de commutateurs virtuels Hyper-V pour séparer les communications internes et externes.</li>
+              <li>Utilisation de pfSense comme passerelle virtuelle entre le lab et le vrai Internet.</li>
+              <li>Tests de connectivité entre serveurs, postes clients et machines Linux.</li>
+              <li>Simulation d’une architecture réseau cohérente et proche d’un contexte professionnel.</li>
+              <li>Travail sur l’adressage, les routes, le rôle du firewall et le contrôle des flux.</li>
+            </ul>
+          </article>
+
+          <article class="list-card">
+            <h3>Ouverture vers Linux</h3>
+            <ul class="list">
+              <li>Ajout de VMs Linux pour diversifier l’environnement technique du laboratoire.</li>
+              <li>Tests de communication entre Windows et Linux sur le réseau virtuel.</li>
+              <li>Observation de l’interopérabilité dans un environnement mixte.</li>
+              <li>Renforcement de la compréhension globale des systèmes et de leur intégration réseau.</li>
+              <li>Développement d’une vision plus complète de l’administration multi-environnements.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>Compétences développées</h2>
+          <div class="section-sub">Ce que ce projet m’a apporté</div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-title">Compétences techniques</div>
+            <ul class="list">
+              <li>Installation et gestion d’un environnement virtualisé avec Hyper-V.</li>
+              <li>Déploiement et administration de services Windows Server.</li>
+              <li>Configuration d’un domaine Active Directory en environnement de test.</li>
+              <li>Gestion du DNS, du DHCP, des partages réseau et des permissions.</li>
+              <li>Mise en place et validation de GPO simples et avancées.</li>
+              <li>Compréhension du rôle de pfSense dans une architecture réseau virtualisée.</li>
+              <li>Travail sur l’intégration réseau Windows / Linux.</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <div class="card-title">Compétences professionnelles</div>
+            <ul class="list">
+              <li>Organisation méthodique d’un projet d’infrastructure.</li>
+              <li>Capacité à construire un laboratoire réaliste à partir de ressources personnelles.</li>
+              <li>Approche progressive de la résolution de problèmes techniques.</li>
+              <li>Montée en compétences sur l’administration système et réseau.</li>
+              <li>Développement d’une vision globale d’un SI virtualisé.</li>
+              <li>Préparation à des contextes de support, d’administration et de cybersécurité.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-text">
+        Projet personnel / pédagogique orienté administration systèmes, virtualisation, réseau et environnement Microsoft.
+      </div>
+      <a class="footer-btn" href="index.html">Revenir au CV</a>
+    </footer>
+  </main>
+</body>
+</html>
