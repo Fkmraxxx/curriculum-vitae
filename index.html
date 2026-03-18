@@ -291,14 +291,16 @@
     }
 
     .contact-link,
-    .company-link{
+    .company-link,
+    .project-link{
       color:var(--text);
       text-decoration:none;
       transition:.18s ease;
     }
 
     .contact-link:hover,
-    .company-link:hover{
+    .company-link:hover,
+    .project-link:hover{
       color:var(--primary-dark);
       text-decoration:underline;
     }
@@ -657,7 +659,7 @@
     .envelope-wrap.show{
       opacity:1;
       transform:scale(1);
-      pointer-events:auto;
+      pointer-events:none;
     }
 
     .envelope-note{
@@ -705,7 +707,7 @@
       padding:18px 20px 14px;
       z-index:2;
       transition:transform .55s ease, height .55s ease, opacity .55s ease;
-      pointer-events:auto;
+      pointer-events:none;
     }
 
     .envelope-wrap.sealed .envelope-paper{
@@ -746,8 +748,7 @@
       transform:translateY(0);
     }
 
-    .paper-contact a{
-      text-decoration:none;
+    .paper-contact-item{
       color:var(--text);
       font-size:12px;
       font-weight:700;
@@ -755,14 +756,6 @@
       border:1px solid var(--line);
       border-radius:12px;
       padding:9px 10px;
-      pointer-events:auto;
-      transition:.18s ease;
-    }
-
-    .paper-contact a:hover{
-      background:#eef5ff;
-      border-color:#bfd0ea;
-      color:var(--primary-dark);
     }
 
     .envelope-front{
@@ -811,7 +804,7 @@
       z-index:6;
       opacity:0;
       transition:opacity .35s ease, transform .35s ease;
-      pointer-events:auto;
+      pointer-events:none;
     }
 
     .envelope-wrap.sealed.details-visible .front-contact-card{
@@ -835,10 +828,9 @@
       gap:7px;
     }
 
-    .front-links a{
+    .front-link-like{
       display:block;
       text-align:center;
-      text-decoration:none;
       color:var(--primary-dark);
       font-size:12px;
       font-weight:800;
@@ -846,13 +838,6 @@
       border:1px solid #d7e2f0;
       border-radius:10px;
       padding:8px 10px;
-      transition:.18s ease;
-      pointer-events:auto;
-    }
-
-    .front-links a:hover{
-      background:#f7fbff;
-      border-color:#bfd0ea;
     }
 
     /* =========================
@@ -1078,7 +1063,7 @@
 <body>
   <div id="introScreen">
     <button id="introPhotoBtn" type="button" aria-label="Ouvrir le CV">
-      <img src="static/photo.png" alt="Photo de Alexis Campos" />
+      <img src="photo.png" alt="Photo de Alexis Campos" />
     </button>
     <div id="introText">Clique sur la photo</div>
   </div>
@@ -1345,11 +1330,53 @@
           <h2>Projets</h2>
           <article class="card">
             <ul class="job-list" style="margin-top:0;">
-              <li><strong>Projet Licences</strong> : développement d’un outil de suivi et de centralisation de licences.</li>
-              <li><strong>Camping MQTT</strong> : mise en place d’échanges et supervision via MQTT.</li>
-              <li><strong>Projet CAN</strong> : travail autour de la communication sur bus CAN.</li>
-              <li><strong>Skybot</strong> : projet technique autour de l’automatisation / robotique.</li>
-              <li><strong>IR Game</strong> : projet réalisé dans le cadre de la formation.</li>
+              <li>
+                <a class="project-link" href="projet-licences.html">
+                  <strong>Projet Licences</strong>
+                </a>
+                : développement d’un outil de suivi et de centralisation de licences.
+              </li>
+              <li>
+                <a class="project-link" href="camping-mqtt.html">
+                  <strong>Camping MQTT</strong>
+                </a>
+                : mise en place d’échanges et supervision via MQTT.
+              </li>
+              <li>
+                <a class="project-link" href="projet-can.html">
+                  <strong>Projet CAN</strong>
+                </a>
+                : travail autour de la communication sur bus CAN.
+              </li>
+              <li>
+                <a class="project-link" href="skybot.html">
+                  <strong>Skybot</strong>
+                </a>
+                : projet technique autour de l’automatisation / robotique.
+              </li>
+              <li>
+                <a class="project-link" href="ir-game.html">
+                  <strong>IR Game</strong>
+                </a>
+                : projet réalisé dans le cadre de la formation.
+              </li>
+              <li>
+                <a class="project-link" href="projet-hyper-v.html">
+                  <strong>Projet Hyper-V</strong>
+                </a>
+                : mise en place et utilisation d’un environnement virtualisé sous Hyper-V.
+              </li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="section">
+          <h2>Centres d’intérêt</h2>
+          <article class="card">
+            <ul class="job-list" style="margin-top:0;">
+              <li>Sport</li>
+              <li>Musiques</li>
+              <li>Jeux vidéos</li>
             </ul>
           </article>
         </div>
@@ -1390,11 +1417,9 @@
           <div class="paper-sep"></div>
 
           <div class="paper-contact">
-            <a href="mailto:alexiscampos4@hotmail.com">✉️ alexiscampos4@hotmail.com</a>
-            <a href="tel:+33610498140">📞 +33 6 10 49 81 40</a>
-            <a href="https://www.linkedin.com/in/alexis-campos-533ba7271/" target="_blank" rel="noopener noreferrer">
-              🔗 LinkedIn
-            </a>
+            <div class="paper-contact-item">✉️ alexiscampos4@hotmail.com</div>
+            <div class="paper-contact-item">📞 +33 6 10 49 81 40</div>
+            <div class="paper-contact-item">🔗 LinkedIn</div>
           </div>
         </div>
 
@@ -1404,8 +1429,8 @@
         <div class="front-contact-card">
           <div class="front-title">Coordonnées</div>
           <div class="front-links">
-            <a href="mailto:alexiscampos4@hotmail.com">alexiscampos4@hotmail.com</a>
-            <a href="tel:+33610498140">+33 6 10 49 81 40</a>
+            <div class="front-link-like">alexiscampos4@hotmail.com</div>
+            <div class="front-link-like">+33 6 10 49 81 40</div>
           </div>
         </div>
       </div>
@@ -1646,7 +1671,7 @@
         const holeX = window.innerWidth / 2;
         const holeY = window.innerHeight / 2;
 
-        pieces.forEach((piece, i) => {
+        pieces.forEach((piece) => {
           const dx = piece.cx - holeX;
           const dy = piece.cy - holeY;
           const dist = Math.hypot(dx, dy) || 1;
