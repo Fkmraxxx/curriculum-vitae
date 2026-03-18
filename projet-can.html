@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet CAN - Alexis Campos</title>
+
+  <style>
+    :root{
+      --bg:#e9eef5;
+      --page:#ffffff;
+      --primary:#123b7a;
+      --primary-dark:#0d2e60;
+      --text:#182231;
+      --muted:#5e6b7c;
+      --line:#d8e0ea;
+      --soft:#f5f8fc;
+      --chip:#edf3ff;
+      --good:#1f8f56;
+      --warn:#d97706;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    html, body{
+      width:100%;
+      min-height:100%;
+    }
+
+    body{
+      font-family:"Segoe UI", Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      padding:24px;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page{
+      max-width:1200px;
+      margin:0 auto;
+      background:var(--page);
+      border-radius:22px;
+      overflow:hidden;
+      box-shadow:0 18px 50px rgba(18,59,122,.10);
+      border:1px solid rgba(18,59,122,.05);
+    }
+
+    .topbar{
+      height:8px;
+      background:linear-gradient(90deg, var(--primary-dark), var(--primary));
+    }
+
+    .hero{
+      padding:34px 34px 28px;
+      border-bottom:1px solid var(--line);
+      background:
+        radial-gradient(circle at top right, rgba(18,59,122,.06), transparent 28%),
+        linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+    }
+
+    .back-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:13px;
+      font-weight:700;
+      color:var(--primary);
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 14px;
+      margin-bottom:18px;
+      transition:.18s ease;
+    }
+
+    .back-link:hover{
+      background:#f7faff;
+      border-color:#bfd0ea;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:28px;
+      align-items:center;
+    }
+
+    .badge{
+      display:inline-block;
+      background:var(--primary);
+      color:#fff;
+      padding:7px 14px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    .hero h1{
+      font-size:40px;
+      line-height:1.02;
+      color:var(--primary-dark);
+      margin-bottom:12px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+
+    .hero p{
+      font-size:15px;
+      line-height:1.7;
+      color:var(--muted);
+      max-width:760px;
+    }
+
+    .highlight{
+      color:var(--text);
+      font-weight:700;
+    }
+
+    .hero-side{
+      display:grid;
+      gap:14px;
+    }
+
+    .mini-card{
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px 18px;
+    }
+
+    .mini-card h3{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:1.5px;
+      color:var(--primary-dark);
+      margin-bottom:10px;
+    }
+
+    .mini-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .mini-item{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+    }
+
+    .mini-item strong{
+      display:block;
+      font-size:12px;
+      color:var(--primary-dark);
+      margin-bottom:4px;
+    }
+
+    .mini-item span{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .hero-image{
+      width:100%;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:14px;
+      box-shadow:0 8px 20px rgba(18,59,122,.06);
+    }
+
+    .hero-image img{
+      width:100%;
+      display:block;
+      border-radius:12px;
+      object-fit:cover;
+    }
+
+    .content{
+      padding:28px 34px 34px;
+      display:grid;
+      gap:22px;
+    }
+
+    .section{
+      display:grid;
+      gap:14px;
+    }
+
+    .section-title{
+      font-size:15px;
+      font-weight:900;
+      color:var(--primary-dark);
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px 20px;
+    }
+
+    .card p{
+      font-size:14px;
+      line-height:1.75;
+      color:var(--muted);
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:16px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .chip{
+      background:var(--chip);
+      color:var(--primary-dark);
+      border:1px solid #cddaf0;
+      border-radius:999px;
+      padding:7px 12px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .list{
+      padding-left:18px;
+      display:grid;
+      gap:8px;
+    }
+
+    .list li{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .tpro-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:16px;
+    }
+
+    .tpro-card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding:18px;
+    }
+
+    .tpro-head{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .tpro-num{
+      min-width:40px;
+      height:40px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--primary);
+      color:#fff;
+      font-size:13px;
+      font-weight:900;
+    }
+
+    .tpro-title{
+      font-size:14px;
+      font-weight:800;
+      color:var(--primary-dark);
+      line-height:1.4;
+    }
+
+    .tpro-card p{
+      font-size:13px;
+      line-height:1.7;
+      color:var(--muted);
+    }
+
+    .stage-list{
+      display:grid;
+      gap:14px;
+    }
+
+    .stage-item{
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:var(--soft);
+      padding:16px 18px;
+    }
+
+    .stage-item h3{
+      font-size:14px;
+      color:var(--primary-dark);
+      margin-bottom:8px;
+    }
+
+    .stage-item p{
+      font-size:14px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .media-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .media-box{
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:0 8px 18px rgba(18,59,122,.04);
+    }
+
+    .media-box .media-head{
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      background:var(--soft);
+      font-size:13px;
+      font-weight:800;
+      color:var(--primary-dark);
+      letter-spacing:.3px;
+    }
+
+    .media-box .media-body{
+      padding:14px;
+    }
+
+    .media-box img,
+    .media-box video{
+      width:100%;
+      display:block;
+      border-radius:12px;
+      background:#000;
+    }
+
+    .note{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:10px;
+      line-height:1.6;
+    }
+
+    .result-card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      background:linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    }
+
+    .result-card h3{
+      font-size:14px;
+      color:var(--primary-dark);
+      margin-bottom:10px;
+    }
+
+    .footer-note{
+      text-align:center;
+      font-size:13px;
+      color:var(--muted);
+      padding-top:4px;
+    }
+
+    @media (max-width:1000px){
+      .hero-grid,
+      .grid-2,
+      .grid-3,
+      .tpro-grid,
+      .media-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:760px){
+      body{
+        padding:12px;
+      }
+
+      .hero,
+      .content{
+        padding:20px;
+      }
+
+      .hero h1{
+        font-size:30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topbar"></div>
+
+    <section class="hero">
+      <a class="back-link" href="index.html">← Retour au CV</a>
+
+      <div class="hero-grid">
+        <div>
+          <div class="badge">BTS CIEL - Mini projet</div>
+          <h1>Projet CAN</h1>
+          <p>
+            Ce projet a pour objectif de <span class="highlight">récupérer et afficher le régime moteur</span>
+            de manière compacte et simplifiée. Pour cela, une carte <span class="highlight">ESP32</span> équipée
+            d’un module <span class="highlight">MCP2515</span> se connecte au bus CAN afin de recevoir les trames
+            moteur. Les données sont ensuite exploitées localement sur un <span class="highlight">écran OLED</span>,
+            puis envoyées vers un <span class="highlight">Raspberry Pi</span> qui diffuse les informations sur une
+            <span class="highlight">interface web temps réel</span> via <span class="highlight">WebSocket</span>.
+          </p>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-image">
+            <img src="static/CAN/CAN.png" alt="Maquette du projet CAN" />
+          </div>
+
+          <div class="mini-card">
+            <h3>Résumé du projet</h3>
+            <div class="mini-list">
+              <div class="mini-item">
+                <strong>Objectif</strong>
+                <span>Afficher le régime moteur sur OLED et sur une jauge web.</span>
+              </div>
+              <div class="mini-item">
+                <strong>Matériel</strong>
+                <span>ESP32, MCP2515, transceiver, OLED, Raspberry Pi, véhicule.</span>
+              </div>
+              <div class="mini-item">
+                <strong>Compétences</strong>
+                <span>Bus CAN, embarqué, réseau, Node.js, WebSocket, supervision.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="section">
+        <h2 class="section-title">Sommaire du dossier</h2>
+        <div class="grid-2">
+          <div class="card">
+            <p>
+              <span class="highlight">A / Spécification</span><br>
+              Analyse du besoin, diagramme SysML de cas d’utilisation, diagrammes SysML de séquence.
+            </p>
+          </div>
+          <div class="card">
+            <p>
+              <span class="highlight">B / Conception préliminaire</span><br>
+              Diagramme de déploiement, diagramme Bdd, diagrammes ibd, détails des tâches professionnelles et planning.
+            </p>
+          </div>
+          <div class="card">
+            <p>
+              <span class="highlight">C / Conception détaillée</span><br>
+              Résultats techniques, explications des tâches réalisées et validation des choix.
+            </p>
+          </div>
+          <div class="card">
+            <p>
+              <span class="highlight">D / Validation</span><br>
+              Vérification du fonctionnement complet et recette des exigences définies en début de projet.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Analyse du besoin</h2>
+        <div class="card">
+          <p>
+            Le besoin principal de ce projet est d’obtenir une <span class="highlight">lecture du régime moteur</span>
+            depuis le réseau CAN du véhicule, puis de l’afficher de manière simple, lisible et exploitable.
+            La solution doit fonctionner à la fois en local sur un écran embarqué et à distance via une page web.
+            Le projet mobilise donc plusieurs briques techniques : acquisition de trames CAN, traitement de données,
+            affichage embarqué, communication réseau et visualisation web temps réel.
+          </p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Technologies et matériel utilisés</h2>
+        <div class="card">
+          <div class="chips">
+            <span class="chip">ESP32</span>
+            <span class="chip">MCP2515</span>
+            <span class="chip">Bus CAN</span>
+            <span class="chip">Transceiver CAN</span>
+            <span class="chip">OLED I2C</span>
+            <span class="chip">Raspberry Pi</span>
+            <span class="chip">RaspAP</span>
+            <span class="chip">Node.js</span>
+            <span class="chip">WebSocket</span>
+            <span class="chip">Postman</span>
+            <span class="chip">Muxtrace</span>
+            <span class="chip">Muxdiag</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Architecture globale</h2>
+        <div class="grid-3">
+          <div class="result-card">
+            <h3>1. Acquisition CAN</h3>
+            <p>
+              L’ESP32 est relié à une carte MCP2515 qui lui permet de communiquer avec le bus CAN et de recevoir les trames moteur.
+            </p>
+          </div>
+          <div class="result-card">
+            <h3>2. Traitement local</h3>
+            <p>
+              Le régime moteur est extrait des octets reçus, converti en tr/min puis affiché sur l’écran OLED sous forme numérique et graphique.
+            </p>
+          </div>
+          <div class="result-card">
+            <h3>3. Diffusion réseau</h3>
+            <p>
+              Les valeurs sont transmises au Raspberry Pi qui héberge un serveur Web / WebSocket pour alimenter une jauge consultable depuis un navigateur.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Déroulement des tâches professionnelles</h2>
+        <div class="tpro-grid">
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">1</div>
+              <div class="tpro-title">Installer et configurer la carte CAN MCP2515 sur ESP32</div>
+            </div>
+            <p>
+              Mise en place du câblage entre l’ESP32, le module MCP2515, le transceiver, la breadboard et les connexions SPI.
+              La carte MCP2515 agit comme interface SPI vers CAN et permet à l’ESP32 d’envoyer et de recevoir des trames.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">2</div>
+              <div class="tpro-title">Valider la réception des trames CAN par simulation</div>
+            </div>
+            <p>
+              Utilisation du logiciel Muxtrace et du boîtier Muxdiag pour simuler la trame moteur.
+              Les octets transmis ont permis de vérifier l’extraction correcte du régime, de la vitesse et de l’état moteur via le moniteur série.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">3</div>
+              <div class="tpro-title">Installer et configurer l’écran OLED</div>
+            </div>
+            <p>
+              Recherche de l’identifiant I2C, ajout des bibliothèques nécessaires et validation de l’affichage sur l’écran OLED connecté à l’ESP32.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">4</div>
+              <div class="tpro-title">Afficher le régime moteur en milliers de tours/minute</div>
+            </div>
+            <p>
+              Création d’un premier affichage compact du régime moteur sur la première ligne de l’écran OLED en multiple de 1000 tr/min.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">5</div>
+              <div class="tpro-title">Traduire le régime moteur en barres sur OLED</div>
+            </div>
+            <p>
+              Mise en place d’un affichage visuel complémentaire sous forme de barres afin de représenter plus intuitivement la montée en régime.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">6</div>
+              <div class="tpro-title">Valider le fonctionnement complet sur véhicule</div>
+            </div>
+            <p>
+              Test réel sur véhicule avec l’ensemble ESP32 + MCP2515 + OLED afin de confirmer la récupération et l’affichage des données moteur.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">7</div>
+              <div class="tpro-title">Configurer un point d’accès Wi-Fi sur Raspberry Pi</div>
+            </div>
+            <p>
+              Connexion SSH au Raspberry Pi, installation de RaspAP puis mise en service du point d’accès Wi-Fi pour rendre la solution autonome et accessible.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">8</div>
+              <div class="tpro-title">Installer un serveur Web et WebSocket en Node.js</div>
+            </div>
+            <p>
+              Déploiement d’un serveur Node.js sur Raspberry Pi, puis validation de son fonctionnement avec Postman via des tests de requêtes WebSocket.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">9</div>
+              <div class="tpro-title">Configurer le client WebSocket sur ESP32</div>
+            </div>
+            <p>
+              Ajout de la bibliothèque côté ESP32 et validation de l’envoi des données vers le Raspberry Pi, qui reçoit correctement les trames.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">10</div>
+              <div class="tpro-title">Créer la page web avec jauge moteur en temps réel</div>
+            </div>
+            <p>
+              Réalisation d’une interface HTML / CSS / JavaScript utilisant un canvas pour dessiner une jauge automobile animée.
+              Le navigateur reçoit les valeurs via WebSocket et met à jour l’aiguille de façon fluide.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">11</div>
+              <div class="tpro-title">Valider le fonctionnement complet de bout en bout</div>
+            </div>
+            <p>
+              Vérification finale avec le montage complet : véhicule, bus CAN, ESP32, MCP2515, Raspberry Pi, WebSocket et navigateur web.
+            </p>
+          </div>
+
+          <div class="tpro-card">
+            <div class="tpro-head">
+              <div class="tpro-num">12</div>
+              <div class="tpro-title">Résultat final</div>
+            </div>
+            <p>
+              Le système permet d’obtenir une lecture temps réel du régime moteur en local sur OLED et à distance sur une interface web claire et moderne.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Exemple de décodage de trame</h2>
+        <div class="grid-2">
+          <div class="card">
+            <p>
+              <span class="highlight">Octets 1 et 2 :</span> régime moteur<br>
+              4500 tr/min × 8 = 36000 = 0x8CA0 → 0x8C 0xA0
+            </p>
+          </div>
+
+          <div class="card">
+            <p>
+              <span class="highlight">Octets 3 et 4 :</span> vitesse véhicule<br>
+              85,21 km/h → 8521 = 0x2149 → 0x21 0x49
+            </p>
+          </div>
+
+          <div class="card">
+            <p>
+              <span class="highlight">Octet 5 :</span> boîte + rapport<br>
+              0x72 pour l’état de boîte et rapport engagé selon la simulation choisie.
+            </p>
+          </div>
+
+          <div class="card">
+            <p>
+              <span class="highlight">Octet 6 :</span> état moteur<br>
+              0x01 → moteur allumé.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Conception détaillée</h2>
+        <div class="stage-list">
+          <div class="stage-item">
+            <h3>Affichage embarqué sur OLED</h3>
+            <p>
+              Le régime moteur est affiché sur une première ligne sous forme numérique simplifiée, puis sur une deuxième ligne sous forme de barres
+              afin d’obtenir un retour visuel immédiat et lisible.
+            </p>
+          </div>
+
+          <div class="stage-item">
+            <h3>Communication réseau avec Raspberry Pi</h3>
+            <p>
+              Le Raspberry Pi sert de passerelle entre le monde embarqué et la supervision web. Il propose un point d’accès Wi-Fi
+              et héberge les services Node.js nécessaires au serveur Web et WebSocket.
+            </p>
+          </div>
+
+          <div class="stage-item">
+            <h3>Jauge web temps réel</h3>
+            <p>
+              La jauge développée en HTML, CSS et JavaScript utilise un canvas pour simuler un compte-tours automobile avec zones colorées,
+              graduations et aiguille animée. Chaque nouvelle valeur reçue est convertie en angle pour obtenir une animation fluide.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Validation et démonstration</h2>
+        <div class="media-grid">
+          <div class="media-box">
+            <div class="media-head">Vue du montage</div>
+            <div class="media-body">
+              <img src="static/CAN/CAN.png" alt="Montage projet CAN" />
+            </div>
+          </div>
+
+          <div class="media-box">
+            <div class="media-head">Vidéo de démonstration</div>
+            <div class="media-body">
+              <video controls preload="metadata" poster="static/CAN/CAN.png">
+                <source src="static/CAN/Demonstrationfinale.MOV" type="video/mp4" />
+                <source src="static/CAN/Demonstrationfinale.MOV" type="video/quicktime" />
+                Votre navigateur ne prend pas en charge la lecture de cette vidéo.
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Compétences développées</h2>
+        <div class="grid-2">
+          <div class="card">
+            <ul class="list">
+              <li>Compréhension et exploitation d’un bus CAN automobile.</li>
+              <li>Configuration d’un ESP32 avec module MCP2515.</li>
+              <li>Lecture et interprétation de trames techniques.</li>
+              <li>Affichage embarqué sur écran OLED.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <ul class="list">
+              <li>Mise en place d’un Raspberry Pi comme passerelle réseau.</li>
+              <li>Configuration d’un point d’accès Wi-Fi avec RaspAP.</li>
+              <li>Déploiement d’un serveur Web / WebSocket en Node.js.</li>
+              <li>Création d’une interface web dynamique en temps réel.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Conclusion</h2>
+        <div class="card">
+          <p>
+            Ce projet CAN m’a permis de relier plusieurs domaines techniques dans une seule réalisation :
+            <span class="highlight">embarqué, communication CAN, affichage local, réseau, serveur WebSocket et interface web</span>.
+            Il montre ma capacité à concevoir une chaîne complète de récupération, traitement et visualisation de données
+            dans un contexte concret et proche du terrain.
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        Projet réalisé dans le cadre de ma formation en BTS CIEL option Informatique et Réseaux.
+      </div>
+    </section>
+  </main>
+</body>
+</html>

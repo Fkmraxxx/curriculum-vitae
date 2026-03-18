@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet Camping MQTT - Alexis Campos</title>
+
+  <style>
+    :root{
+      --bg:#e9eef5;
+      --page:#ffffff;
+      --primary:#123b7a;
+      --primary-dark:#0d2e60;
+      --text:#182231;
+      --muted:#5e6b7c;
+      --line:#d8e0ea;
+      --soft:#f5f8fc;
+      --chip:#edf3ff;
+      --success:#1f8f56;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    html, body{
+      width:100%;
+      min-height:100%;
+    }
+
+    body{
+      font-family:"Segoe UI", Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      padding:24px;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page{
+      max-width:1200px;
+      margin:0 auto;
+      background:var(--page);
+      border-radius:22px;
+      overflow:hidden;
+      box-shadow:0 18px 50px rgba(18,59,122,.10);
+      border:1px solid rgba(18,59,122,.05);
+    }
+
+    .topbar{
+      height:8px;
+      background:linear-gradient(90deg, var(--primary-dark), var(--primary));
+    }
+
+    .hero{
+      padding:34px 34px 26px;
+      border-bottom:1px solid var(--line);
+      background:
+        radial-gradient(circle at top right, rgba(18,59,122,.06), transparent 28%),
+        linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+    }
+
+    .back-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:13px;
+      font-weight:700;
+      color:var(--primary);
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 14px;
+      margin-bottom:18px;
+      transition:.18s ease;
+    }
+
+    .back-link:hover{
+      background:#f7faff;
+      border-color:#bfd0ea;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:28px;
+      align-items:center;
+    }
+
+    .badge{
+      display:inline-block;
+      background:var(--primary);
+      color:#fff;
+      padding:7px 14px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    .hero h1{
+      font-size:42px;
+      line-height:1.02;
+      color:var(--primary-dark);
+      margin-bottom:12px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+
+    .hero p{
+      font-size:15px;
+      line-height:1.7;
+      color:var(--muted);
+      max-width:760px;
+    }
+
+    .hero-card{
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:20px;
+    }
+
+    .hero-card h3{
+      font-size:13px;
+      color:var(--primary-dark);
+      text-transform:uppercase;
+      letter-spacing:1.6px;
+      margin-bottom:14px;
+    }
+
+    .mini-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .mini-item{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+    }
+
+    .mini-item strong{
+      display:block;
+      font-size:12px;
+      color:var(--primary-dark);
+      margin-bottom:4px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+    }
+
+    .mini-item span{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .content{
+      padding:28px 34px 34px;
+      display:grid;
+      gap:22px;
+    }
+
+    .section{
+      display:grid;
+      gap:14px;
+    }
+
+    .section-title{
+      font-size:15px;
+      font-weight:900;
+      color:var(--primary-dark);
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px 20px;
+    }
+
+    .card p{
+      font-size:14px;
+      line-height:1.75;
+      color:var(--muted);
+    }
+
+    .highlight{
+      color:var(--text);
+      font-weight:700;
+    }
+
+    .architecture{
+      display:grid;
+      grid-template-columns:repeat(5, 1fr);
+      gap:16px;
+      align-items:stretch;
+    }
+
+    .arch-card{
+      background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px 14px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .arch-card::after{
+      content:"";
+      position:absolute;
+      inset:auto -8px 50% auto;
+      width:40px;
+      height:2px;
+      background:linear-gradient(90deg, var(--primary), transparent);
+      transform:translateY(50%);
+    }
+
+    .arch-card:last-child::after{
+      display:none;
+    }
+
+    .arch-card img{
+      width:74px;
+      height:74px;
+      object-fit:contain;
+      margin-bottom:12px;
+    }
+
+    .arch-card h3{
+      font-size:13px;
+      color:var(--primary-dark);
+      margin-bottom:8px;
+    }
+
+    .arch-card p{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .steps{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:16px;
+    }
+
+    .step{
+      border:1px solid var(--line);
+      background:var(--soft);
+      border-radius:18px;
+      padding:18px;
+    }
+
+    .step-number{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      background:var(--primary);
+      color:#fff;
+      display:grid;
+      place-items:center;
+      font-size:14px;
+      font-weight:900;
+      margin-bottom:12px;
+    }
+
+    .step h3{
+      font-size:14px;
+      color:var(--primary-dark);
+      margin-bottom:8px;
+    }
+
+    .step p{
+      font-size:13px;
+      line-height:1.65;
+      color:var(--muted);
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .chip{
+      background:var(--chip);
+      color:var(--primary-dark);
+      border:1px solid #cddaf0;
+      border-radius:999px;
+      padding:7px 12px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .list{
+      padding-left:18px;
+      display:grid;
+      gap:8px;
+    }
+
+    .list li{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(5, 1fr);
+      gap:16px;
+    }
+
+    .gallery-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 8px 18px rgba(18,59,122,.04);
+    }
+
+    .gallery-card .img-wrap{
+      height:160px;
+      background:linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+
+    .gallery-card img{
+      max-width:100%;
+      max-height:100%;
+      object-fit:contain;
+      display:block;
+    }
+
+    .gallery-card .caption{
+      padding:12px 14px 14px;
+      border-top:1px solid var(--line);
+    }
+
+    .gallery-card h4{
+      font-size:13px;
+      color:var(--primary-dark);
+      margin-bottom:5px;
+    }
+
+    .gallery-card p{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .footer-note{
+      text-align:center;
+      font-size:13px;
+      color:var(--muted);
+      padding-top:4px;
+    }
+
+    @media (max-width:1100px){
+      .hero-grid,
+      .architecture,
+      .steps,
+      .gallery,
+      .grid-2{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media (max-width:760px){
+      body{
+        padding:12px;
+      }
+
+      .hero,
+      .content{
+        padding:20px;
+      }
+
+      .hero h1{
+        font-size:30px;
+      }
+
+      .hero-grid,
+      .architecture,
+      .steps,
+      .gallery,
+      .grid-2{
+        grid-template-columns:1fr;
+      }
+
+      .arch-card::after{
+        display:none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topbar"></div>
+
+    <section class="hero">
+      <a class="back-link" href="index.html">← Retour au CV</a>
+
+      <div class="hero-grid">
+        <div>
+          <div class="badge">Projet BTS CIEL IR</div>
+          <h1>Camping MQTT</h1>
+          <p>
+            Ce projet consiste à mettre en place une <span class="highlight">collecte de températures en temps réel</span>
+            à l’aide de plusieurs <span class="highlight">ESP32</span> équipés de capteurs
+            <span class="highlight">DHT</span>. Chaque module envoie ses mesures sur un
+            <span class="highlight">broker MQTT</span> à travers différents topics.
+            Un <span class="highlight">Raspberry Pi</span> récupère ensuite l’ensemble des données et,
+            grâce à <span class="highlight">Node-RED</span>, génère une interface web permettant de
+            centraliser et visualiser toutes les informations.
+          </p>
+        </div>
+
+        <div class="hero-card">
+          <h3>Résumé rapide</h3>
+          <div class="mini-list">
+            <div class="mini-item">
+              <strong>Objectif</strong>
+              <span>Superviser plusieurs capteurs de température depuis une seule interface.</span>
+            </div>
+            <div class="mini-item">
+              <strong>Technologies</strong>
+              <span>ESP32, DHT, MQTT, Raspberry Pi, Node-RED.</span>
+            </div>
+            <div class="mini-item">
+              <strong>Résultat</strong>
+              <span>Un site web simple regroupant les données envoyées par tous les modules.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="section">
+        <h2 class="section-title">Contexte du projet</h2>
+        <div class="card">
+          <p>
+            Dans ce projet, l’idée était de créer un système de <span class="highlight">remontée de données
+            distribué</span>. Plusieurs points de mesure étaient installés avec des ESP32 reliés à des capteurs DHT.
+            Chaque carte relevait les valeurs de température puis les publiait sur un broker MQTT à l’aide de topics dédiés.
+            Le Raspberry Pi servait de point central pour récupérer, traiter et afficher les données sur une page web construite
+            avec Node-RED. Ce projet permettait donc de combiner <span class="highlight">embarqué, réseau, protocole MQTT
+            et supervision web</span>.
+          </p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Architecture générale</h2>
+        <div class="architecture">
+          <div class="arch-card">
+            <img src="static/camping/dht.png" alt="Capteur DHT" />
+            <h3>Capteur DHT</h3>
+            <p>Mesure la température puis transmet la valeur à l’ESP32.</p>
+          </div>
+
+          <div class="arch-card">
+            <img src="static/camping/esp32.png" alt="ESP32" />
+            <h3>ESP32</h3>
+            <p>Lit les données du capteur et publie les mesures sur un topic MQTT.</p>
+          </div>
+
+          <div class="arch-card">
+            <img src="static/camping/mqtt.png" alt="MQTT" />
+            <h3>Broker MQTT</h3>
+            <p>Centralise les messages envoyés par tous les modules connectés.</p>
+          </div>
+
+          <div class="arch-card">
+            <img src="static/camping/rasp.jpg" alt="Raspberry Pi" />
+            <h3>Raspberry Pi</h3>
+            <p>Récupère les données du broker et héberge la partie de traitement.</p>
+          </div>
+
+          <div class="arch-card">
+            <img src="static/camping/Node-red-icon.png" alt="Node-RED" />
+            <h3>Node-RED</h3>
+            <p>Crée l’interface web qui regroupe et affiche toutes les températures.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Fonctionnement</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Acquisition</h3>
+            <p>
+              Chaque capteur DHT mesure la température au niveau de son emplacement.
+            </p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Publication MQTT</h3>
+            <p>
+              L’ESP32 publie la valeur mesurée sur un topic MQTT dédié, ce qui permet d’identifier facilement chaque zone.
+            </p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Centralisation</h3>
+            <p>
+              Le Raspberry Pi récupère tous les messages transmis via le broker MQTT.
+            </p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Affichage web</h3>
+            <p>
+              Node-RED traite les données puis génère un site web centralisé pour consulter les températures.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Technologies utilisées</h2>
+        <div class="card">
+          <div class="chips">
+            <span class="chip">ESP32</span>
+            <span class="chip">Capteur DHT</span>
+            <span class="chip">MQTT</span>
+            <span class="chip">Topics MQTT</span>
+            <span class="chip">Raspberry Pi</span>
+            <span class="chip">Node-RED</span>
+            <span class="chip">Communication réseau</span>
+            <span class="chip">Supervision web</span>
+            <span class="chip">IoT</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Ce que ce projet m’a apporté</h2>
+        <div class="grid-2">
+          <div class="card">
+            <ul class="list">
+              <li>Comprendre le fonctionnement d’une architecture IoT simple et efficace.</li>
+              <li>Mettre en œuvre la communication entre plusieurs équipements sur un réseau.</li>
+              <li>Utiliser le protocole MQTT pour publier et recevoir des données.</li>
+              <li>Structurer des topics pour organiser correctement les informations.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <ul class="list">
+              <li>Exploiter un Raspberry Pi comme point central de collecte.</li>
+              <li>Créer une interface avec Node-RED pour afficher des données en temps réel.</li>
+              <li>Relier capteurs, microcontrôleurs, réseau et affichage web dans un même projet.</li>
+              <li>Développer une logique de supervision simple, lisible et centralisée.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Illustrations du projet</h2>
+        <div class="gallery">
+          <div class="gallery-card">
+            <div class="img-wrap">
+              <img src="static/camping/dht.png" alt="Capteur DHT" />
+            </div>
+            <div class="caption">
+              <h4>Capteur DHT</h4>
+              <p>Capteur utilisé pour relever la température.</p>
+            </div>
+          </div>
+
+          <div class="gallery-card">
+            <div class="img-wrap">
+              <img src="static/camping/esp32.png" alt="ESP32" />
+            </div>
+            <div class="caption">
+              <h4>ESP32</h4>
+              <p>Carte microcontrôleur utilisée pour envoyer les données.</p>
+            </div>
+          </div>
+
+          <div class="gallery-card">
+            <div class="img-wrap">
+              <img src="static/camping/mqtt.png" alt="Logo MQTT" />
+            </div>
+            <div class="caption">
+              <h4>MQTT</h4>
+              <p>Protocole léger de communication entre les équipements.</p>
+            </div>
+          </div>
+
+          <div class="gallery-card">
+            <div class="img-wrap">
+              <img src="static/camping/rasp.jpg" alt="Raspberry Pi" />
+            </div>
+            <div class="caption">
+              <h4>Raspberry Pi</h4>
+              <p>Machine centrale de récupération et de traitement.</p>
+            </div>
+          </div>
+
+          <div class="gallery-card">
+            <div class="img-wrap">
+              <img src="static/camping/Node-red-icon.png" alt="Node-RED" />
+            </div>
+            <div class="caption">
+              <h4>Node-RED</h4>
+              <p>Outil utilisé pour créer l’interface web de supervision.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Conclusion</h2>
+        <div class="card">
+          <p>
+            Le projet <span class="highlight">Camping MQTT</span> m’a permis de travailler sur une chaîne complète :
+            <span class="highlight">capteur → microcontrôleur → broker MQTT → Raspberry Pi → interface web</span>.
+            Il montre ma capacité à relier plusieurs technologies pour construire une solution de supervision simple,
+            cohérente et fonctionnelle dans un contexte réseau et IoT.
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        Projet réalisé dans le cadre de ma formation en BTS CIEL option Informatique et Réseaux.
+      </div>
+    </section>
+  </main>
+</body>
+</html>

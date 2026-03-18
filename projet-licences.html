@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet Licences - Alexis Campos</title>
+  <style>
+    :root{
+      --bg:#eef3f9;
+      --page:#ffffff;
+      --primary:#123b7a;
+      --primary-dark:#0d2e60;
+      --accent:#d946ef;
+      --text:#182231;
+      --muted:#5e6b7c;
+      --line:#d8e0ea;
+      --soft:#f6f9fd;
+      --chip:#edf3ff;
+      --success:#0f9f67;
+      --shadow:0 16px 42px rgba(18,59,122,.10);
+      --radius:20px;
+      --radius-sm:14px;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:"Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(66,153,225,.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(217,70,239,.10), transparent 24%),
+        linear-gradient(180deg, #edf2f8 0%, #e8eef6 100%);
+      color:var(--text);
+      line-height:1.6;
+      padding:28px 18px 40px;
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    .page{
+      max-width:var(--max);
+      margin:0 auto;
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(135deg, rgba(18,59,122,.96), rgba(38,128,220,.88) 56%, rgba(217,70,239,.78));
+      color:#fff;
+      border-radius:28px;
+      padding:34px;
+      box-shadow:0 22px 58px rgba(18,59,122,.18);
+      margin-bottom:22px;
+      isolation:isolate;
+    }
+
+    .hero::before,
+    .hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      filter:blur(2px);
+      opacity:.25;
+      z-index:-1;
+    }
+
+    .hero::before{
+      width:340px;
+      height:340px;
+      right:-80px;
+      top:-120px;
+      background:rgba(255,255,255,.20);
+    }
+
+    .hero::after{
+      width:220px;
+      height:220px;
+      left:-60px;
+      bottom:-90px;
+      background:rgba(255,255,255,.14);
+    }
+
+    .top-actions{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+      margin-bottom:26px;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.20);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:1.2px;
+      backdrop-filter:blur(8px);
+    }
+
+    .btn-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      padding:11px 16px;
+      border-radius:14px;
+      font-size:13px;
+      font-weight:800;
+      transition:.18s ease;
+      border:1px solid transparent;
+    }
+
+    .btn-primary{
+      background:#fff;
+      color:var(--primary-dark);
+      box-shadow:0 10px 24px rgba(0,0,0,.12);
+    }
+
+    .btn-primary:hover{transform:translateY(-2px)}
+
+    .btn-ghost{
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      border-color:rgba(255,255,255,.22);
+      backdrop-filter:blur(8px);
+    }
+
+    .btn-ghost:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,.16);
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.3fr .9fr;
+      gap:24px;
+      align-items:end;
+    }
+
+    .hero h1{
+      font-size:40px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.4px;
+      margin-bottom:12px;
+      text-transform:uppercase;
+    }
+
+    .hero-subtitle{
+      display:inline-block;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:1.4px;
+      margin-bottom:14px;
+    }
+
+    .hero p{
+      max-width:720px;
+      font-size:15px;
+      color:rgba(255,255,255,.94);
+    }
+
+    .hero-side{
+      display:grid;
+      gap:10px;
+    }
+
+    .hero-side-card{
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:14px 16px;
+      backdrop-filter:blur(8px);
+    }
+
+    .hero-side-label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1.2px;
+      font-weight:800;
+      opacity:.82;
+      margin-bottom:4px;
+    }
+
+    .hero-side-value{
+      font-size:14px;
+      font-weight:800;
+      line-height:1.4;
+    }
+
+    .notice{
+      margin-top:18px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      padding:12px 14px;
+      border-radius:16px;
+      font-size:13px;
+      color:rgba(255,255,255,.92);
+    }
+
+    .grid{
+      display:grid;
+      gap:18px;
+    }
+
+    .grid-3{grid-template-columns:repeat(3, 1fr)}
+    .grid-2{grid-template-columns:repeat(2, 1fr)}
+
+    .card{
+      background:var(--page);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .section-title{
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      color:var(--primary-dark);
+      font-weight:900;
+      margin-bottom:14px;
+    }
+
+    .card h2,
+    .card h3{
+      color:var(--primary-dark);
+      line-height:1.15;
+    }
+
+    .lead{
+      font-size:15px;
+      color:var(--muted);
+    }
+
+    .muted{color:var(--muted)}
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .pill{
+      padding:7px 11px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      color:var(--primary-dark);
+      background:var(--chip);
+      border:1px solid #cddaf0;
+    }
+
+    .list{
+      padding-left:18px;
+      display:grid;
+      gap:8px;
+    }
+
+    .list li{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .highlight{
+      color:var(--text);
+      font-weight:800;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:18px;
+    }
+
+    .timeline{
+      display:grid;
+      gap:12px;
+      position:relative;
+    }
+
+    .timeline::before{
+      content:"";
+      position:absolute;
+      left:11px;
+      top:3px;
+      bottom:3px;
+      width:2px;
+      background:linear-gradient(180deg, var(--primary), rgba(18,59,122,.12));
+    }
+
+    .timeline-item{
+      position:relative;
+      padding-left:36px;
+    }
+
+    .timeline-item::before{
+      content:"";
+      position:absolute;
+      left:4px;
+      top:6px;
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow:0 0 0 4px #eef4fb;
+    }
+
+    .timeline-item h3{
+      font-size:15px;
+      margin-bottom:4px;
+    }
+
+    .timeline-item p{
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .flow-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .flow-step{
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      position:relative;
+    }
+
+    .flow-step .num{
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, var(--primary), #3d8dff);
+      color:#fff;
+      font-size:13px;
+      font-weight:900;
+      margin-bottom:10px;
+    }
+
+    .flow-step h3{
+      font-size:15px;
+      margin-bottom:6px;
+    }
+
+    .flow-step p{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .tech-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .tech-card{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, #fff 0%, #f9fbfe 100%);
+      border-radius:16px;
+      padding:15px;
+    }
+
+    .tech-card h3{
+      font-size:14px;
+      margin-bottom:8px;
+    }
+
+    .tech-card p{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:16px;
+      margin-top:14px;
+    }
+
+    .shot{
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:0 12px 30px rgba(18,59,122,.10);
+    }
+
+    .shot-media{
+      aspect-ratio:16 / 10;
+      overflow:hidden;
+      background:#f1f5fb;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .shot-media img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform .28s ease;
+    }
+
+    .shot:hover .shot-media img{
+      transform:scale(1.02);
+    }
+
+    .shot-body{
+      padding:14px;
+    }
+
+    .shot-title{
+      font-size:14px;
+      font-weight:900;
+      color:var(--primary-dark);
+      margin-bottom:6px;
+    }
+
+    .shot-text{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .quote-box{
+      background:linear-gradient(180deg, #fbfdff 0%, #f4f8fd 100%);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+    }
+
+    .quote-box p{
+      font-size:15px;
+      color:var(--text);
+      font-weight:700;
+      line-height:1.65;
+    }
+
+    .result-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .result-card{
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:15px;
+    }
+
+    .result-card .value{
+      font-size:24px;
+      font-weight:900;
+      color:var(--primary-dark);
+      margin-bottom:6px;
+    }
+
+    .result-card .label{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .footer{
+      margin-top:22px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      padding:18px;
+    }
+
+    .footer strong{color:var(--primary-dark)}
+
+    @media (max-width: 1100px){
+      .hero-grid,
+      .split,
+      .grid-3,
+      .grid-2,
+      .gallery-grid,
+      .tech-grid,
+      .flow-grid,
+      .result-grid{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px){
+      body{padding:14px}
+      .hero{padding:22px;border-radius:24px}
+      .hero h1{font-size:31px}
+      .hero-grid,
+      .split,
+      .grid-3,
+      .grid-2,
+      .gallery-grid,
+      .tech-grid,
+      .flow-grid,
+      .result-grid{
+        grid-template-columns:1fr;
+      }
+      .top-actions{margin-bottom:18px}
+      .card{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="top-actions">
+        <div class="hero-badge">Projet de fin d’année • BTS CIEL IR</div>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="index.html">Retour au CV</a>
+          <a class="btn btn-ghost" href="#captures">Voir les captures</a>
+        </div>
+      </div>
+
+      <div class="hero-grid">
+        <div>
+          <div class="hero-subtitle">Outil de suivi des licences</div>
+          <h1>Projet Licences</h1>
+          <p>
+            Projet réalisé dans le cadre de ma 2ᵉ année de <strong>BTS CIEL option Informatique et Réseaux</strong>,
+            au sein de l’entreprise <strong>C-ISI à Thann</strong>. L’objectif était de concevoir une application web
+            capable de <strong>centraliser, normaliser et consulter</strong> des informations de licences issues de plusieurs
+            sources, dans une interface unique, claire et sécurisée.
+          </p>
+
+          <div class="notice">
+            <div>🔒</div>
+            <div>
+              Cette présentation est volontairement <strong>anonymisée</strong>. Aucun nom de client, aucune donnée sensible,
+              aucune information commerciale confidentielle n’est affichée. Les captures servent uniquement à illustrer
+              l’interface et le fonctionnement général du projet.
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-side-card">
+            <div class="hero-side-label">Contexte</div>
+            <div class="hero-side-value">Validation de la 2ᵉ année de BTS CIEL IR</div>
+          </div>
+          <div class="hero-side-card">
+            <div class="hero-side-label">Entreprise d’accueil</div>
+            <div class="hero-side-value">C-ISI • Thann</div>
+          </div>
+          <div class="hero-side-card">
+            <div class="hero-side-label">Finalité</div>
+            <div class="hero-side-value">Centraliser les licences et accélérer leur consultation</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid grid-3">
+      <article class="card">
+        <div class="section-title">Contexte</div>
+        <p class="lead">
+          L’entreprise utilise plusieurs portails, exports et outils fournisseurs pour suivre les licences logicielles.
+          Cette dispersion rend la consultation globale plus longue et moins confortable pour les techniciens.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="section-title">Problématique</div>
+        <p class="lead">
+          Il n’existait pas d’outil unique permettant de retrouver rapidement, pour un client donné,
+          les licences utiles dans une vue claire, homogène et exploitable au quotidien.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="section-title">Réponse apportée</div>
+        <p class="lead">
+          J’ai développé une solution web centralisée capable de récupérer les données, les uniformiser,
+          les stocker dans PostgreSQL, puis les afficher dans un portail sécurisé.
+        </p>
+      </article>
+    </section>
+
+    <section class="split" style="margin-top:18px;">
+      <article class="card">
+        <div class="section-title">Objectifs du projet</div>
+        <ul class="list">
+          <li>Réduire le temps de recherche d’informations liées aux licences.</li>
+          <li>Centraliser plusieurs sources dans une <span class="highlight">base de données unique</span>.</li>
+          <li>Normaliser les données pour obtenir une lecture plus cohérente.</li>
+          <li>Proposer une <span class="highlight">interface web sécurisée</span> pour les techniciens et l’administration.</li>
+          <li>Préparer un socle propre pour le suivi, le contrôle et l’anticipation des renouvellements.</li>
+        </ul>
+
+        <div class="pill-row">
+          <span class="pill">Centralisation</span>
+          <span class="pill">Automatisation</span>
+          <span class="pill">Sécurisation</span>
+          <span class="pill">Normalisation</span>
+          <span class="pill">Consultation rapide</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="section-title">Ce que j’ai réalisé</div>
+        <ul class="list">
+          <li>Analyse du besoin et structuration globale du projet.</li>
+          <li>Mise en place d’un environnement virtualisé sur <span class="highlight">Proxmox VE</span>.</li>
+          <li>Création et sécurisation d’une <span class="highlight">VM Ubuntu Server</span>.</li>
+          <li>Conception d’une base <span class="highlight">PostgreSQL</span> avec organisation des données par source.</li>
+          <li>Développement de scripts d’import automatisés via <span class="highlight">API / CSV</span>.</li>
+          <li>Développement du portail web de consultation avec authentification.</li>
+          <li>Tests, documentation, organisation Trello, Gantt et suivi des tâches professionnelles.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:18px;">
+      <div class="section-title">Architecture générale de la solution</div>
+      <div class="flow-grid">
+        <div class="flow-step">
+          <div class="num">1</div>
+          <h3>Collecte</h3>
+          <p>
+            Des scripts récupèrent régulièrement les données depuis plusieurs services externes ou fichiers d’export.
+          </p>
+        </div>
+        <div class="flow-step">
+          <div class="num">2</div>
+          <h3>Normalisation</h3>
+          <p>
+            Les informations sont retraitées pour obtenir une structure homogène, exploitable et cohérente.
+          </p>
+        </div>
+        <div class="flow-step">
+          <div class="num">3</div>
+          <h3>Stockage</h3>
+          <p>
+            Les données sont enregistrées dans PostgreSQL avec mise à jour automatique et logique d’upsert.
+          </p>
+        </div>
+        <div class="flow-step">
+          <div class="num">4</div>
+          <h3>Consultation</h3>
+          <p>
+            Une interface web permet d’accéder aux informations de manière rapide, filtrée et sécurisée.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="split" style="margin-top:18px;">
+      <article class="card">
+        <div class="section-title">Démarche projet</div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <h3>1. Analyse du besoin</h3>
+            <p>Identification du problème métier, définition des objectifs et formalisation des exigences.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>2. Conception de l’infrastructure</h3>
+            <p>Choix de Proxmox, Ubuntu Server, Nginx, Flask et PostgreSQL selon des critères techniques et pédagogiques.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>3. Développement</h3>
+            <p>Création de la base, des scripts de synchronisation, de l’application web et des interfaces d’affichage.</p>
+          </div>
+          <div class="timeline-item">
+            <h3>4. Sécurisation et validation</h3>
+            <p>Configuration SSH, pare-feu, mises à jour, fail2ban, tests fonctionnels et documentation du projet.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="section-title">Compétences mobilisées</div>
+        <div class="pill-row">
+          <span class="pill">Proxmox VE</span>
+          <span class="pill">Ubuntu Server</span>
+          <span class="pill">Nginx</span>
+          <span class="pill">Flask</span>
+          <span class="pill">PostgreSQL</span>
+          <span class="pill">Git / GitHub</span>
+          <span class="pill">DBeaver</span>
+          <span class="pill">Postman</span>
+          <span class="pill">VS Code SSH</span>
+          <span class="pill">UFW</span>
+          <span class="pill">Fail2ban</span>
+          <span class="pill">Cron</span>
+          <span class="pill">API REST</span>
+          <span class="pill">Documentation</span>
+        </div>
+
+        <div class="quote-box" style="margin-top:16px;">
+          <p>
+            Ce projet m’a permis de travailler à la fois sur l’<strong>infrastructure</strong>, la <strong>base de données</strong>,
+            le <strong>développement web</strong>, l’<strong>automatisation</strong>, la <strong>sécurité</strong> et la
+            <strong>gestion de projet</strong>, dans un contexte proche d’un besoin réel d’entreprise.
+          </p>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:18px;">
+      <div class="section-title">Choix techniques principaux</div>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <h3>Proxmox VE</h3>
+          <p>
+            Choisi pour disposer d’un environnement de virtualisation professionnel, souple et gratuit,
+            adapté au déploiement d’une VM serveur dans un cadre BTS.
+          </p>
+        </div>
+        <div class="tech-card">
+          <h3>Ubuntu Server LTS</h3>
+          <p>
+            Retenu pour sa stabilité, sa documentation, sa compatibilité avec la stack web et sa faible consommation de ressources.
+          </p>
+        </div>
+        <div class="tech-card">
+          <h3>Nginx</h3>
+          <p>
+            Utilisé comme reverse proxy pour améliorer la sécurité, la gestion HTTPS et le comportement en production.
+          </p>
+        </div>
+        <div class="tech-card">
+          <h3>Flask</h3>
+          <p>
+            Choisi pour développer une application claire, légère et compréhensible, avec une architecture progressive.
+          </p>
+        </div>
+        <div class="tech-card">
+          <h3>PostgreSQL</h3>
+          <p>
+            Utilisé pour centraliser les données dans une base robuste, adaptée au multi-utilisateur et aux traitements structurés.
+          </p>
+        </div>
+        <div class="tech-card">
+          <h3>Scripts automatisés</h3>
+          <p>
+            Développés pour synchroniser les données à intervalles réguliers, sans action manuelle, avec journalisation des traitements.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="captures" style="margin-top:18px;">
+      <div class="section-title">Captures d’écran du projet</div>
+      <p class="lead">
+        Les visuels ci-dessous illustrent l’interface de démonstration du projet. Les noms, données clients,
+        quantités et informations sensibles ont été retirés, masqués ou remplacés.
+      </p>
+
+      <div class="gallery-grid">
+        <article class="shot">
+          <div class="shot-media">
+            <img src="static/licence/dashboard.png" alt="Capture du tableau de bord du projet licences" />
+          </div>
+          <div class="shot-body">
+            <div class="shot-title">Tableau de bord</div>
+            <div class="shot-text">
+              Vue d’ensemble du portail avec accès rapide aux informations essentielles et aux différents modules de consultation.
+            </div>
+          </div>
+        </article>
+
+        <article class="shot">
+          <div class="shot-media">
+            <img src="static/licence/feuilledefacturation.png" alt="Capture de la feuille de facturation du projet licences" />
+          </div>
+          <div class="shot-body">
+            <div class="shot-title">Feuille de facturation</div>
+            <div class="shot-text">
+              Interface dédiée au suivi et à la lecture structurée de lignes de licences, avec présentation plus homogène des données.
+            </div>
+          </div>
+        </article>
+
+        <article class="shot">
+          <div class="shot-media">
+            <img src="static/licence/portalweb.png" alt="Capture de la page de connexion du portail licences" />
+          </div>
+          <div class="shot-body">
+            <div class="shot-title">Portail web sécurisé</div>
+            <div class="shot-text">
+              Page de connexion du projet, illustrant l’accès contrôlé au portail avant consultation des données centralisées.
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="split" style="margin-top:18px;">
+      <article class="card">
+        <div class="section-title">Apports du projet</div>
+        <ul class="list">
+          <li>Compréhension complète d’un cycle de projet, de l’analyse du besoin jusqu’à la validation.</li>
+          <li>Montée en compétence sur l’hébergement serveur, la sécurité et l’administration Linux.</li>
+          <li>Travail concret sur l’intégration de données et la structuration d’une base PostgreSQL.</li>
+          <li>Développement d’une application utile, lisible et adaptée à un contexte professionnel.</li>
+          <li>Renforcement des méthodes de suivi de projet, de documentation et de présentation technique.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="section-title">Résultats obtenus</div>
+        <div class="result-grid">
+          <div class="result-card">
+            <div class="value">1</div>
+            <div class="label">Portail unique pour consulter les licences</div>
+          </div>
+          <div class="result-card">
+            <div class="value">Multi</div>
+            <div class="label">Sources regroupées dans une même logique de lecture</div>
+          </div>
+          <div class="result-card">
+            <div class="value">24/7</div>
+            <div class="label">Hébergement sur infrastructure dédiée et sauvegardée</div>
+          </div>
+          <div class="result-card">
+            <div class="value">Auto</div>
+            <div class="label">Synchronisation planifiée avec automatisation régulière</div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <strong>Alexis Campos</strong> — Projet de fin d’année BTS CIEL IR<br />
+      Application web de suivi centralisé des licences • Présentation anonymisée
+    </footer>
+  </div>
+</body>
+</html>

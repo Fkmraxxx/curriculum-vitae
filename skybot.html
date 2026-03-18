@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet SKYBOT - Alexis Campos</title>
+  <style>
+    :root{
+      --bg:#0b1120;
+      --bg2:#10192e;
+      --panel:#121c34;
+      --panel-2:#0f172a;
+      --line:rgba(255,255,255,.10);
+      --line-strong:rgba(255,255,255,.18);
+      --text:#eef4ff;
+      --muted:#b8c4db;
+      --blue:#6fb5ff;
+      --cyan:#67e8f9;
+      --violet:#9b8cff;
+      --green:#57d38c;
+      --shadow:0 20px 60px rgba(0,0,0,.34);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    html{scroll-behavior:smooth}
+
+    body{
+      font-family:"Segoe UI",Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(111,181,255,.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(155,140,255,.14), transparent 24%),
+        linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
+      color:var(--text);
+      line-height:1.6;
+      padding:24px;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+    }
+
+    .top-actions{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:46px;
+      padding:0 18px;
+      border-radius:14px;
+      border:1px solid var(--line-strong);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      font-size:14px;
+      font-weight:700;
+      transition:.18s ease;
+      backdrop-filter:blur(10px);
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(111,181,255,.55);
+      box-shadow:0 14px 30px rgba(0,0,0,.22);
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg, rgba(111,181,255,.18), rgba(155,140,255,.18));
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:30px;
+      background:
+        linear-gradient(135deg, rgba(111,181,255,.12), rgba(155,140,255,.08)),
+        rgba(255,255,255,.04);
+      box-shadow:var(--shadow);
+      padding:38px;
+      margin-bottom:22px;
+    }
+
+    .hero::before,
+    .hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      filter:blur(18px);
+      pointer-events:none;
+    }
+
+    .hero::before{
+      width:280px;
+      height:280px;
+      right:-80px;
+      top:-80px;
+      background:rgba(111,181,255,.16);
+    }
+
+    .hero::after{
+      width:220px;
+      height:220px;
+      left:-60px;
+      bottom:-60px;
+      background:rgba(155,140,255,.14);
+    }
+
+    .eyebrow{
+      display:inline-block;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--cyan);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.3fr .7fr;
+      gap:24px;
+      position:relative;
+      z-index:1;
+    }
+
+    h1{
+      font-size:clamp(34px, 5vw, 58px);
+      line-height:.98;
+      font-weight:900;
+      letter-spacing:.4px;
+      margin-bottom:14px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      font-size:15.5px;
+      max-width:760px;
+    }
+
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .badge{
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:12px;
+      font-weight:700;
+      color:#dce7fb;
+    }
+
+    .hero-side{
+      display:grid;
+      gap:12px;
+      align-content:start;
+    }
+
+    .mini-card{
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(12,19,34,.74);
+      padding:16px 18px;
+      backdrop-filter:blur(10px);
+    }
+
+    .mini-label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1.3px;
+      color:var(--cyan);
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .mini-value{
+      font-size:14px;
+      color:var(--text);
+      font-weight:700;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:18px;
+    }
+
+    .card{
+      grid-column:span 12;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:rgba(255,255,255,.04);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-body{
+      padding:24px;
+    }
+
+    .title{
+      font-size:20px;
+      font-weight:900;
+      margin-bottom:12px;
+    }
+
+    .text{
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .cols-6{grid-column:span 6}
+    .cols-4{grid-column:span 4}
+    .cols-8{grid-column:span 8}
+
+    .list{
+      display:grid;
+      gap:10px;
+      padding-left:18px;
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .list li::marker{color:var(--blue)}
+
+    .steps{
+      display:grid;
+      gap:12px;
+    }
+
+    .step{
+      display:grid;
+      grid-template-columns:52px 1fr;
+      gap:14px;
+      align-items:start;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+
+    .step-num{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      color:#fff;
+      background:linear-gradient(135deg, rgba(111,181,255,.95), rgba(155,140,255,.95));
+      box-shadow:0 10px 24px rgba(111,181,255,.18);
+    }
+
+    .step h3{
+      font-size:16px;
+      margin-bottom:4px;
+    }
+
+    .step p{
+      color:var(--muted);
+      font-size:14.5px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .chip{
+      padding:9px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      color:#e7efff;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .two-col-text{
+      columns:2;
+      column-gap:28px;
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .two-col-text p{margin-bottom:14px}
+
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+
+    .ph{
+      min-height:210px;
+      border-radius:20px;
+      border:1px dashed rgba(255,255,255,.18);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
+        rgba(4,9,18,.42);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:18px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .table-like{
+      display:grid;
+      gap:10px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:220px 1fr;
+      gap:14px;
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .row strong{
+      color:var(--text);
+      font-size:14px;
+    }
+
+    .row span{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    footer{
+      margin-top:22px;
+      padding:22px 8px 8px;
+      color:#9fb0cc;
+      text-align:center;
+      font-size:13px;
+    }
+
+    @media (max-width:980px){
+      .hero-grid,
+      .gallery,
+      .row,
+      .two-col-text{
+        display:block;
+        columns:1;
+      }
+
+      .cols-6,.cols-4,.cols-8{grid-column:span 12}
+      .hero-side{margin-top:18px}
+      .gallery{display:grid;grid-template-columns:1fr;}
+      .row{display:grid;grid-template-columns:1fr;}
+    }
+
+    @media (max-width:640px){
+      body{padding:14px}
+      .hero,.card-body{padding:18px}
+      .top-actions{flex-direction:column}
+      .btn{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top-actions">
+      <a class="btn btn-primary" href="index.html">← Retour au CV</a>
+      <a class="btn" href="#synthese">Voir la synthèse du projet</a>
+    </div>
+
+    <section class="hero">
+      <span class="eyebrow">Projet BTS CIEL</span>
+      <div class="hero-grid">
+        <div>
+          <h1>Projet SKYBOT</h1>
+          <p>
+            SKYBOT est un projet de robot mobile interactif réalisé dans le cadre du BTS CIEL. L’objectif est de concevoir
+            un robot démonstrateur capable de valoriser les compétences de la section lors des portes ouvertes, tout en
+            intégrant des technologies abordées en informatique et réseaux, électronique, systèmes embarqués et communication.
+          </p>
+          <div class="badges">
+            <span class="badge">Robot mobile interactif</span>
+            <span class="badge">Projet collectif</span>
+            <span class="badge">Systèmes embarqués</span>
+            <span class="badge">Raspberry Pi / ESP32</span>
+            <span class="badge">MQTT • HTTP • WebSocket</span>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="mini-card">
+            <div class="mini-label">Cadre</div>
+            <div class="mini-value">BTS CIEL — 2025-2026</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-label">Objectif</div>
+            <div class="mini-value">Créer un robot d’accueil et de démonstration, évolutif et pédagogique</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-label">Base matérielle</div>
+            <div class="mini-value">Châssis de gyropode Elektor Wheelie avec structure aluminium et habillage plexiglas</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" id="synthese">
+      <article class="card cols-8">
+        <div class="card-body">
+          <div class="title">Présentation du projet</div>
+          <div class="two-col-text">
+            <p>
+              Le projet SKYBOT consiste à imaginer et réaliser un robot mobile capable d’interagir avec son environnement.
+              Il doit à la fois représenter le savoir-faire de la section BTS CIEL lors des événements de présentation,
+              mais aussi démontrer l’intégration concrète de plusieurs briques technologiques étudiées en formation.
+            </p>
+            <p>
+              Le robot doit pouvoir accueillir des visiteurs, proposer une interaction simple, se déplacer et, à terme,
+              assurer certaines tâches en autonomie. Le projet s’inscrit dans une logique réaliste de prototypage, avec
+              une attention portée au coût, à la sécurité, à la robustesse et à l’évolutivité de la solution.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-4">
+        <div class="card-body">
+          <div class="title">Problématique</div>
+          <ul class="list">
+            <li>Concevoir un robot démonstrateur visible et attractif</li>
+            <li>Intégrer les technologies des deux options du BTS CIEL</li>
+            <li>Réaliser une architecture modulaire et évolutive</li>
+            <li>Travailler avec un budget limité</li>
+            <li>Respecter les contraintes de sécurité du public</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card cols-6">
+        <div class="card-body">
+          <div class="title">Besoins fonctionnels</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">01</div>
+              <div>
+                <h3>Accueil et interaction</h3>
+                <p>Le robot doit pouvoir attirer l’attention, accueillir les visiteurs et proposer des fonctions interactives simples.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">02</div>
+              <div>
+                <h3>Déplacement mobile</h3>
+                <p>Le système doit gérer la motorisation et le déplacement du robot sur sa base mobile.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">03</div>
+              <div>
+                <h3>Communication entre modules</h3>
+                <p>Les différentes cartes et sous-systèmes doivent échanger des données de manière fiable.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">04</div>
+              <div>
+                <h3>Évolutivité</h3>
+                <p>L’architecture doit permettre d’ajouter de nouvelles fonctions sans repartir de zéro.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-6">
+        <div class="card-body">
+          <div class="title">Partie mécanique</div>
+          <ul class="list">
+            <li>Réutilisation d’un gyropode Elektor Wheelie comme base de châssis</li>
+            <li>Structure réalisée en profilés aluminium</li>
+            <li>Habillage en plexiglas pour la finition et l’intégration</li>
+            <li>Recherche d’un bon compromis entre encombrement, stabilité et accessibilité</li>
+            <li>Approche orientée prototypage avec réemploi de matériel disponible</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card cols-12">
+        <div class="card-body">
+          <div class="title">Architecture technique du système</div>
+          <div class="text" style="margin-bottom:14px;">
+            Le dossier technique présente une architecture distribuée mêlant système monocarte, microcontrôleurs,
+            capteurs, actionneurs et interfaces utilisateurs. L’idée est de répartir les fonctions selon les besoins de calcul,
+            de réactivité et d’interfaçage matériel.
+          </div>
+          <div class="chips">
+            <span class="chip">Raspberry Pi</span>
+            <span class="chip">ESP32</span>
+            <span class="chip">ESP32-CAM</span>
+            <span class="chip">Arduino UNO</span>
+            <span class="chip">Écran tactile</span>
+            <span class="chip">Servomoteur</span>
+            <span class="chip">Ultrasons</span>
+            <span class="chip">RFID</span>
+            <span class="chip">GPS RS232</span>
+            <span class="chip">NRF24L01</span>
+            <span class="chip">Anneaux de LED</span>
+            <span class="chip">Capteurs de température</span>
+            <span class="chip">Carte de puissance</span>
+            <span class="chip">Capteur à effet Hall</span>
+            <span class="chip">Smartphone Android</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-6">
+        <div class="card-body">
+          <div class="title">Choix technologiques</div>
+          <div class="table-like">
+            <div class="row">
+              <strong>Raspberry Pi</strong>
+              <span>Adapté aux fonctions de haut niveau, à l’exécution d’un système Linux et à l’intégration de logiciels plus complets.</span>
+            </div>
+            <div class="row">
+              <strong>ESP32 / Arduino</strong>
+              <span>Très réactifs pour les entrées/sorties, la gestion temps réel et le pilotage direct de modules matériels.</span>
+            </div>
+            <div class="row">
+              <strong>Approche hybride</strong>
+              <span>Le projet combine un calculateur principal et plusieurs cartes dédiées pour mieux répartir les rôles.</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-6">
+        <div class="card-body">
+          <div class="title">Protocoles et communication</div>
+          <ul class="list">
+            <li>HTTP pour certaines interfaces ou échanges applicatifs</li>
+            <li>MQTT pour la communication légère entre modules</li>
+            <li>WebSocket pour des échanges temps réel</li>
+            <li>SPI, PWM, GPIO et OneWire pour les interconnexions locales</li>
+            <li>RS232, Wi-Fi et radio NRF24L01 selon les besoins</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card cols-12">
+        <div class="card-body">
+          <div class="title">Réalisation et démarche de projet</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">A</div>
+              <div>
+                <h3>Analyse fonctionnelle</h3>
+                <p>Formalisation du besoin avec diagrammes de cas d’utilisation et diagrammes d’exigences sous MagicDraw.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">B</div>
+              <div>
+                <h3>Conception structurelle</h3>
+                <p>Travail sur le diagramme de déploiement, le diagramme de définition de blocs et l’organisation des sous-systèmes.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">C</div>
+              <div>
+                <h3>Développement et mise au point</h3>
+                <p>Utilisation de robots de développement et de maquettes intermédiaires pour tester les fonctions avant intégration.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">D</div>
+              <div>
+                <h3>Tests, recettes et améliorations</h3>
+                <p>Vérification des performances attendues, rédaction d’un cahier de recettes, corrections, dépannages et propositions d’évolution.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-6">
+        <div class="card-body">
+          <div class="title">Matériel de développement utilisé</div>
+          <ul class="list">
+            <li>SunFounder Raspberry Pi Smart Video Car Kit V1.0</li>
+            <li>Adeept 2-Wheel Self-Balancing</li>
+            <li>Châssis Dagu DG012-SV</li>
+            <li>Plateformes intermédiaires pour prototyper les fonctions avant intégration au SKYBOT</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card cols-6">
+        <div class="card-body">
+          <div class="title">Compétences mobilisées</div>
+          <ul class="list">
+            <li>Conception de systèmes embarqués</li>
+            <li>Intégration matériel / logiciel</li>
+            <li>Lecture et réalisation de schémas</li>
+            <li>Programmation et tests</li>
+            <li>Communication entre cartes et périphériques</li>
+            <li>Méthodes de projet et documentation technique</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card cols-12">
+        <div class="card-body">
+          <div class="title">Bilan du projet</div>
+          <div class="text">
+            SKYBOT est un projet pédagogique complet, car il combine mécanique, électronique, informatique,
+            systèmes embarqués, communication entre modules et gestion de projet. Il illustre une démarche de conception
+            réaliste, depuis l’analyse du besoin jusqu’aux tests et à la validation. Ce type de projet permet de développer
+            des compétences transversales proches de celles mobilisées dans un contexte professionnel.
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      Projet SKYBOT — Alexis Campos — BTS CIEL
+    </footer>
+  </div>
+</body>
+</html>
