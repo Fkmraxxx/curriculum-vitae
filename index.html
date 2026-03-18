@@ -1326,49 +1326,49 @@
           </div>
         </div>
 
-        <div class="section">
-          <h2>Projets</h2>
-          <article class="card">
-            <ul class="job-list" style="margin-top:0;">
-              <li>
-                <a class="project-link" href="projet-licences.html">
-                  <strong>Projet Licences</strong>
-                </a>
-                : développement d’un outil de suivi et de centralisation de licences.
-              </li>
-              <li>
-                <a class="project-link" href="camping-mqtt.html">
-                  <strong>Camping MQTT</strong>
-                </a>
-                : mise en place d’échanges et supervision via MQTT.
-              </li>
-              <li>
-                <a class="project-link" href="projet-can.html">
-                  <strong>Projet CAN</strong>
-                </a>
-                : travail autour de la communication sur bus CAN.
-              </li>
-              <li>
-                <a class="project-link" href="skybot.html">
-                  <strong>Skybot</strong>
-                </a>
-                : projet technique autour de l’automatisation / robotique.
-              </li>
-              <li>
-                <a class="project-link" href="ir-game.html">
-                  <strong>IR Game</strong>
-                </a>
-                : projet réalisé dans le cadre de la formation.
-              </li>
-              <li>
-                <a class="project-link" href="projet-hyper-v.html">
-                  <strong>Projet Hyper-V</strong>
-                </a>
-                : mise en place et utilisation d’un environnement virtualisé sous Hyper-V.
-              </li>
-            </ul>
-          </article>
-        </div>
+       <div class="section">
+  <h2>Projets</h2>
+  <article class="card">
+    <ul class="job-list" style="margin-top:0;">
+      <li>
+        <a class="project-link" href="projet-licences.html" target="_blank" rel="noopener noreferrer">
+          <strong>Projet Licences</strong>
+        </a>
+        : développement d’un outil de suivi et de centralisation de licences.
+      </li>
+      <li>
+        <a class="project-link" href="camping-mqtt.html" target="_blank" rel="noopener noreferrer">
+          <strong>Camping MQTT</strong>
+        </a>
+        : mise en place d’échanges et supervision via MQTT.
+      </li>
+      <li>
+        <a class="project-link" href="projet-can.html" target="_blank" rel="noopener noreferrer">
+          <strong>Projet CAN</strong>
+        </a>
+        : travail autour de la communication sur bus CAN.
+      </li>
+      <li>
+        <a class="project-link" href="skybot.html" target="_blank" rel="noopener noreferrer">
+          <strong>Skybot</strong>
+        </a>
+        : projet technique autour de l’automatisation / robotique.
+      </li>
+      <li>
+        <a class="project-link" href="ir-game.html" target="_blank" rel="noopener noreferrer">
+          <strong>IR Game</strong>
+        </a>
+        : projet réalisé dans le cadre de la formation.
+      </li>
+      <li>
+        <a class="project-link" href="projet-hyper-v.html" target="_blank" rel="noopener noreferrer">
+          <strong>Projet Hyper-V</strong>
+        </a>
+        : mise en place et utilisation d’un environnement virtualisé sous Hyper-V.
+      </li>
+    </ul>
+  </article>
+</div>
 
         <div class="section">
           <h2>Centres d’intérêt</h2>
@@ -1492,30 +1492,44 @@
         item.node.nodeValue = '';
       });
 
-      function typeNode(node, text, speed = 8) {
-        return new Promise((resolve) => {
-          let index = 0;
+     const TOTAL_TYPING_DURATION = 3200; // 3.2 secondes
 
-          function write() {
-            node.nodeValue = text.slice(0, index);
-            index++;
+function typeAllText() {
+  return new Promise((resolve) => {
+    const totalChars = typedNodes.reduce((sum, item) => sum + item.text.length, 0);
 
-            if (index <= text.length) {
-              setTimeout(write, speed);
-            } else {
-              resolve();
-            }
-          }
+    if (totalChars === 0) {
+      resolve();
+      return;
+    }
 
-          write();
-        });
+    const start = performance.now();
+
+    function render(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / TOTAL_TYPING_DURATION, 1);
+      const visibleChars = Math.floor(totalChars * progress);
+
+      let remaining = visibleChars;
+
+      typedNodes.forEach((item) => {
+        const len = item.text.length;
+        const charsForNode = Math.max(0, Math.min(len, remaining));
+        item.node.nodeValue = item.text.slice(0, charsForNode);
+        remaining -= charsForNode;
+      });
+
+      if (progress < 1) {
+        requestAnimationFrame(render);
+      } else {
+        restoreFullText();
+        resolve();
       }
+    }
 
-      async function typeAllText() {
-        for (const item of typedNodes) {
-          await typeNode(item.node, item.text, 8);
-        }
-      }
+    requestAnimationFrame(render);
+  });
+}
 
       function restoreFullText() {
         typedNodes.forEach((item) => {
