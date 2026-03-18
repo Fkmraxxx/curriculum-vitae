@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV - Alexis Campos</title>
+
+  <style>
+    :root{
+      --bg:#e9eef5;
+      --page:#ffffff;
+      --primary:#123b7a;
+      --primary-dark:#0d2e60;
+      --text:#182231;
+      --muted:#5e6b7c;
+      --line:#d8e0ea;
+      --soft:#f5f8fc;
+      --chip:#edf3ff;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    html, body{
+      width:100%;
+      min-height:100%;
+    }
+
+    body{
+      font-family:"Segoe UI", Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      padding:16px;
+      overflow-x:hidden;
+    }
+
+    a{
+      color:inherit;
+    }
+
+    /* =========================
+       INTRO
+    ========================= */
+    #introScreen{
+      position:fixed;
+      inset:0;
+      background:linear-gradient(180deg, #edf2f8 0%, #e8edf5 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:18px;
+      z-index:9999;
+      transition:opacity .45s ease, visibility .45s ease;
+    }
+
+    #introScreen.hidden{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+
+    #introPhotoBtn{
+      width:230px;
+      height:230px;
+      border:none;
+      border-radius:50%;
+      overflow:hidden;
+      cursor:pointer;
+      background:#fff;
+      box-shadow:0 22px 60px rgba(18,59,122,.18);
+      border:5px solid #fff;
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+
+    #introPhotoBtn:hover{
+      transform:scale(1.03);
+      box-shadow:0 28px 70px rgba(18,59,122,.24);
+    }
+
+    #introPhotoBtn img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    #introText{
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+      color:var(--primary-dark);
+      opacity:.85;
+    }
+
+    /* =========================
+       CV
+    ========================= */
+    .cv{
+      width:210mm;
+      min-height:297mm;
+      margin:0 auto;
+      background:var(--page);
+      border-radius:18px;
+      box-shadow:0 14px 40px rgba(18,59,122,.10);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      transition:opacity .55s ease, transform .55s ease, filter .55s ease;
+      transform-origin:center center;
+      position:relative;
+      z-index:2;
+    }
+
+    .cv.cv-hidden{
+      opacity:0;
+      transform:translateY(24px) scale(.985);
+      pointer-events:none;
+    }
+
+    .cv.soft-hide{
+      opacity:0 !important;
+      pointer-events:none !important;
+    }
+
+    .cv.invisible-only{
+      visibility:hidden !important;
+      pointer-events:none !important;
+    }
+
+    .topbar{
+      height:8px;
+      background:linear-gradient(90deg, var(--primary-dark), var(--primary));
+      flex:0 0 auto;
+    }
+
+    .header{
+      display:grid;
+      grid-template-columns:110px 1fr;
+      gap:14px;
+      padding:14px 18px 10px;
+      border-bottom:1px solid var(--line);
+      align-items:center;
+      flex:0 0 auto;
+    }
+
+    .photo{
+      width:100%;
+      aspect-ratio:1/1;
+      border-radius:18px;
+      overflow:hidden;
+      border:3px solid var(--primary);
+      background:#dfe6f1;
+    }
+
+    .photo a{
+      display:block;
+      width:100%;
+      height:100%;
+    }
+
+    .photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .hero h1{
+      font-size:34px;
+      line-height:.92;
+      font-weight:900;
+      letter-spacing:.5px;
+      color:var(--primary-dark);
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .subtitle{
+      display:inline-block;
+      background:var(--primary);
+      color:#fff;
+      padding:6px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:1.6px;
+      margin-bottom:10px;
+    }
+
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-bottom:10px;
+    }
+
+    .meta span,
+    .meta-link,
+    .tooltip-pill > span,
+    .tooltip-pill > a{
+      display:inline-block;
+      font-size:11px;
+      color:var(--muted);
+      background:var(--soft);
+      border:1px solid var(--line);
+      padding:5px 10px;
+      border-radius:999px;
+      line-height:1;
+      text-decoration:none;
+      transition:.18s ease;
+    }
+
+    .meta-link:hover,
+    .tooltip-pill > a:hover{
+      color:var(--primary-dark);
+      border-color:#bfd0ea;
+      background:#f7faff;
+    }
+
+    .intro{
+      font-size:12.6px;
+      line-height:1.55;
+      color:var(--muted);
+      max-width:100%;
+    }
+
+    .content{
+      display:grid;
+      grid-template-columns:32% 68%;
+      flex:1 1 auto;
+    }
+
+    .left{
+      background:var(--soft);
+      border-right:1px solid var(--line);
+      padding:12px 14px 10px;
+    }
+
+    .right{
+      padding:12px 16px 10px;
+    }
+
+    .section{
+      margin-bottom:10px;
+    }
+
+    .section:last-child{
+      margin-bottom:0;
+    }
+
+    .section h2{
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      color:var(--primary-dark);
+      margin-bottom:9px;
+      font-weight:900;
+    }
+
+    .small-title{
+      font-size:12px;
+      font-weight:800;
+      color:var(--text);
+      margin-bottom:6px;
+    }
+
+    .contact{
+      display:grid;
+      gap:8px;
+    }
+
+    .contact-item{
+      font-size:12.2px;
+      line-height:1.35;
+    }
+
+    .contact-label{
+      display:block;
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:1px;
+      color:var(--muted);
+      text-transform:uppercase;
+      margin-bottom:2px;
+    }
+
+    .contact-link,
+    .company-link{
+      color:var(--text);
+      text-decoration:none;
+      transition:.18s ease;
+    }
+
+    .contact-link:hover,
+    .company-link:hover{
+      color:var(--primary-dark);
+      text-decoration:underline;
+    }
+
+    .skill-block{
+      margin-bottom:10px;
+    }
+
+    .skill-block:last-child{
+      margin-bottom:0;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:5px;
+    }
+
+    .chip{
+      background:var(--chip);
+      color:var(--primary-dark);
+      border:1px solid #cddaf0;
+      border-radius:999px;
+      padding:3px 7px;
+      font-size:9.8px;
+      font-weight:700;
+      line-height:1.15;
+    }
+
+    .list{
+      padding-left:15px;
+    }
+
+    .list li{
+      font-size:12px;
+      line-height:1.4;
+      margin-bottom:4px;
+    }
+
+    .list li:last-child{
+      margin-bottom:0;
+    }
+
+    .language-block{
+      margin-bottom:10px;
+    }
+
+    .language-block:last-child{
+      margin-bottom:0;
+    }
+
+    .language-name{
+      font-size:12px;
+      font-weight:800;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+
+    .language-lines{
+      padding-left:15px;
+      color:var(--muted);
+    }
+
+    .language-lines li{
+      font-size:12px;
+      line-height:1.45;
+      margin-bottom:3px;
+    }
+
+    .card,
+    .profile-box,
+    .edu-item{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+    }
+
+    .card{
+      padding:12px 14px;
+    }
+
+    .profile-box{
+      padding:11px 13px;
+      font-size:12px;
+      line-height:1.5;
+      color:var(--muted);
+    }
+
+    .job-top{
+      margin-bottom:8px;
+    }
+
+    .job-date{
+      font-size:10.5px;
+      text-transform:uppercase;
+      letter-spacing:1.2px;
+      color:var(--primary);
+      font-weight:900;
+      margin-bottom:3px;
+    }
+
+    .job-title{
+      font-size:14px;
+      font-weight:900;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+
+    .job-sub{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
+    .job-list{
+      padding-left:16px;
+      margin-top:8px;
+    }
+
+    .job-list li{
+      font-size:12px;
+      line-height:1.45;
+      margin-bottom:5px;
+    }
+
+    .job-list li:last-child{
+      margin-bottom:0;
+    }
+
+    .edu{
+      display:grid;
+      gap:8px;
+    }
+
+    .edu-item{
+      padding:10px 12px;
+    }
+
+    .edu-year{
+      font-size:10.5px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:var(--primary);
+      font-weight:900;
+      margin-bottom:4px;
+    }
+
+    .edu-title{
+      font-size:13px;
+      font-weight:900;
+      margin-bottom:3px;
+    }
+
+    .edu-text{
+      font-size:11.8px;
+      line-height:1.45;
+      color:var(--muted);
+    }
+
+    /* =========================
+       TOOLTIPS
+    ========================= */
+    .tooltip-pill{
+      position:relative;
+      display:inline-block;
+    }
+
+    .tooltip-pill .tooltip-box,
+    .tooltip-pill .tooltip-map{
+      position:absolute;
+      top:calc(100% + 10px);
+      left:50%;
+      transform:translateX(-50%) translateY(8px);
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      box-shadow:0 14px 32px rgba(18,59,122,.14);
+      opacity:0;
+      visibility:hidden;
+      transition:.18s ease;
+      z-index:50;
+    }
+
+    .tooltip-pill .tooltip-box::before,
+    .tooltip-pill .tooltip-map::before{
+      content:"";
+      position:absolute;
+      top:-6px;
+      left:50%;
+      transform:translateX(-50%) rotate(45deg);
+      width:12px;
+      height:12px;
+      background:#fff;
+      border-top:1px solid var(--line);
+      border-left:1px solid var(--line);
+    }
+
+    .tooltip-box{
+      min-width:170px;
+      padding:10px 12px;
+      font-size:11px;
+      line-height:1.45;
+      color:var(--text);
+      white-space:nowrap;
+    }
+
+    .tooltip-map{
+      width:260px;
+      padding:10px;
+    }
+
+    .tooltip-map-title{
+      font-size:11px;
+      font-weight:800;
+      color:var(--primary-dark);
+      margin-bottom:8px;
+    }
+
+    .tooltip-map iframe{
+      width:100%;
+      height:160px;
+      border:0;
+      border-radius:10px;
+      display:block;
+    }
+
+    .tooltip-pill:hover .tooltip-box,
+    .tooltip-pill:hover .tooltip-map{
+      opacity:1;
+      visibility:visible;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    /* =========================
+       ACTIONS
+    ========================= */
+    .action-panel{
+      position:fixed;
+      top:50%;
+      right:26px;
+      transform:translateY(-50%) translateX(20px);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      z-index:300;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .35s ease, transform .35s ease;
+    }
+
+    .action-panel.is-visible{
+      opacity:1;
+      pointer-events:auto;
+      transform:translateY(-50%) translateX(0);
+    }
+
+    .action-btn{
+      min-width:170px;
+      border:none;
+      border-radius:16px;
+      padding:14px 18px;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.3px;
+      cursor:pointer;
+      box-shadow:0 12px 28px rgba(18,59,122,.14);
+      transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+
+    .action-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 34px rgba(18,59,122,.20);
+    }
+
+    .action-btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .action-like{
+      background:linear-gradient(135deg, #1f8f56, #2dbf74);
+      color:#fff;
+    }
+
+    .action-dislike{
+      background:linear-gradient(135deg, #111827, #2a3142);
+      color:#fff;
+    }
+
+    /* =========================
+       FX LAYERS
+    ========================= */
+    .fx-layer{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:220;
+    }
+
+    #fragmentLayer{
+      position:fixed;
+      inset:0;
+      z-index:230;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .cv-fragment{
+      position:fixed;
+      overflow:hidden;
+      will-change:transform, opacity, filter;
+      backface-visibility:hidden;
+      transform:translate3d(0,0,0);
+      transition:
+        transform 1.5s cubic-bezier(.14,.88,.2,1),
+        opacity 1.5s ease,
+        filter 1.5s ease;
+      box-shadow:0 3px 10px rgba(0,0,0,.10);
+    }
+
+    .cv-fragment canvas{
+      display:block;
+      width:100%;
+      height:100%;
+    }
+
+    /* =========================
+       ENVELOPPE CENTRÉE
+    ========================= */
+    .envelope-scene{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:center;
+      z-index:240;
+      pointer-events:none;
+      opacity:0;
+      transition:opacity .35s ease;
+    }
+
+    .envelope-scene.show{
+      opacity:1;
+    }
+
+    .envelope-wrap{
+      position:relative;
+      width:420px;
+      height:320px;
+      transform:scale(.82);
+      opacity:0;
+      transition:opacity .35s ease, transform .35s ease;
+      pointer-events:none;
+    }
+
+    .envelope-wrap.show{
+      opacity:1;
+      transform:scale(1);
+      pointer-events:auto;
+    }
+
+    .envelope-note{
+      text-align:center;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      color:var(--primary-dark);
+      margin-bottom:12px;
+      opacity:.92;
+    }
+
+    .envelope{
+      position:relative;
+      width:100%;
+      height:265px;
+      perspective:1200px;
+    }
+
+    .envelope-back{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:195px;
+      background:linear-gradient(180deg, #f7fbff 0%, #deebfb 100%);
+      border:1px solid #cfddef;
+      border-radius:22px;
+      box-shadow:0 18px 44px rgba(18,59,122,.14);
+      z-index:1;
+    }
+
+    .envelope-paper{
+      position:absolute;
+      left:50%;
+      top:18px;
+      transform:translateX(-50%) translateY(-8px);
+      width:78%;
+      height:168px;
+      background:#fff;
+      border-radius:14px 14px 4px 4px;
+      border:1px solid #dde7f4;
+      box-shadow:0 12px 30px rgba(18,59,122,.12);
+      padding:18px 20px 14px;
+      z-index:2;
+      transition:transform .55s ease, height .55s ease, opacity .55s ease;
+      pointer-events:auto;
+    }
+
+    .envelope-wrap.sealed .envelope-paper{
+      transform:translateX(-50%) translateY(24px);
+      height:130px;
+    }
+
+    .paper-name{
+      font-size:15px;
+      font-weight:900;
+      color:var(--primary-dark);
+      margin-bottom:4px;
+    }
+
+    .paper-role{
+      font-size:11px;
+      color:var(--muted);
+      margin-bottom:10px;
+    }
+
+    .paper-sep{
+      width:100%;
+      height:1px;
+      background:var(--line);
+      margin-bottom:10px;
+    }
+
+    .paper-contact{
+      display:grid;
+      gap:8px;
+      opacity:0;
+      transform:translateY(8px);
+      transition:opacity .35s ease, transform .35s ease;
+    }
+
+    .envelope-wrap.details-visible .paper-contact{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .paper-contact a{
+      text-decoration:none;
+      color:var(--text);
+      font-size:12px;
+      font-weight:700;
+      background:#f6f9fe;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:9px 10px;
+      pointer-events:auto;
+      transition:.18s ease;
+    }
+
+    .paper-contact a:hover{
+      background:#eef5ff;
+      border-color:#bfd0ea;
+      color:var(--primary-dark);
+    }
+
+    .envelope-front{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:195px;
+      background:linear-gradient(180deg, #edf5ff 0%, #d7e6fa 100%);
+      clip-path:polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%);
+      border-bottom-left-radius:22px;
+      border-bottom-right-radius:22px;
+      z-index:4;
+    }
+
+    .envelope-flap{
+      position:absolute;
+      left:0;
+      right:0;
+      top:60px;
+      height:128px;
+      background:linear-gradient(180deg, #f8fbff 0%, #dce9fb 100%);
+      clip-path:polygon(0 0, 50% 82%, 100% 0, 100% 100%, 0 100%);
+      transform-origin:top center;
+      transform:rotateX(180deg);
+      transition:transform .7s cubic-bezier(.2,.8,.2,1);
+      z-index:5;
+      filter:drop-shadow(0 8px 14px rgba(18,59,122,.08));
+    }
+
+    .envelope-wrap.sealed .envelope-flap{
+      transform:rotateX(0deg);
+    }
+
+    .front-contact-card{
+      position:absolute;
+      left:50%;
+      bottom:22px;
+      transform:translateX(-50%) translateY(8px);
+      width:72%;
+      background:rgba(255,255,255,.84);
+      backdrop-filter:blur(6px);
+      border:1px solid rgba(18,59,122,.10);
+      border-radius:16px;
+      padding:10px 12px;
+      z-index:6;
+      opacity:0;
+      transition:opacity .35s ease, transform .35s ease;
+      pointer-events:auto;
+    }
+
+    .envelope-wrap.sealed.details-visible .front-contact-card{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .front-contact-card .front-title{
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:1px;
+      color:var(--primary);
+      text-transform:uppercase;
+      margin-bottom:8px;
+      text-align:center;
+    }
+
+    .front-links{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+
+    .front-links a{
+      display:block;
+      text-align:center;
+      text-decoration:none;
+      color:var(--primary-dark);
+      font-size:12px;
+      font-weight:800;
+      background:#fff;
+      border:1px solid #d7e2f0;
+      border-radius:10px;
+      padding:8px 10px;
+      transition:.18s ease;
+      pointer-events:auto;
+    }
+
+    .front-links a:hover{
+      background:#f7fbff;
+      border-color:#bfd0ea;
+    }
+
+    /* =========================
+       TROU NOIR AU MILIEU
+    ========================= */
+    .blackhole-scene{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+      z-index:235;
+      opacity:0;
+      transition:opacity .35s ease;
+    }
+
+    .blackhole-scene.show{
+      opacity:1;
+    }
+
+    .blackhole-wrap{
+      position:relative;
+      width:360px;
+      height:360px;
+      display:grid;
+      place-items:center;
+      transform:scale(.65);
+      transition:transform .35s ease;
+    }
+
+    .blackhole-scene.show .blackhole-wrap{
+      transform:scale(1);
+    }
+
+    .blackhole-glow{
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at center,
+          rgba(120,185,255,0) 0 26%,
+          rgba(72,26,122,.16) 27% 42%,
+          rgba(100,50,180,.18) 43% 58%,
+          rgba(112,185,255,.18) 59% 68%,
+          rgba(112,185,255,0) 69% 100%);
+      filter:blur(18px);
+      animation:holeBreath 2.3s ease-in-out infinite;
+    }
+
+    .blackhole{
+      width:240px;
+      height:240px;
+      border-radius:50%;
+      position:relative;
+      background:
+        radial-gradient(circle at center,
+          #010103 0 20%,
+          #050711 21% 34%,
+          #140b2f 35% 44%,
+          #2d1760 45% 56%,
+          #4d2e87 57% 65%,
+          #8bc5ff 66% 74%,
+          rgba(139,197,255,0) 75% 100%);
+      box-shadow:
+        0 0 40px rgba(70,110,255,.22),
+        0 0 90px rgba(98,34,190,.24),
+        inset 0 0 38px rgba(0,0,0,.96);
+      animation:blackholeSpin 1.4s linear infinite, blackholePulse 1.8s ease-in-out infinite;
+    }
+
+    .blackhole::before{
+      content:"";
+      position:absolute;
+      inset:24px;
+      border-radius:50%;
+      border:2px solid rgba(140,190,255,.26);
+      border-top-color:rgba(255,255,255,.9);
+      border-left-color:rgba(126,82,225,.7);
+      filter:blur(.2px);
+      animation:blackholeSpin 1s linear infinite reverse;
+    }
+
+    .blackhole::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:90px;
+      height:90px;
+      transform:translate(-50%, -50%);
+      border-radius:50%;
+      background:radial-gradient(circle, #000 0 60%, rgba(0,0,0,0) 100%);
+      box-shadow:0 0 40px rgba(0,0,0,.95);
+    }
+
+    .accretion-ring{
+      position:absolute;
+      width:290px;
+      height:140px;
+      border-radius:50%;
+      border-top:10px solid rgba(145,209,255,.95);
+      border-bottom:12px solid rgba(76,38,163,.55);
+      border-left:10px solid transparent;
+      border-right:10px solid transparent;
+      transform:rotate(18deg);
+      filter:blur(1px) drop-shadow(0 0 24px rgba(124,195,255,.40));
+      animation:ringSpin 1.2s linear infinite;
+    }
+
+    .accretion-ring.r2{
+      width:315px;
+      height:154px;
+      transform:rotate(-22deg);
+      opacity:.7;
+      animation-duration:1.8s;
+      filter:blur(1.4px) drop-shadow(0 0 18px rgba(153,97,255,.25));
+    }
+
+    @keyframes blackholeSpin{
+      from{ transform:rotate(0deg); }
+      to{ transform:rotate(360deg); }
+    }
+
+    @keyframes ringSpin{
+      from{ transform:rotate(0deg) rotateX(68deg); }
+      to{ transform:rotate(360deg) rotateX(68deg); }
+    }
+
+    @keyframes blackholePulse{
+      0%,100%{ filter:brightness(1) saturate(1); }
+      50%{ filter:brightness(1.24) saturate(1.2); }
+    }
+
+    @keyframes holeBreath{
+      0%,100%{ transform:scale(1); opacity:.8; }
+      50%{ transform:scale(1.08); opacity:1; }
+    }
+
+    /* =========================
+       ANIMS CV
+    ========================= */
+    .cv.is-folding-center{
+      animation:cvFoldToCenter 2.05s cubic-bezier(.2,.8,.2,1) forwards;
+      will-change:transform, opacity, filter;
+    }
+
+    @keyframes cvFoldToCenter{
+      0%{
+        transform:translate(0,0) scale(1) rotate(0deg);
+        opacity:1;
+        filter:blur(0);
+      }
+      18%{
+        transform:translate(0,0) scaleY(.82) scaleX(1);
+      }
+      35%{
+        transform:translate(0,0) scaleY(.82) scaleX(.56);
+      }
+      65%{
+        transform:
+          translate(calc(var(--foldX) * .72), calc(var(--foldY) * .72))
+          scale(.26)
+          rotate(7deg);
+        opacity:1;
+      }
+      100%{
+        transform:
+          translate(var(--foldX), var(--foldY))
+          scale(.04)
+          rotate(11deg);
+        opacity:0;
+        filter:blur(2px);
+      }
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+    @media (max-width:1450px){
+      .action-panel{
+        right:12px;
+      }
+    }
+
+    /* =========================
+       PRINT
+    ========================= */
+    @media print{
+      body{
+        background:#fff;
+        padding:0;
+      }
+
+      .cv{
+        width:210mm;
+        min-height:297mm;
+        border-radius:0;
+        box-shadow:none;
+        margin:0;
+        transform:none !important;
+        opacity:1 !important;
+        filter:none !important;
+        visibility:visible !important;
+      }
+
+      .action-panel,
+      .fx-layer,
+      .blackhole-scene,
+      .envelope-scene,
+      #fragmentLayer,
+      #introScreen{
+        display:none !important;
+      }
+    }
+
+    @page{
+      size:A4;
+      margin:0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="introScreen">
+    <button id="introPhotoBtn" type="button" aria-label="Ouvrir le CV">
+      <img src="photo.png" alt="Photo de Alexis Campos" />
+    </button>
+    <div id="introText">Clique sur la photo</div>
+  </div>
+
+  <main class="cv cv-hidden" id="cvContent">
+    <div class="topbar"></div>
+
+    <section class="header">
+      <div class="photo">
+        <a href="https://www.linkedin.com/in/alexis-campos-533ba7271/" target="_blank" rel="noopener noreferrer">
+          <img src="photo.png" alt="Photo de Alexis Campos" />
+        </a>
+      </div>
+
+      <div class="hero">
+        <h1>ALEXIS<br />CAMPOS</h1>
+        <div class="subtitle">Alternant technicien informatique</div>
+
+        <div class="meta">
+          <div class="tooltip-pill">
+            <span>19 ans</span>
+            <div class="tooltip-box">
+              Né en 2006<br />
+              Profil junior en alternance
+            </div>
+          </div>
+
+          <div class="tooltip-pill">
+            <a href="https://www.google.com/maps/search/?api=1&query=Wittelsheim+68310" target="_blank" rel="noopener noreferrer">
+              Wittelsheim (68310)
+            </a>
+            <div class="tooltip-map">
+              <div class="tooltip-map-title">📍 Wittelsheim, Haut-Rhin</div>
+              <iframe
+                src="https://www.openstreetmap.org/export/embed.html?bbox=7.2200%2C47.8000%2C7.2800%2C47.8400&layer=mapnik&marker=47.8097%2C7.2416"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+          </div>
+
+          <a
+            class="meta-link"
+            href="https://www.onisep.fr/ressources/univers-formation/formations/post-bac/bts-cybersecurite-informatique-et-reseaux-electronique-option-a-informatique-et-reseaux"
+            target="_blank"
+            rel="noopener noreferrer">
+            BTS CIEL IR
+          </a>
+
+          <span>Systèmes • Réseaux • Cybersécurité</span>
+        </div>
+
+        <p class="intro">
+          Je recherche une alternance dans les domaines des systèmes, réseaux et de la cybersécurité.
+          Motivé, autonome et rigoureux, je souhaite mettre en pratique mes compétences en support IT,
+          administration, déploiement, supervision et environnement Microsoft / Linux.
+        </p>
+      </div>
+    </section>
+
+    <section class="content">
+      <aside class="left">
+        <div class="section">
+          <h2>Coordonnées</h2>
+          <div class="contact">
+            <div class="contact-item">
+              <span class="contact-label">Adresse</span>
+              <a
+                class="contact-link"
+                href="https://www.google.com/maps/search/?api=1&query=1+rue+de+l%27%C3%AEle+au+tr%C3%A9sor+68310+Wittelsheim"
+                target="_blank"
+                rel="noopener noreferrer">
+                1 rue de l’île au trésor<br />
+                68310 Wittelsheim
+              </a>
+            </div>
+
+            <div class="contact-item">
+              <span class="contact-label">Téléphone</span>
+              +33 6 10 49 81 40
+            </div>
+
+            <div class="contact-item">
+              <span class="contact-label">Email</span>
+              <a class="contact-link" href="mailto:alexiscampos4@hotmail.com">
+                alexiscampos4@hotmail.com
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Compétences</h2>
+
+          <div class="skill-block">
+            <div class="small-title">Systèmes</div>
+            <div class="chips">
+              <span class="chip">Windows 10/11</span>
+              <span class="chip">Windows Server</span>
+              <span class="chip">Ubuntu</span>
+              <span class="chip">Debian</span>
+              <span class="chip">Raspberry Pi OS</span>
+              <span class="chip">NAS Synology</span>
+            </div>
+          </div>
+
+          <div class="skill-block">
+            <div class="small-title">Virtualisation</div>
+            <div class="chips">
+              <span class="chip">Proxmox VE</span>
+              <span class="chip">VMware ESXi</span>
+              <span class="chip">Hyper-V</span>
+              <span class="chip">Docker</span>
+            </div>
+          </div>
+
+          <div class="skill-block">
+            <div class="small-title">Réseaux</div>
+            <div class="chips">
+              <span class="chip">TCP/IP</span>
+              <span class="chip">IPv4 / IPv6</span>
+              <span class="chip">VLAN</span>
+              <span class="chip">Inter-VLAN</span>
+              <span class="chip">DHCP / DNS</span>
+              <span class="chip">NAT / PAT</span>
+              <span class="chip">OSPF</span>
+              <span class="chip">VPN</span>
+              <span class="chip">Wi-Fi</span>
+              <span class="chip">Pare-feu / ACL</span>
+            </div>
+          </div>
+
+          <div class="skill-block">
+            <div class="small-title">Support / Infra</div>
+            <div class="chips">
+              <span class="chip">Support N1 / N2</span>
+              <span class="chip">Ticketing</span>
+              <span class="chip">Active Directory</span>
+              <span class="chip">Azure AD / Entra ID</span>
+              <span class="chip">Microsoft 365</span>
+              <span class="chip">Acronis</span>
+              <span class="chip">Veeam</span>
+              <span class="chip">RMM</span>
+              <span class="chip">Déploiement postes / serveurs</span>
+            </div>
+          </div>
+
+          <div class="skill-block">
+            <div class="small-title">Cybersécurité (bases et bonnes pratiques)</div>
+            <div class="chips">
+              <span class="chip">TryHackMe</span>
+              <span class="chip">Hack The Box</span>
+              <span class="chip">Root-Me</span>
+              <span class="chip">SecNumacadémie</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Qualités</h2>
+          <ul class="list">
+            <li>Motivé et impliqué</li>
+            <li>Curieux, autonome et rigoureux</li>
+            <li>Organisé et à l’aise en équipe</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>Langues</h2>
+
+          <div class="language-block">
+            <div class="language-name">Anglais :</div>
+            <ul class="language-lines">
+              <li>Compréhension écrite/orale</li>
+              <li>Expression écrite/orale</li>
+            </ul>
+          </div>
+
+          <div class="language-block">
+            <div class="language-name">Français :</div>
+            <ul class="language-lines">
+              <li>Langue natale</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <section class="right">
+        <div class="section">
+          <h2>Profil</h2>
+          <div class="profile-box">
+            Étudiant en BTS CIEL option Informatique et Réseaux, je recherche une alternance dans les domaines
+            des systèmes, réseaux et de la cybersécurité. Sérieux, motivé et autonome, je souhaite continuer à
+            développer mes compétences techniques en support informatique, administration systèmes et réseaux,
+            déploiement et environnement Microsoft / Linux.
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Expérience professionnelle</h2>
+          <article class="card">
+            <div class="job-top">
+              <div class="job-date">Stage + Alternance BTS CIEL IR</div>
+              <div class="job-title">
+                <a class="company-link" href="https://www.c-isi.fr/" target="_blank" rel="noopener noreferrer">
+                  C-ISI
+                </a>
+                — Technicien informatique
+              </div>
+              <div class="job-sub">
+                Support, administration, déploiement, supervision et accompagnement utilisateurs en environnement professionnel.
+              </div>
+            </div>
+
+            <ul class="job-list">
+              <li>Support utilisateurs N1/N2 : diagnostic, résolution, suivi et documentation.</li>
+              <li>Administration Active Directory et Azure AD / Entra ID : comptes, groupes, droits d’accès.</li>
+              <li>Déploiement et maintenance de postes de travail et de serveurs.</li>
+              <li>Supervision du parc via outils RMM et contrôle de l’état des machines.</li>
+              <li>Microsoft 365 : licences, configuration et accompagnement utilisateurs.</li>
+              <li>Préparation, livraison et installation de matériel informatique.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="section">
+          <h2>Formation</h2>
+          <div class="edu">
+            <div class="edu-item">
+              <div class="edu-year">2024 - 2026</div>
+              <div class="edu-title">
+                <a
+                  class="company-link"
+                  href="https://www.onisep.fr/ressources/univers-formation/formations/post-bac/bts-cybersecurite-informatique-et-reseaux-electronique-option-a-informatique-et-reseaux"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  BTS CIEL option Informatique et Réseaux
+                </a>
+              </div>
+              <div class="edu-text">
+                Formation orientée systèmes, réseaux, cybersécurité, administration et support informatique.
+              </div>
+            </div>
+
+            <div class="edu-item">
+              <div class="edu-year">2022 - 2024</div>
+              <div class="edu-title">
+                <a
+                  class="company-link"
+                  href="https://www.onisep.fr/ressources/univers-formation/formations/lycees/bac-techno-sti2d-sciences-et-technologies-de-l-industrie-et-du-developpement-durable-enseignement-specifique-systemes-d-information-et-numerique"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  Bac STI2D spécialité SIN
+                </a>
+              </div>
+              <div class="edu-text">
+                Sciences et technologies de l’industrie et du développement durable, spécialité systèmes d’information et numérique.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Projets</h2>
+          <article class="card">
+            <ul class="job-list" style="margin-top:0;">
+              <li><strong>Projet Licences</strong> : développement d’un outil de suivi et de centralisation de licences.</li>
+              <li><strong>Camping MQTT</strong> : mise en place d’échanges et supervision via MQTT.</li>
+              <li><strong>Projet CAN</strong> : travail autour de la communication sur bus CAN.</li>
+              <li><strong>Skybot</strong> : projet technique autour de l’automatisation / robotique.</li>
+              <li><strong>IR Game</strong> : projet réalisé dans le cadre de la formation.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="action-panel" id="actionPanel">
+    <button class="action-btn action-like" id="btnInterested" type="button">
+      Intéressé ?
+    </button>
+    <button class="action-btn action-dislike" id="btnReject" type="button">
+      Pas intéressé
+    </button>
+  </div>
+
+  <div id="fragmentLayer" aria-hidden="true"></div>
+
+  <div class="blackhole-scene" id="blackholeScene" aria-hidden="true">
+    <div class="blackhole-wrap">
+      <div class="blackhole-glow"></div>
+      <div class="accretion-ring"></div>
+      <div class="accretion-ring r2"></div>
+      <div class="blackhole"></div>
+    </div>
+  </div>
+
+  <div class="envelope-scene" id="envelopeScene" aria-hidden="true">
+    <div class="envelope-wrap" id="envelopeWrap">
+      <div class="envelope-note">Candidature prête à partir</div>
+
+      <div class="envelope">
+        <div class="envelope-back"></div>
+
+        <div class="envelope-paper">
+          <div class="paper-name">Alexis Campos</div>
+          <div class="paper-role">Alternant technicien informatique</div>
+          <div class="paper-sep"></div>
+
+          <div class="paper-contact">
+            <a href="mailto:alexiscampos4@hotmail.com">✉️ alexiscampos4@hotmail.com</a>
+            <a href="tel:+33610498140">📞 +33 6 10 49 81 40</a>
+            <a href="https://www.linkedin.com/in/alexis-campos-533ba7271/" target="_blank" rel="noopener noreferrer">
+              🔗 LinkedIn
+            </a>
+          </div>
+        </div>
+
+        <div class="envelope-front"></div>
+        <div class="envelope-flap"></div>
+
+        <div class="front-contact-card">
+          <div class="front-title">Coordonnées</div>
+          <div class="front-links">
+            <a href="mailto:alexiscampos4@hotmail.com">alexiscampos4@hotmail.com</a>
+            <a href="tel:+33610498140">+33 6 10 49 81 40</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const introScreen = document.getElementById('introScreen');
+      const introPhotoBtn = document.getElementById('introPhotoBtn');
+      const cvContent = document.getElementById('cvContent');
+
+      const actionPanel = document.getElementById('actionPanel');
+      const btnInterested = document.getElementById('btnInterested');
+      const btnReject = document.getElementById('btnReject');
+
+      const envelopeScene = document.getElementById('envelopeScene');
+      const envelopeWrap = document.getElementById('envelopeWrap');
+
+      const blackholeScene = document.getElementById('blackholeScene');
+      const fragmentLayer = document.getElementById('fragmentLayer');
+
+      let isAnimating = false;
+      let introStarted = false;
+
+      function getTextNodes(root) {
+        const walker = document.createTreeWalker(
+          root,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode(node) {
+              if (!node.nodeValue || !node.nodeValue.trim()) {
+                return NodeFilter.FILTER_REJECT;
+              }
+
+              const parent = node.parentElement;
+              if (!parent) return NodeFilter.FILTER_REJECT;
+              if (parent.closest('#introScreen')) return NodeFilter.FILTER_REJECT;
+              if (['SCRIPT', 'STYLE'].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
+
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        return nodes;
+      }
+
+      const typedNodes = getTextNodes(cvContent).map((node) => ({
+        node,
+        text: node.nodeValue
+      }));
+
+      typedNodes.forEach((item) => {
+        item.node.nodeValue = '';
+      });
+
+      function typeNode(node, text, speed = 8) {
+        return new Promise((resolve) => {
+          let index = 0;
+
+          function write() {
+            node.nodeValue = text.slice(0, index);
+            index++;
+
+            if (index <= text.length) {
+              setTimeout(write, speed);
+            } else {
+              resolve();
+            }
+          }
+
+          write();
+        });
+      }
+
+      async function typeAllText() {
+        for (const item of typedNodes) {
+          await typeNode(item.node, item.text, 8);
+        }
+      }
+
+      function restoreFullText() {
+        typedNodes.forEach((item) => {
+          item.node.nodeValue = item.text;
+        });
+      }
+
+      function disableActions() {
+        isAnimating = true;
+        btnInterested.disabled = true;
+        btnReject.disabled = true;
+      }
+
+      function hideActions() {
+        actionPanel.classList.remove('is-visible');
+      }
+
+      async function startCvAnimation() {
+        if (introStarted) return;
+        introStarted = true;
+
+        introScreen.classList.add('hidden');
+        cvContent.classList.remove('cv-hidden');
+
+        await typeAllText();
+        actionPanel.classList.add('is-visible');
+      }
+
+      function resetFx() {
+        envelopeScene.classList.remove('show');
+        envelopeWrap.classList.remove('show', 'sealed', 'details-visible');
+        blackholeScene.classList.remove('show');
+        fragmentLayer.innerHTML = '';
+      }
+
+      function launchInterested() {
+        if (isAnimating || cvContent.classList.contains('cv-hidden')) return;
+
+        disableActions();
+        hideActions();
+        blackholeScene.classList.remove('show');
+
+        const rect = cvContent.getBoundingClientRect();
+        const targetX = (window.innerWidth / 2) - (rect.left + rect.width / 2);
+        const targetY = (window.innerHeight / 2) - (rect.top + rect.height / 2) - 15;
+
+        cvContent.style.setProperty('--foldX', `${targetX}px`);
+        cvContent.style.setProperty('--foldY', `${targetY}px`);
+
+        envelopeScene.classList.add('show');
+        envelopeWrap.classList.add('show');
+
+        requestAnimationFrame(() => {
+          cvContent.classList.add('is-folding-center');
+        });
+
+        setTimeout(() => {
+          envelopeWrap.classList.add('details-visible');
+        }, 450);
+
+        setTimeout(() => {
+          envelopeWrap.classList.add('sealed');
+        }, 1350);
+
+        setTimeout(() => {
+          envelopeWrap.classList.add('details-visible');
+          cvContent.classList.add('invisible-only');
+        }, 1750);
+      }
+
+      function createFragmentCanvas(sourceCanvas, sx, sy, sw, sh) {
+        const pieceCanvas = document.createElement('canvas');
+        const ratio = window.devicePixelRatio || 1;
+
+        pieceCanvas.width = Math.max(1, Math.floor(sw * ratio));
+        pieceCanvas.height = Math.max(1, Math.floor(sh * ratio));
+
+        const ctx = pieceCanvas.getContext('2d');
+        ctx.scale(ratio, ratio);
+        ctx.drawImage(sourceCanvas, sx, sy, sw, sh, 0, 0, sw, sh);
+
+        return pieceCanvas;
+      }
+
+      async function buildCvFragments() {
+        const rect = cvContent.getBoundingClientRect();
+
+        const canvas = await html2canvas(cvContent, {
+          backgroundColor: null,
+          scale: window.devicePixelRatio || 1,
+          useCORS: true
+        });
+
+        const pieces = [];
+        const cols = 12;
+        const rows = 18;
+        const pieceW = rect.width / cols;
+        const pieceH = rect.height / rows;
+
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const left = rect.left + x * pieceW;
+            const top = rect.top + y * pieceH;
+            const width = (x === cols - 1) ? (rect.width - x * pieceW) : pieceW;
+            const height = (y === rows - 1) ? (rect.height - y * pieceH) : pieceH;
+
+            const frag = document.createElement('div');
+            frag.className = 'cv-fragment';
+            frag.style.left = `${left}px`;
+            frag.style.top = `${top}px`;
+            frag.style.width = `${width}px`;
+            frag.style.height = `${height}px`;
+
+            const pieceCanvas = createFragmentCanvas(
+              canvas,
+              x * pieceW,
+              y * pieceH,
+              width,
+              height
+            );
+
+            frag.appendChild(pieceCanvas);
+            fragmentLayer.appendChild(frag);
+
+            pieces.push({
+              el: frag,
+              cx: left + width / 2,
+              cy: top + height / 2,
+              xIndex: x,
+              yIndex: y
+            });
+          }
+        }
+
+        return pieces;
+      }
+
+      async function launchReject() {
+        if (isAnimating || cvContent.classList.contains('cv-hidden')) return;
+
+        disableActions();
+        hideActions();
+        envelopeScene.classList.remove('show');
+        envelopeWrap.classList.remove('show', 'sealed', 'details-visible');
+
+        restoreFullText();
+
+        const pieces = await buildCvFragments();
+
+        cvContent.classList.add('soft-hide');
+        blackholeScene.classList.add('show');
+
+        const holeX = window.innerWidth / 2;
+        const holeY = window.innerHeight / 2;
+
+        pieces.forEach((piece, i) => {
+          const dx = piece.cx - holeX;
+          const dy = piece.cy - holeY;
+          const dist = Math.hypot(dx, dy) || 1;
+
+          const nx = dx / dist;
+          const ny = dy / dist;
+
+          const scatter = 18 + Math.random() * 24;
+          const scatterX = nx * scatter + (Math.random() - 0.5) * 24;
+          const scatterY = ny * scatter + (Math.random() - 0.5) * 24;
+          const swirl = 42 + Math.random() * 74;
+
+          const tangentX = -ny * swirl;
+          const tangentY = nx * swirl;
+
+          const toHoleX = holeX - piece.cx + tangentX * 0.35;
+          const toHoleY = holeY - piece.cy + tangentY * 0.35;
+
+          const breakDelay = Math.random() * 160;
+          const suckDelay = 180 + Math.random() * 280;
+          const totalDur = 900 + Math.random() * 700;
+
+          piece.el.style.transition =
+            `transform ${totalDur}ms cubic-bezier(.14,.88,.2,1), opacity ${totalDur}ms ease, filter ${totalDur}ms ease`;
+
+          setTimeout(() => {
+            piece.el.style.transform = `translate(${scatterX}px, ${scatterY}px) rotate(${(-18 + Math.random() * 36).toFixed(2)}deg) scale(.98)`;
+            piece.el.style.filter = 'blur(.2px)';
+          }, breakDelay);
+
+          setTimeout(() => {
+            piece.el.style.transform =
+              `translate(${toHoleX}px, ${toHoleY}px) rotate(${(540 + Math.random() * 540).toFixed(2)}deg) scale(0.02)`;
+            piece.el.style.opacity = '0';
+            piece.el.style.filter = 'blur(5px) brightness(.7)';
+          }, suckDelay);
+        });
+
+        setTimeout(() => {
+          fragmentLayer.innerHTML = '';
+        }, 2300);
+      }
+
+      introPhotoBtn.addEventListener('click', startCvAnimation, { once: true });
+      btnInterested.addEventListener('click', launchInterested);
+      btnReject.addEventListener('click', launchReject);
+
+      window.addEventListener('beforeprint', () => {
+        restoreFullText();
+        resetFx();
+
+        cvContent.classList.remove(
+          'cv-hidden',
+          'soft-hide',
+          'invisible-only',
+          'is-folding-center'
+        );
+
+        cvContent.style.removeProperty('--foldX');
+        cvContent.style.removeProperty('--foldY');
+
+        introScreen.classList.add('hidden');
+        actionPanel.classList.remove('is-visible');
+      });
+
+      window.addEventListener('resize', () => {
+        if (!isAnimating) return;
+      });
+    });
+  </script>
+</body>
+</html>
