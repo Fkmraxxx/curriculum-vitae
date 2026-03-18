@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet Bot Discord Docker - Alexis Campos</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --bg2:#121a31;
+      --panel:rgba(255,255,255,.05);
+      --panel-2:rgba(255,255,255,.04);
+      --line:rgba(255,255,255,.10);
+      --line-strong:rgba(255,255,255,.16);
+      --text:#eef4ff;
+      --muted:#b9c6dd;
+      --blue:#78b6ff;
+      --violet:#9d8cff;
+      --cyan:#67e8f9;
+      --good:#57d38c;
+      --shadow:0 22px 60px rgba(0,0,0,.34);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+
+    body{
+      font-family:"Segoe UI",Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(120,182,255,.16), transparent 28%),
+        radial-gradient(circle at top right, rgba(157,140,255,.14), transparent 22%),
+        linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
+      padding:24px;
+      line-height:1.6;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .wrap{
+      max-width:1240px;
+      margin:0 auto;
+    }
+
+    .top-actions{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:46px;
+      padding:0 18px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font-size:14px;
+      font-weight:800;
+      transition:.18s ease;
+      backdrop-filter:blur(10px);
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(120,182,255,.55);
+      box-shadow:0 12px 26px rgba(0,0,0,.20);
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg, rgba(120,182,255,.18), rgba(157,140,255,.18));
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      padding:40px;
+      border-radius:32px;
+      border:1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(120,182,255,.12), rgba(157,140,255,.08)),
+        rgba(255,255,255,.04);
+      box-shadow:var(--shadow);
+      margin-bottom:22px;
+    }
+
+    .hero::before,
+    .hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      filter:blur(20px);
+      pointer-events:none;
+    }
+
+    .hero::before{
+      width:280px;height:280px;
+      top:-80px;right:-80px;
+      background:rgba(120,182,255,.18);
+    }
+
+    .hero::after{
+      width:220px;height:220px;
+      left:-60px;bottom:-60px;
+      background:rgba(157,140,255,.14);
+    }
+
+    .eyebrow{
+      display:inline-block;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--cyan);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .hero-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:1.25fr .75fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    h1{
+      font-size:clamp(34px, 5vw, 58px);
+      line-height:.98;
+      font-weight:900;
+      margin-bottom:14px;
+      letter-spacing:.3px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      font-size:15.5px;
+      max-width:760px;
+    }
+
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .badge{
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:12px;
+      font-weight:800;
+      color:#dbe8ff;
+    }
+
+    .hero-side{
+      display:grid;
+      gap:12px;
+      align-content:start;
+    }
+
+    .mini-card{
+      padding:16px 18px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:rgba(11,18,34,.72);
+      backdrop-filter:blur(10px);
+    }
+
+    .mini-label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1.3px;
+      color:var(--cyan);
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .mini-value{
+      font-size:14px;
+      color:var(--text);
+      font-weight:700;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:18px;
+    }
+
+    .card{
+      grid-column:span 12;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-body{padding:24px}
+
+    .cols-4{grid-column:span 4}
+    .cols-5{grid-column:span 5}
+    .cols-6{grid-column:span 6}
+    .cols-7{grid-column:span 7}
+    .cols-8{grid-column:span 8}
+
+    .title{
+      font-size:20px;
+      font-weight:900;
+      margin-bottom:12px;
+    }
+
+    .text{
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+      padding-left:18px;
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .list li::marker{color:var(--blue)}
+
+    .steps{
+      display:grid;
+      gap:12px;
+    }
+
+    .step{
+      display:grid;
+      grid-template-columns:52px 1fr;
+      gap:14px;
+      align-items:start;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+
+    .step-num{
+      width:52px;height:52px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      color:#fff;
+      background:linear-gradient(135deg, rgba(120,182,255,.95), rgba(157,140,255,.95));
+      box-shadow:0 10px 24px rgba(120,182,255,.18);
+    }
+
+    .step h3{
+      font-size:16px;
+      margin-bottom:4px;
+    }
+
+    .step p{
+      color:var(--muted);
+      font-size:14.5px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .chip{
+      padding:9px 12px;
+      border-radius:12px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:#e8f0ff;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+
+    .shot{
+      overflow:hidden;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .shot:hover{
+      transform:translateY(-4px);
+      border-color:rgba(120,182,255,.32);
+      box-shadow:0 18px 32px rgba(0,0,0,.22);
+    }
+
+    .shot-btn{
+      display:block;
+      width:100%;
+      border:none;
+      background:transparent;
+      color:inherit;
+      cursor:pointer;
+      text-align:left;
+      font:inherit;
+    }
+
+    .shot-media{
+      position:relative;
+      overflow:hidden;
+    }
+
+    .shot img{
+      width:100%;
+      display:block;
+      aspect-ratio:16/10;
+      object-fit:cover;
+      background:#0a0f1f;
+      transition:transform .28s ease, filter .28s ease;
+    }
+
+    .shot:hover img{
+      transform:scale(1.03);
+      filter:brightness(1.04);
+    }
+
+    .shot-zoom{
+      position:absolute;
+      right:12px;
+      top:12px;
+      padding:8px 10px;
+      border-radius:12px;
+      background:rgba(7,12,24,.72);
+      border:1px solid rgba(255,255,255,.14);
+      color:#fff;
+      font-size:12px;
+      font-weight:800;
+      opacity:0;
+      transform:translateY(-4px);
+      transition:.18s ease;
+      backdrop-filter:blur(8px);
+      pointer-events:none;
+    }
+
+    .shot:hover .shot-zoom{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .shot .caption{
+      padding:14px 16px;
+      color:var(--muted);
+      font-size:13px;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .table-like{
+      display:grid;
+      gap:10px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:230px 1fr;
+      gap:14px;
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .row strong{
+      color:var(--text);
+      font-size:14px;
+    }
+
+    .row span{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .note{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(87,211,140,.22);
+      background:rgba(87,211,140,.08);
+      color:#dff8ea;
+      font-size:14px;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background:rgba(3,7,16,.82);
+      backdrop-filter:blur(10px);
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition:.2s ease;
+    }
+
+    .modal.is-open{
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+    }
+
+    .modal-dialog{
+      position:relative;
+      width:min(1100px, 100%);
+      max-height:92vh;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(11,18,34,.92);
+      box-shadow:0 30px 80px rgba(0,0,0,.45);
+      overflow:hidden;
+    }
+
+    .modal-close{
+      position:absolute;
+      top:14px;
+      right:14px;
+      z-index:3;
+      width:44px;
+      height:44px;
+      border:none;
+      border-radius:14px;
+      cursor:pointer;
+      background:rgba(6,10,20,.72);
+      border:1px solid rgba(255,255,255,.12);
+      color:#fff;
+      font-size:22px;
+      font-weight:900;
+    }
+
+    .modal-close:hover{
+      background:rgba(120,182,255,.18);
+    }
+
+    .modal-media{
+      background:#050a15;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      min-height:260px;
+    }
+
+    .modal-media img{
+      max-width:100%;
+      max-height:72vh;
+      display:block;
+      border-radius:18px;
+    }
+
+    .modal-caption{
+      padding:16px 18px 18px;
+      color:var(--muted);
+      font-size:14px;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .modal-title{
+      color:var(--text);
+      font-weight:900;
+      margin-bottom:6px;
+      font-size:15px;
+    }
+
+    footer{
+      margin-top:22px;
+      padding:20px 6px 6px;
+      text-align:center;
+      color:#9db0cd;
+      font-size:13px;
+    }
+
+    @media (max-width:980px){
+      .hero-grid,
+      .row{
+        grid-template-columns:1fr !important;
+      }
+      .gallery{
+        grid-template-columns:1fr !important;
+      }
+      .cols-4,.cols-5,.cols-6,.cols-7,.cols-8{grid-column:span 12}
+    }
+
+    @media (max-width:640px){
+      body{padding:14px}
+      .hero,.card-body{padding:18px}
+      .top-actions{flex-direction:column}
+      .btn{width:100%}
+      .modal{padding:12px}
+      .modal-dialog{border-radius:18px}
+      .modal-media{padding:10px}
+      .modal-close{
+        top:10px;
+        right:10px;
+        width:40px;
+        height:40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top-actions">
+      <a class="btn btn-primary" href="index.html">← Retour au CV</a>
+      <a class="btn" href="#projet">Voir le projet</a>
+    </div>
+
+    <section class="hero">
+      <span class="eyebrow">Projet personnel</span>
+      <div class="hero-grid">
+        <div>
+          <h1>Bot Discord dans Docker<br>sur NAS Synology</h1>
+          <p>
+            Ce projet personnel consiste à concevoir, développer et héberger un bot Discord dans un conteneur Docker
+            sur un NAS Synology. L’objectif était de mettre en place un service autonome, accessible en permanence,
+            avec un environnement de développement pratique grâce à une connexion SSH et au travail à distance depuis
+            Visual Studio Code.
+          </p>
+          <div class="badges">
+            <span class="badge">NAS Synology DS415+</span>
+            <span class="badge">Docker</span>
+            <span class="badge">SSH</span>
+            <span class="badge">Visual Studio Code</span>
+            <span class="badge">Bot Discord</span>
+            <span class="badge">Projet personnel</span>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="mini-card">
+            <div class="mini-label">Hébergement</div>
+            <div class="mini-value">Exécution du bot dans un conteneur Docker sur un NAS Synology</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-label">Développement</div>
+            <div class="mini-value">Connexion SSH au NAS et administration du projet avec Visual Studio Code</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-label">Fonctions</div>
+            <div class="mini-value">Commandes fun, modération, utilitaires et modes personnalisés autour des chats et des pingouins</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" id="projet">
+      <article class="card cols-8">
+        <div class="card-body">
+          <div class="title">Présentation du projet</div>
+          <div class="text">
+            J’ai réalisé ce projet pour concevoir un bot Discord personnalisé, le déployer dans un environnement
+            conteneurisé et le faire tourner sur mon NAS Synology. L’intérêt du projet était double : d’un côté,
+            développer un bot avec des commandes utiles et originales ; de l’autre, apprendre à gérer un hébergement
+            propre, distant et persistant, dans une logique proche d’un petit service en production.
+            <br><br>
+            Ce projet m’a permis de travailler sur l’organisation du bot, le déploiement avec Docker, la maintenance
+            sur un NAS personnel, ainsi que l’administration à distance en SSH via Visual Studio Code.
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-4">
+        <div class="card-body">
+          <div class="title">Objectifs</div>
+          <ul class="list">
+            <li>Créer un bot Discord fonctionnel et personnalisé</li>
+            <li>Déployer le service dans Docker sur un NAS Synology</li>
+            <li>Travailler à distance en SSH avec Visual Studio Code</li>
+            <li>Organiser les commandes par modes et catégories</li>
+            <li>Mettre en place une solution stable et réutilisable</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card cols-6">
+        <div class="card-body">
+          <div class="title">Infrastructure mise en place</div>
+          <div class="table-like">
+            <div class="row">
+              <strong>Machine hôte</strong>
+              <span>NAS Synology utilisé comme plateforme d’hébergement du projet.</span>
+            </div>
+            <div class="row">
+              <strong>Conteneurisation</strong>
+              <span>Le bot est exécuté dans Docker afin d’isoler le service et faciliter son déploiement.</span>
+            </div>
+            <div class="row">
+              <strong>Administration distante</strong>
+              <span>Connexion SSH au NAS pour accéder aux fichiers, exécuter les commandes nécessaires et maintenir le projet.</span>
+            </div>
+            <div class="row">
+              <strong>Éditeur</strong>
+              <span>Utilisation de Visual Studio Code à distance pour modifier le code et travailler plus confortablement.</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-6">
+        <div class="card-body">
+          <div class="title">Compétences mobilisées</div>
+          <div class="chips">
+            <span class="chip">Docker</span>
+            <span class="chip">NAS Synology</span>
+            <span class="chip">SSH</span>
+            <span class="chip">VS Code Remote</span>
+            <span class="chip">Organisation de projet</span>
+            <span class="chip">Déploiement d’un service</span>
+            <span class="chip">Gestion de commandes</span>
+            <span class="chip">Maintenance distante</span>
+            <span class="chip">Administration système</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-7">
+        <div class="card-body">
+          <div class="title">Fonctionnalités du bot</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">01</div>
+              <div>
+                <h3>Modes personnalisés</h3>
+                <p>Le bot propose plusieurs univers de commandes, avec un mode chat et un mode pingu, chacun possédant ses commandes dédiées.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">02</div>
+              <div>
+                <h3>Commandes fun</h3>
+                <p>Envoi de contenus thématiques, citations, faits, noms aléatoires, quiz, blagues et interactions entre utilisateurs.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">03</div>
+              <div>
+                <h3>Commandes de modération</h3>
+                <p>Gestion du salon et des membres avec des commandes comme ban, kick, mute, unmute, lock, unlock, purge, slowmode ou massmove.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">04</div>
+              <div>
+                <h3>Utilitaires</h3>
+                <p>Fonctions complémentaires comme l’affichage d’avatar, la traduction, des informations serveur ou utilisateur, et un classement d’activité.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-5">
+        <div class="card-body">
+          <div class="title">Exemples de commandes</div>
+          <ul class="list">
+            <li>Mode chat : <strong>!meow</strong>, <strong>!catfact</strong>, <strong>!catquote</strong>, <strong>!oracle</strong></li>
+            <li>Mode pingu : <strong>!nopnop</strong>, <strong>!pinguquote</strong>, <strong>!pingufact</strong>, <strong>!oracle</strong></li>
+            <li>Modération : <strong>!ban</strong>, <strong>!kick</strong>, <strong>!mute</strong>, <strong>!lock</strong>, <strong>!purge</strong></li>
+            <li>Utilitaires : <strong>!avatar</strong>, <strong>!translate</strong>, <strong>!userinfo</strong>, <strong>!serverinfo</strong></li>
+          </ul>
+          <div class="note">
+            Le bot a été pensé comme un projet évolutif, avec une structure permettant d’ajouter de nouvelles commandes et de nouveaux modes.
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-12">
+        <div class="card-body">
+          <div class="title">Développement et déploiement</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">A</div>
+              <div>
+                <h3>Connexion SSH au NAS</h3>
+                <p>Le NAS est administré à distance en SSH, ce qui permet d’accéder à l’environnement de travail et au projet sans passer uniquement par l’interface web.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">B</div>
+              <div>
+                <h3>Travail depuis Visual Studio Code</h3>
+                <p>Le projet peut être modifié directement à distance dans Visual Studio Code, ce qui facilite l’édition du code, la gestion des fichiers et le suivi du développement.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">C</div>
+              <div>
+                <h3>Exécution dans Docker</h3>
+                <p>Le bot est lancé dans un conteneur afin de séparer proprement l’application de l’hôte et rendre le déploiement plus simple à reproduire.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">D</div>
+              <div>
+                <h3>Maintenance et évolution</h3>
+                <p>Cette approche permet de faire évoluer le bot plus facilement, de corriger des commandes, d’ajouter des fonctionnalités et de maintenir un service disponible sur le long terme.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-12">
+        <div class="card-body">
+          <div class="title">Illustrations du projet</div>
+          <div class="gallery">
+            <figure class="shot">
+              <button class="shot-btn" type="button" data-full="static/PROJET%20DOCKER/ds415%2B.jpg" data-title="NAS Synology DS415+" data-caption="NAS Synology DS415+ utilisé pour héberger le projet.">
+                <div class="shot-media">
+                  <img src="static/PROJET%20DOCKER/ds415%2B.jpg" alt="NAS Synology DS415+" />
+                  <span class="shot-zoom">Cliquer pour agrandir</span>
+                </div>
+                <figcaption class="caption">NAS Synology DS415+ utilisé pour héberger le projet.</figcaption>
+              </button>
+            </figure>
+
+            <figure class="shot">
+              <button class="shot-btn" type="button" data-full="static/PROJET%20DOCKER/listecommandemodechat.png" data-title="Mode chat" data-caption="Aperçu des commandes disponibles dans le mode chat du bot.">
+                <div class="shot-media">
+                  <img src="static/PROJET%20DOCKER/listecommandemodechat.png" alt="Liste des commandes du mode chat" />
+                  <span class="shot-zoom">Cliquer pour agrandir</span>
+                </div>
+                <figcaption class="caption">Aperçu des commandes disponibles dans le mode chat du bot.</figcaption>
+              </button>
+            </figure>
+
+            <figure class="shot">
+              <button class="shot-btn" type="button" data-full="static/PROJET%20DOCKER/listecommandesmodepingu.png" data-title="Mode pingu" data-caption="Aperçu des commandes disponibles dans le mode pingu du bot.">
+                <div class="shot-media">
+                  <img src="static/PROJET%20DOCKER/listecommandesmodepingu.png" alt="Liste des commandes du mode pingu" />
+                  <span class="shot-zoom">Cliquer pour agrandir</span>
+                </div>
+                <figcaption class="caption">Aperçu des commandes disponibles dans le mode pingu du bot.</figcaption>
+              </button>
+            </figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="card cols-12">
+        <div class="card-body">
+          <div class="title">Bilan</div>
+          <div class="text">
+            Ce projet m’a permis d’apprendre à relier développement applicatif et hébergement réel sur un équipement personnel.
+            Il met en avant des compétences utiles en administration, accès distant, conteneurisation, organisation de projet
+            et déploiement d’un service. C’est également un bon exemple de projet personnel concret, mêlant technique,
+            autonomie et maintenance dans la durée.
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      Projet Bot Discord Docker — Alexis Campos
+    </footer>
+  </div>
+
+  <div class="modal" id="imageModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Fermer">×</button>
+      <div class="modal-media">
+        <img id="modalImage" src="" alt="" />
+      </div>
+      <div class="modal-caption">
+        <div class="modal-title" id="modalTitle"></div>
+        <div id="modalText"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalText = document.getElementById('modalText');
+    const modalClose = document.getElementById('modalClose');
+    const shotButtons = document.querySelectorAll('.shot-btn');
+
+    function openModal(src, title, caption, alt) {
+      modalImage.src = src;
+      modalImage.alt = alt || title || '';
+      modalTitle.textContent = title || '';
+      modalText.textContent = caption || '';
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        if (!modal.classList.contains('is-open')) {
+          modalImage.src = '';
+        }
+      }, 180);
+    }
+
+    shotButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const img = button.querySelector('img');
+        openModal(
+          button.dataset.full,
+          button.dataset.title,
+          button.dataset.caption,
+          img ? img.alt : ''
+        );
+      });
+    });
+
+    modalClose.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

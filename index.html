@@ -29,13 +29,81 @@
       min-height:100%;
     }
 
-    body{
-      font-family:"Segoe UI", Arial, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      padding:16px;
-      overflow-x:hidden;
-    }
+ body{
+  font-family:"Segoe UI", Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding:16px;
+  overflow-x:hidden;
+  position:relative;
+  isolation:isolate;
+}
+
+/* =========================
+   FOND JEU DE LA VIE
+========================= */
+.bg-life-wrap{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+#lifeCanvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  opacity:.9;
+}
+
+.bg-life-vignette{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 42%),
+    linear-gradient(180deg, rgba(233,238,245,.18) 0%, rgba(233,238,245,.42) 100%);
+}
+
+/* léger ajustement pour voir le fond derrière l'intro */
+#introScreen{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg, rgba(237,242,248,.84) 0%, rgba(232,237,245,.76) 100%);
+  backdrop-filter:blur(3px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:18px;
+  z-index:9999;
+  transition:opacity .45s ease, visibility .45s ease;
+}
+
+.cv{
+  width:210mm;
+  min-height:297mm;
+  margin:0 auto;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(2px);
+  border-radius:18px;
+  box-shadow:0 14px 40px rgba(18,59,122,.10);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition:opacity .55s ease, transform .55s ease, filter .55s ease;
+  transform-origin:center center;
+  position:relative;
+  z-index:2;
+}
+
+@media print{
+  .bg-life-wrap{
+    display:none !important;
+  }
+}
 
     a{
       color:inherit;
@@ -1095,6 +1163,10 @@
 </head>
 
 <body>
+  <div class="bg-life-wrap" aria-hidden="true">
+  <canvas id="lifeCanvas"></canvas>
+  <div class="bg-life-vignette"></div>
+</div>
   <div id="introScreen">
     <button id="introPhotoBtn" type="button" aria-label="Ouvrir le CV">
       <img src="static/photo.png" alt="Photo de Alexis Campos" />
@@ -1398,8 +1470,15 @@
         <a class="project-link" href="projet-hyper-v.html" target="_blank" rel="noopener noreferrer">
           <strong>Projet Hyper-V</strong>
         </a>
-        : mise en place et utilisation d’un environnement virtualisé sous Hyper-V.
+        : mise en place et utilisation d’un environnement virtualisé 
+        sous Hyper-V.
       </li>
+      <li>
+  <a class="project-link" href="projet-bot-discord.html" target="_blank" rel="noopener noreferrer">
+    <strong>Bot Discord Docker</strong>
+  </a>
+  : projet personnel de bot Discord hébergé dans un conteneur Docker sur un NAS Synology, avec développement à distance en SSH via Visual Studio Code.
+</li>
     </ul>
   </article>
 </div>
@@ -1474,6 +1553,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+    
       const introScreen = document.getElementById('introScreen');
       const introPhotoBtn = document.getElementById('introPhotoBtn');
       const cvContent = document.getElementById('cvContent');
@@ -1487,10 +1567,237 @@
 
       const blackholeScene = document.getElementById('blackholeScene');
       const fragmentLayer = document.getElementById('fragmentLayer');
+const lifeCanvas = document.getElementById('lifeCanvas');
+initLifeBackground();
 
       let isAnimating = false;
       let introStarted = false;
+function initLifeBackground() {
+  if (!lifeCanvas) return;
 
+  const ctx = lifeCanvas.getContext('2d', {
+    alpha: true,
+    desynchronized: true
+  });
+
+  if (!ctx) return;
+
+  const STEP_MS = 95; // rythme fluide sans trop charger le CPU
+  const BASE_DENSITY = 0.15;
+
+  let dpr = 1;
+  let width = 0;
+  let height = 0;
+  let cellSize = 10;
+  let cols = 0;
+  let rows = 0;
+
+  let current = new Uint8Array(0);
+  let next = new Uint8Array(0);
+
+  let left = new Int16Array(0);
+  let right = new Int16Array(0);
+  let up = new Int16Array(0);
+  let down = new Int16Array(0);
+
+  let lastTime = 0;
+  let acc = 0;
+  let resizeTimer = null;
+
+  const patterns = [
+    // glider
+    [[1,0],[2,1],[0,2],[1,2],[2,2]],
+    // block
+    [[0,0],[1,0],[0,1],[1,1]],
+    // blinker
+    [[0,0],[1,0],[2,0]],
+    // petit motif
+    [[1,0],[2,0],[0,1],[1,1],[1,2]]
+  ];
+
+  function chooseCellSize() {
+    if (window.innerWidth < 640) return 13;
+    if (window.innerWidth < 1100) return 11;
+    return 10;
+  }
+
+  function index(x, y) {
+    return y * cols + x;
+  }
+
+  function stamp(pattern, ox, oy) {
+    for (const [px, py] of pattern) {
+      const x = (ox + px + cols) % cols;
+      const y = (oy + py + rows) % rows;
+      current[index(x, y)] = 1;
+    }
+  }
+
+  function clearGrid() {
+    current.fill(0);
+    next.fill(0);
+  }
+
+  function seed() {
+    clearGrid();
+
+    const total = cols * rows;
+
+    for (let i = 0; i < total; i++) {
+      current[i] = Math.random() < BASE_DENSITY ? 1 : 0;
+    }
+
+    const extraPatterns = Math.max(8, Math.floor(total / 900));
+    for (let i = 0; i < extraPatterns; i++) {
+      const pattern = patterns[(Math.random() * patterns.length) | 0];
+      stamp(pattern, (Math.random() * cols) | 0, (Math.random() * rows) | 0);
+    }
+  }
+
+  function pulse() {
+    const injections = Math.max(6, Math.floor((cols * rows) / 1200));
+
+    for (let i = 0; i < injections; i++) {
+      const pattern = patterns[(Math.random() * patterns.length) | 0];
+      stamp(pattern, (Math.random() * cols) | 0, (Math.random() * rows) | 0);
+    }
+  }
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
+    lifeCanvas.width = Math.floor(width * dpr);
+    lifeCanvas.height = Math.floor(height * dpr);
+    lifeCanvas.style.width = `${width}px`;
+    lifeCanvas.style.height = `${height}px`;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+
+    cellSize = chooseCellSize();
+    cols = Math.ceil(width / cellSize);
+    rows = Math.ceil(height / cellSize);
+
+    current = new Uint8Array(cols * rows);
+    next = new Uint8Array(cols * rows);
+
+    left = new Int16Array(cols);
+    right = new Int16Array(cols);
+    up = new Int16Array(rows);
+    down = new Int16Array(rows);
+
+    for (let x = 0; x < cols; x++) {
+      left[x] = x === 0 ? cols - 1 : x - 1;
+      right[x] = x === cols - 1 ? 0 : x + 1;
+    }
+
+    for (let y = 0; y < rows; y++) {
+      up[y] = y === 0 ? rows - 1 : y - 1;
+      down[y] = y === rows - 1 ? 0 : y + 1;
+    }
+
+    seed();
+    render();
+  }
+
+  function step() {
+    let alive = 0;
+
+    for (let y = 0; y < rows; y++) {
+      const rowUp = up[y] * cols;
+      const rowMid = y * cols;
+      const rowDown = down[y] * cols;
+
+      for (let x = 0; x < cols; x++) {
+        const xl = left[x];
+        const xr = right[x];
+        const idx = rowMid + x;
+
+        const neighbors =
+          current[rowUp + xl] + current[rowUp + x] + current[rowUp + xr] +
+          current[rowMid + xl]                    + current[rowMid + xr] +
+          current[rowDown + xl] + current[rowDown + x] + current[rowDown + xr];
+
+        const isAlive = current[idx] === 1;
+        const nextState = (neighbors === 3 || (isAlive && neighbors === 2)) ? 1 : 0;
+
+        next[idx] = nextState;
+        alive += nextState;
+      }
+    }
+
+    const tmp = current;
+    current = next;
+    next = tmp;
+
+    const total = cols * rows;
+
+    // évite un fond trop vide ou trop saturé
+    if (alive < total * 0.035 || alive > total * 0.58) {
+      pulse();
+    }
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, width, height);
+
+    const pad = cellSize > 10 ? 1.2 : 1;
+    const size = Math.max(1, cellSize - pad * 2);
+
+    ctx.fillStyle = 'rgba(18, 59, 122, 0.14)';
+
+    for (let y = 0; y < rows; y++) {
+      const row = y * cols;
+      const py = y * cellSize + pad;
+
+      for (let x = 0; x < cols; x++) {
+        if (current[row + x]) {
+          ctx.fillRect(x * cellSize + pad, py, size, size);
+        }
+      }
+    }
+  }
+
+  function tick(ts) {
+    if (document.hidden) {
+      lastTime = ts;
+      requestAnimationFrame(tick);
+      return;
+    }
+
+    if (!lastTime) lastTime = ts;
+    acc += ts - lastTime;
+    lastTime = ts;
+
+    let updated = false;
+
+    while (acc >= STEP_MS) {
+      step();
+      acc -= STEP_MS;
+      updated = true;
+    }
+
+    if (updated) {
+      render();
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      acc = 0;
+      lastTime = 0;
+      resize();
+    }, 120);
+  });
+
+  resize();
+  requestAnimationFrame(tick);
+}
       function getTextNodes(root) {
         const walker = document.createTreeWalker(
           root,
