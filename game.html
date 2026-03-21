@@ -3,99 +3,148 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mes jeux :</title>
-  <meta name="description" content="Bibliothèque de jeux : favoris, terminés, en cours, franchises et notes." />
+  <title>Games - Alexis Campos</title>
+  <meta name="description" content="Bibliothèque de jeux d'Alexis Campos" />
   <link rel="stylesheet" href="./static/css/game.css" />
 </head>
 <body>
-  <header class="topbar">
-    <a class="back-link" href="./index.html">← Retour au CV</a>
-    <div class="brand">Game Library</div>
-  </header>
-
-  <main class="page">
-    <section class="hero">
-      <div class="hero-text">
-        <p class="eyebrow">Collection gaming</p>
-        <h1>Mes jeux</h1>
-        <p class="hero-desc">
-          Une page pour regrouper mes jeux favoris, ceux terminés, ceux en cours,
-          mes notes et les licences que j’aime.
-        </p>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="topbar-left">
+        <a href="./index.html" class="nav-btn">← Retour CV</a>
+        <a href="./admin/" class="nav-btn nav-btn-secondary">Admin</a>
       </div>
 
-      <div class="stats">
-        <article class="stat-card">
-          <span class="stat-label">Total</span>
-          <strong id="totalCount">0</strong>
+      <div class="topbar-right">
+        <input id="searchInput" class="search-input" type="search" placeholder="Rechercher un jeu, une licence..." />
+      </div>
+    </header>
+
+    <main class="games-page">
+      <section id="heroSection" class="hero-section">
+        <div class="hero-backdrop" id="heroBackdrop"></div>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-top-strip">
+          <div class="hero-mini-list" id="heroMiniList"></div>
+        </div>
+
+        <div class="hero-content">
+          <div class="hero-main">
+            <p class="hero-kicker" id="heroFranchise">Franchise</p>
+            <h1 class="hero-title" id="heroTitle">Chargement...</h1>
+            <p class="hero-subtitle" id="heroSubtitle">Bibliothèque de jeux</p>
+
+            <div class="hero-meta" id="heroMeta"></div>
+
+            <p class="hero-description" id="heroDescription">
+              Chargement de la bibliothèque...
+            </p>
+
+            <div class="hero-actions">
+              <button id="showSelectedBtn" class="hero-btn hero-btn-primary" type="button">Voir la fiche</button>
+              <button id="showFavoritesBtn" class="hero-btn hero-btn-secondary" type="button">Favoris</button>
+            </div>
+          </div>
+
+          <aside class="hero-side-card">
+            <div class="side-card-label">À la une</div>
+            <div class="side-card-cover" id="heroSideCover"></div>
+            <div class="side-card-info">
+              <div class="side-card-title" id="heroSideTitle">Chargement...</div>
+              <div class="side-card-text" id="heroSideInfo">Sélection automatique</div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="stats-bar">
+        <article class="stat-box">
+          <span>Total</span>
+          <strong id="statTotal">0</strong>
         </article>
-        <article class="stat-card">
-          <span class="stat-label">Favoris</span>
-          <strong id="favoriteCount">0</strong>
+        <article class="stat-box">
+          <span>Favoris</span>
+          <strong id="statFavorites">0</strong>
         </article>
-        <article class="stat-card">
-          <span class="stat-label">Terminés</span>
-          <strong id="doneCount">0</strong>
+        <article class="stat-box">
+          <span>Terminés</span>
+          <strong id="statDone">0</strong>
         </article>
-        <article class="stat-card">
-          <span class="stat-label">En cours</span>
-          <strong id="progressCount">0</strong>
+        <article class="stat-box">
+          <span>En cours</span>
+          <strong id="statProgress">0</strong>
         </article>
-      </div>
-    </section>
+      </section>
 
-    <section class="toolbar">
-      <div class="category-tabs" id="categoryTabs">
-        <button class="tab is-active" data-category="all">Tous</button>
-        <button class="tab" data-category="favorites">Favoris</button>
-        <button class="tab" data-category="fait">Faits</button>
-        <button class="tab" data-category="en-cours">En cours</button>
-        <button class="tab" data-category="a-faire">À faire</button>
-        <button class="tab" data-category="abandonne">Abandonnés</button>
-      </div>
+      <section class="control-panel">
+        <div class="control-block">
+          <span class="control-label">Vue rapide</span>
+          <div class="chip-row" id="statusTabs">
+            <button class="chip active" data-filter="all" type="button">Tous</button>
+            <button class="chip" data-filter="favorites" type="button">Favoris</button>
+            <button class="chip" data-filter="fait" type="button">Faits</button>
+            <button class="chip" data-filter="en-cours" type="button">En cours</button>
+            <button class="chip" data-filter="a-faire" type="button">À faire</button>
+            <button class="chip" data-filter="abandonne" type="button">Abandonnés</button>
+          </div>
+        </div>
 
-      <div class="filters">
-        <label class="filter">
-          <span>Recherche</span>
-          <input id="searchInput" type="search" placeholder="Ex. Zelda, GTA, DS..." />
-        </label>
+        <div class="control-grid">
+          <label class="field">
+            <span>Licence</span>
+            <select id="franchiseFilter">
+              <option value="all">Toutes</option>
+            </select>
+          </label>
 
-        <label class="filter">
-          <span>Franchise</span>
-          <select id="franchiseFilter">
-            <option value="all">Toutes</option>
-          </select>
-        </label>
+          <label class="field">
+            <span>Tri</span>
+            <select id="sortFilter">
+              <option value="featured">Mis en avant</option>
+              <option value="rating-desc">Note décroissante</option>
+              <option value="title-asc">Titre A → Z</option>
+              <option value="year-desc">Année décroissante</option>
+            </select>
+          </label>
+        </div>
+      </section>
 
-        <label class="filter">
-          <span>Tri</span>
-          <select id="sortFilter">
-            <option value="rating-desc">Note décroissante</option>
-            <option value="title-asc">Titre A → Z</option>
-            <option value="year-desc">Année décroissante</option>
-            <option value="status-asc">Statut</option>
-          </select>
-        </label>
-      </div>
+      <section class="franchise-panel">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Organisation</p>
+            <h2>Licences / groupes</h2>
+          </div>
+        </div>
 
-      <div class="results-bar">
-        <p id="resultsCount">0 jeu</p>
-        <button id="resetFilters" class="ghost-btn" type="button">Réinitialiser</button>
-      </div>
-    </section>
+        <div id="franchiseChips" class="franchise-chips"></div>
+      </section>
 
-    <section class="franchise-section">
-      <div class="section-head">
-        <h2>Groupes / franchises</h2>
-        <p>Cliquer sur une franchise applique le filtre.</p>
-      </div>
-      <div id="franchiseChips" class="chips"></div>
-    </section>
+      <section class="section-block">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Sélection</p>
+            <h2>Jeux filtrés</h2>
+          </div>
+          <p class="section-info" id="resultsInfo">0 résultat</p>
+        </div>
 
-    <section class="games-section">
-      <div id="gamesContainer" class="games-groups"></div>
-    </section>
-  </main>
+        <div id="selectedGrid" class="game-grid"></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Bibliothèque</p>
+            <h2>Par licence</h2>
+          </div>
+        </div>
+
+        <div id="franchiseSections" class="franchise-sections"></div>
+      </section>
+    </main>
+  </div>
 
   <script type="module" src="./static/js/game.js"></script>
 </body>

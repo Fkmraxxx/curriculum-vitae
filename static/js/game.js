@@ -6,28 +6,42 @@ const STATUS_LABELS = {
 };
 
 const state = {
-  category: "all",
+  allGames: [],
+  selectedGameId: null,
+  activeFilter: "all",
   search: "",
   franchise: "all",
-  sort: "rating-desc"
+  sort: "featured"
 };
 
 const els = {
-  totalCount: document.getElementById("totalCount"),
-  favoriteCount: document.getElementById("favoriteCount"),
-  doneCount: document.getElementById("doneCount"),
-  progressCount: document.getElementById("progressCount"),
-  categoryTabs: document.getElementById("categoryTabs"),
+  heroBackdrop: document.getElementById("heroBackdrop"),
+  heroMiniList: document.getElementById("heroMiniList"),
+  heroFranchise: document.getElementById("heroFranchise"),
+  heroTitle: document.getElementById("heroTitle"),
+  heroSubtitle: document.getElementById("heroSubtitle"),
+  heroMeta: document.getElementById("heroMeta"),
+  heroDescription: document.getElementById("heroDescription"),
+  heroSideCover: document.getElementById("heroSideCover"),
+  heroSideTitle: document.getElementById("heroSideTitle"),
+  heroSideInfo: document.getElementById("heroSideInfo"),
+  showSelectedBtn: document.getElementById("showSelectedBtn"),
+  showFavoritesBtn: document.getElementById("showFavoritesBtn"),
+
+  statTotal: document.getElementById("statTotal"),
+  statFavorites: document.getElementById("statFavorites"),
+  statDone: document.getElementById("statDone"),
+  statProgress: document.getElementById("statProgress"),
+
   searchInput: document.getElementById("searchInput"),
+  statusTabs: document.getElementById("statusTabs"),
   franchiseFilter: document.getElementById("franchiseFilter"),
   sortFilter: document.getElementById("sortFilter"),
-  resultsCount: document.getElementById("resultsCount"),
   franchiseChips: document.getElementById("franchiseChips"),
-  gamesContainer: document.getElementById("gamesContainer"),
-  resetFilters: document.getElementById("resetFilters")
+  resultsInfo: document.getElementById("resultsInfo"),
+  selectedGrid: document.getElementById("selectedGrid"),
+  franchiseSections: document.getElementById("franchiseSections")
 };
-
-let allGames = [];
 
 init();
 
@@ -40,67 +54,90 @@ async function init() {
       throw new Error(`Impossible de charger data/games.json (${response.status})`);
     }
 
-    const data = await response.json();
-    allGames = Array.isArray(data.games) ? data.games.map(normalizeGame) : [];
+    const payload = await response.json();
+    const games = Array.isArray(payload.games) ? payload.games.map(normalizeGame) : [];
 
-    renderStaticLists();
-    render();
+    state.allGames = games;
+    state.selectedGameId = pickFeaturedGame(games)?.id || null;
+
+    renderStats();
+    renderFilterLists();
+    renderHero();
+    renderSelectedGrid();
+    renderFranchiseSections();
   } catch (error) {
     console.error(error);
-    els.gamesContainer.innerHTML = `
-      <div class="empty-state">
-        Impossible de charger la bibliothèque de jeux.<br>
-        Vérifie le fichier <strong>data/games.json</strong>.
-      </div>
-    `;
+    showGlobalError();
   }
 }
 
 function bindEvents() {
-  els.categoryTabs.addEventListener("click", (event) => {
-    const btn = event.target.closest("[data-category]");
-    if (!btn) return;
-
-    state.category = btn.dataset.category;
-    updateTabState();
-    render();
-  });
-
   els.searchInput.addEventListener("input", (event) => {
     state.search = event.target.value.trim().toLowerCase();
-    render();
+    renderSelectedGrid();
+    renderFranchiseSections();
+  });
+
+  els.statusTabs.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-filter]");
+    if (!button) return;
+
+    state.activeFilter = button.dataset.filter;
+    [...els.statusTabs.querySelectorAll(".chip")].forEach((chip) => {
+      chip.classList.toggle("active", chip.dataset.filter === state.activeFilter);
+    });
+
+    renderSelectedGrid();
+    renderFranchiseSections();
   });
 
   els.franchiseFilter.addEventListener("change", (event) => {
     state.franchise = event.target.value;
     syncFranchiseChips();
-    render();
+    renderSelectedGrid();
+    renderFranchiseSections();
   });
 
   els.sortFilter.addEventListener("change", (event) => {
     state.sort = event.target.value;
-    render();
+    renderSelectedGrid();
+    renderFranchiseSections();
   });
 
-  els.resetFilters.addEventListener("click", () => {
-    state.category = "all";
-    state.search = "";
-    state.franchise = "all";
-    state.sort = "rating-desc";
+  els.franchiseChips.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-franchise]");
+    if (!button) return;
 
-    els.searchInput.value = "";
-    els.franchiseFilter.value = "all";
-    els.sortFilter.value = "rating-desc";
-
-    updateTabState();
+    state.franchise = button.dataset.franchise;
+    els.franchiseFilter.value = state.franchise;
     syncFranchiseChips();
-    render();
+    renderSelectedGrid();
+    renderFranchiseSections();
+  });
+
+  els.showSelectedBtn.addEventListener("click", () => {
+    const selected = getSelectedGame();
+    if (!selected) return;
+
+    const card = document.querySelector(`[data-card-id="${cssEscape(selected.id)}"]`);
+    if (card) {
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
+
+  els.showFavoritesBtn.addEventListener("click", () => {
+    state.activeFilter = "favorites";
+    [...els.statusTabs.querySelectorAll(".chip")].forEach((chip) => {
+      chip.classList.toggle("active", chip.dataset.filter === "favorites");
+    });
+    renderSelectedGrid();
+    renderFranchiseSections();
   });
 }
 
 function normalizeGame(game) {
   return {
-    id: String(game.id || "").trim(),
+    id: String(game.id || cryptoRandomFallback()).trim(),
     title: String(game.title || "Sans titre").trim(),
     franchise: String(game.franchise || "Sans franchise").trim(),
     status: normalizeStatus(game.status),
@@ -108,7 +145,7 @@ function normalizeGame(game) {
     rating: normalizeRating(game.rating),
     platform: String(game.platform || "").trim(),
     release_year: normalizeYear(game.release_year),
-    cover: resolveAssetPath(game.cover),
+    cover: normalizeCover(game.cover),
     comment: String(game.comment || "").trim(),
     tags: Array.isArray(game.tags)
       ? game.tags.map(tag => String(tag).trim()).filter(Boolean)
@@ -117,53 +154,73 @@ function normalizeGame(game) {
 }
 
 function normalizeStatus(value) {
-  const source = String(value || "")
+  const v = String(value || "")
     .trim()
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+/g, "-");
 
-  if (["fait", "termine", "terminee"].includes(source)) return "fait";
-  if (["en-cours", "encours", "progress"].includes(source)) return "en-cours";
-  if (["a-faire", "afaire", "backlog", "todo"].includes(source)) return "a-faire";
-  if (["abandonne", "abandonné", "dropped"].includes(source)) return "abandonne";
-
+  if (["fait", "termine", "terminee"].includes(v)) return "fait";
+  if (["en-cours", "encours", "progress"].includes(v)) return "en-cours";
+  if (["a-faire", "afaire", "todo", "backlog"].includes(v)) return "a-faire";
+  if (["abandonne", "abandonné", "dropped"].includes(v)) return "abandonne";
   return "a-faire";
 }
 
 function normalizeRating(value) {
-  const number = Number(value);
-  if (Number.isFinite(number)) {
-    return Math.max(0, Math.min(20, number));
-  }
-  return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.max(0, Math.min(20, n)) : null;
 }
 
 function normalizeYear(value) {
-  const number = Number(value);
-  return Number.isFinite(number) ? number : null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
 }
 
-function resolveAssetPath(path) {
-  if (!path) return "";
-  const value = String(path).trim();
+function normalizeCover(value) {
+  if (!value) return "";
+  const path = String(value).trim();
 
-  if (/^https?:\/\//i.test(value)) return value;
-  if (value.startsWith("/")) return value;
-  if (value.startsWith("./") || value.startsWith("../")) return value;
-
-  return `./${value.replace(/^\/+/, "")}`;
+  if (/^https?:\/\//i.test(path)) return path;
+  if (path.startsWith("./") || path.startsWith("../") || path.startsWith("/")) return path;
+  return `./${path.replace(/^\/+/, "")}`;
 }
 
-function updateTabState() {
-  [...els.categoryTabs.querySelectorAll(".tab")].forEach((tab) => {
-    tab.classList.toggle("is-active", tab.dataset.category === state.category);
+function cryptoRandomFallback() {
+  return `game-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function pickFeaturedGame(games) {
+  const sorted = [...games].sort((a, b) => {
+    const scoreA = featuredScore(a);
+    const scoreB = featuredScore(b);
+    return scoreB - scoreA || a.title.localeCompare(b.title, "fr");
   });
+
+  return sorted[0] || null;
 }
 
-function renderStaticLists() {
-  const franchises = [...new Set(allGames.map(game => game.franchise))].sort((a, b) => a.localeCompare(b, "fr"));
+function featuredScore(game) {
+  return (game.favorite ? 100 : 0)
+    + (game.rating ?? 0) * 5
+    + (game.status === "en-cours" ? 20 : 0)
+    + (game.status === "fait" ? 10 : 0);
+}
+
+function getSelectedGame() {
+  return state.allGames.find((game) => game.id === state.selectedGameId) || pickFeaturedGame(state.allGames);
+}
+
+function renderStats() {
+  els.statTotal.textContent = state.allGames.length;
+  els.statFavorites.textContent = state.allGames.filter(g => g.favorite).length;
+  els.statDone.textContent = state.allGames.filter(g => g.status === "fait").length;
+  els.statProgress.textContent = state.allGames.filter(g => g.status === "en-cours").length;
+}
+
+function renderFilterLists() {
+  const franchises = [...new Set(state.allGames.map(game => game.franchise))].sort((a, b) => a.localeCompare(b, "fr"));
 
   els.franchiseFilter.innerHTML = `
     <option value="all">Toutes</option>
@@ -171,48 +228,180 @@ function renderStaticLists() {
   `;
 
   els.franchiseChips.innerHTML = `
-    <button class="chip is-active" data-franchise="all" type="button">Toutes</button>
+    <button class="franchise-filter-chip active" data-franchise="all" type="button">Toutes</button>
     ${franchises.map(franchise => {
-      const count = allGames.filter(game => game.franchise === franchise).length;
-      return `<button class="chip" data-franchise="${escapeHtml(franchise)}" type="button">${escapeHtml(franchise)} (${count})</button>`;
+      const total = state.allGames.filter(game => game.franchise === franchise).length;
+      return `<button class="franchise-filter-chip" data-franchise="${escapeHtml(franchise)}" type="button">${escapeHtml(franchise)} (${total})</button>`;
     }).join("")}
   `;
 
-  els.franchiseChips.addEventListener("click", (event) => {
-    const chip = event.target.closest("[data-franchise]");
-    if (!chip) return;
-
-    state.franchise = chip.dataset.franchise;
-    els.franchiseFilter.value = state.franchise;
-    syncFranchiseChips();
-    render();
-  });
+  syncFranchiseChips();
 }
 
 function syncFranchiseChips() {
-  [...els.franchiseChips.querySelectorAll(".chip")].forEach((chip) => {
-    chip.classList.toggle("is-active", chip.dataset.franchise === state.franchise);
+  [...els.franchiseChips.querySelectorAll(".franchise-filter-chip")].forEach((button) => {
+    button.classList.toggle("active", button.dataset.franchise === state.franchise);
   });
 }
 
-function render() {
-  renderStats();
+function renderHero() {
+  const selected = getSelectedGame();
 
-  let filtered = [...allGames];
+  if (!selected) {
+    els.heroBackdrop.style.backgroundImage = "none";
+    els.heroTitle.textContent = "Aucun jeu";
+    els.heroFranchise.textContent = "Bibliothèque vide";
+    els.heroSubtitle.textContent = "";
+    els.heroMeta.innerHTML = "";
+    els.heroDescription.textContent = "Ajoute des jeux dans l'admin pour remplir cette page.";
+    els.heroMiniList.innerHTML = "";
+    els.heroSideCover.innerHTML = `<div class="hero-mini-fallback">Aucune image</div>`;
+    els.heroSideTitle.textContent = "Aucun jeu";
+    els.heroSideInfo.textContent = "Ajoute du contenu dans l'admin.";
+    return;
+  }
 
-  if (state.category === "favorites") {
-    filtered = filtered.filter(game => game.favorite);
-  } else if (state.category !== "all") {
-    filtered = filtered.filter(game => game.status === state.category);
+  els.heroBackdrop.style.backgroundImage = selected.cover
+    ? `url("${escapeAttribute(selected.cover)}")`
+    : "linear-gradient(135deg, rgba(77,163,255,.35), rgba(126,198,255,.18))";
+
+  els.heroFranchise.textContent = selected.franchise;
+  els.heroTitle.textContent = formatHeroTitle(selected.title);
+  els.heroSubtitle.textContent = selected.platform || "Bibliothèque de jeux";
+  els.heroMeta.innerHTML = buildHeroMeta(selected);
+  els.heroDescription.textContent = selected.comment || "Aucun commentaire pour ce jeu.";
+  els.heroSideTitle.textContent = selected.title;
+  els.heroSideInfo.textContent = buildSideInfo(selected);
+  els.heroSideCover.innerHTML = renderCover(selected.cover, selected.title, "hero-mini-fallback");
+
+  renderHeroMiniList();
+}
+
+function renderHeroMiniList() {
+  const ranked = [...state.allGames]
+    .sort((a, b) => featuredScore(b) - featuredScore(a))
+    .slice(0, 12);
+
+  els.heroMiniList.innerHTML = ranked.map((game) => `
+    <button
+      class="hero-mini-card ${game.id === state.selectedGameId ? "active" : ""}"
+      type="button"
+      data-hero-id="${escapeAttribute(game.id)}"
+      aria-label="Afficher ${escapeAttribute(game.title)}"
+      title="${escapeAttribute(game.title)}"
+    >
+      ${renderCover(game.cover, game.title, "hero-mini-fallback")}
+    </button>
+  `).join("");
+
+  [...els.heroMiniList.querySelectorAll("[data-hero-id]")].forEach((button) => {
+    button.addEventListener("click", () => {
+      state.selectedGameId = button.dataset.heroId;
+      renderHero();
+    });
+  });
+}
+
+function buildHeroMeta(game) {
+  const items = [];
+
+  items.push(`<span class="hero-badge ${statusTone(game.status)}">${escapeHtml(STATUS_LABELS[game.status])}</span>`);
+
+  if (game.favorite) {
+    items.push(`<span class="hero-badge">★ Favori</span>`);
+  }
+
+  if (game.rating !== null) {
+    items.push(`<span class="hero-badge">${game.rating}/20</span>`);
+  }
+
+  if (game.release_year) {
+    items.push(`<span class="hero-badge">${game.release_year}</span>`);
+  }
+
+  if (game.platform) {
+    items.push(`<span class="hero-badge">${escapeHtml(game.platform)}</span>`);
+  }
+
+  return items.join("");
+}
+
+function buildSideInfo(game) {
+  const parts = [];
+  if (game.platform) parts.push(game.platform);
+  if (game.release_year) parts.push(String(game.release_year));
+  if (game.rating !== null) parts.push(`${game.rating}/20`);
+  return parts.join(" • ") || "Sélection automatique";
+}
+
+function renderSelectedGrid() {
+  const filtered = sortGames(applyFilters(state.allGames));
+  els.resultsInfo.textContent = `${filtered.length} résultat${filtered.length > 1 ? "s" : ""}`;
+
+  if (!filtered.length) {
+    els.selectedGrid.innerHTML = `<div class="empty-state">Aucun jeu ne correspond aux filtres actuels.</div>`;
+    return;
+  }
+
+  els.selectedGrid.innerHTML = filtered.map(game => renderGameCard(game)).join("");
+  bindCardClicks(els.selectedGrid);
+}
+
+function renderFranchiseSections() {
+  const filtered = applyFilters(state.allGames);
+
+  if (!filtered.length) {
+    els.franchiseSections.innerHTML = `<div class="empty-state">Aucune section disponible.</div>`;
+    return;
+  }
+
+  const grouped = groupBy(filtered, game => game.franchise);
+
+  els.franchiseSections.innerHTML = Object.entries(grouped)
+    .sort(([a], [b]) => a.localeCompare(b, "fr"))
+    .map(([franchise, games]) => `
+      <section class="franchise-block">
+        <div class="franchise-head">
+          <h3>${escapeHtml(franchise)}</h3>
+          <span>${games.length} jeu${games.length > 1 ? "x" : ""}</span>
+        </div>
+
+        <div class="franchise-rail">
+          ${sortGames(games).slice(0, 8).map(renderGameCard).join("")}
+        </div>
+      </section>
+    `)
+    .join("");
+
+  bindCardClicks(els.franchiseSections);
+}
+
+function bindCardClicks(container) {
+  [...container.querySelectorAll("[data-select-id]")].forEach((element) => {
+    element.addEventListener("click", () => {
+      state.selectedGameId = element.dataset.selectId;
+      renderHero();
+      document.getElementById("heroSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+
+function applyFilters(games) {
+  let result = [...games];
+
+  if (state.activeFilter === "favorites") {
+    result = result.filter(game => game.favorite);
+  } else if (state.activeFilter !== "all") {
+    result = result.filter(game => game.status === state.activeFilter);
   }
 
   if (state.franchise !== "all") {
-    filtered = filtered.filter(game => game.franchise === state.franchise);
+    result = result.filter(game => game.franchise === state.franchise);
   }
 
   if (state.search) {
-    filtered = filtered.filter(game => {
-      const haystack = [
+    result = result.filter((game) => {
+      const text = [
         game.title,
         game.franchise,
         game.platform,
@@ -220,108 +409,101 @@ function render() {
         ...game.tags
       ].join(" ").toLowerCase();
 
-      return haystack.includes(state.search);
+      return text.includes(state.search);
     });
   }
 
-  filtered = sortGames(filtered);
-
-  els.resultsCount.textContent = `${filtered.length} jeu${filtered.length > 1 ? "x" : ""}`;
-
-  renderGroupedGames(filtered);
-}
-
-function renderStats() {
-  els.totalCount.textContent = allGames.length;
-  els.favoriteCount.textContent = allGames.filter(game => game.favorite).length;
-  els.doneCount.textContent = allGames.filter(game => game.status === "fait").length;
-  els.progressCount.textContent = allGames.filter(game => game.status === "en-cours").length;
+  return result;
 }
 
 function sortGames(games) {
-  const sorted = [...games];
+  const cloned = [...games];
 
   switch (state.sort) {
+    case "rating-desc":
+      return cloned.sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1) || a.title.localeCompare(b.title, "fr"));
+
     case "title-asc":
-      return sorted.sort((a, b) => a.title.localeCompare(b.title, "fr"));
+      return cloned.sort((a, b) => a.title.localeCompare(b.title, "fr"));
 
     case "year-desc":
-      return sorted.sort((a, b) => (b.release_year || 0) - (a.release_year || 0));
+      return cloned.sort((a, b) => (b.release_year ?? 0) - (a.release_year ?? 0) || a.title.localeCompare(b.title, "fr"));
 
-    case "status-asc":
-      return sorted.sort((a, b) => STATUS_LABELS[a.status].localeCompare(STATUS_LABELS[b.status], "fr"));
-
-    case "rating-desc":
+    case "featured":
     default:
-      return sorted.sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1) || a.title.localeCompare(b.title, "fr"));
+      return cloned.sort((a, b) => featuredScore(b) - featuredScore(a) || a.title.localeCompare(b.title, "fr"));
   }
 }
 
-function renderGroupedGames(games) {
-  if (!games.length) {
-    els.gamesContainer.innerHTML = `
-      <div class="empty-state">
-        Aucun jeu ne correspond aux filtres actuels.
-      </div>
-    `;
-    return;
-  }
-
-  const groups = groupBy(games, game => game.franchise);
-
-  els.gamesContainer.innerHTML = Object.entries(groups)
-    .sort(([a], [b]) => a.localeCompare(b, "fr"))
-    .map(([franchise, items]) => `
-      <section class="group-block">
-        <div class="group-title">
-          <h3>${escapeHtml(franchise)}</h3>
-          <span>${items.length} jeu${items.length > 1 ? "x" : ""}</span>
-        </div>
-
-        <div class="games-grid">
-          ${items.map(renderCard).join("")}
-        </div>
-      </section>
-    `)
-    .join("");
-}
-
-function renderCard(game) {
-  const cover = game.cover
-    ? `<img src="${escapeAttribute(game.cover)}" alt="Cover de ${escapeAttribute(game.title)}" loading="lazy" />`
-    : `<div class="no-cover">Aucune image</div>`;
-
-  const rating = game.rating !== null ? `${game.rating}/20` : "Non noté";
-  const platform = game.platform ? `<span class="badge">${escapeHtml(game.platform)}</span>` : "";
-  const year = game.release_year ? `<span class="badge">${game.release_year}</span>` : "";
-  const favorite = game.favorite ? `<div class="favorite-badge">★ Favori</div>` : "";
+function renderGameCard(game) {
+  const cover = renderCover(game.cover, game.title, "game-cover-fallback");
+  const favorite = game.favorite ? `<span class="corner-badge favorite">★ Favori</span>` : "";
+  const rating = game.rating !== null ? `<span class="meta-pill">${game.rating}/20</span>` : "";
+  const platform = game.platform ? `<span class="meta-pill">${escapeHtml(game.platform)}</span>` : "";
+  const year = game.release_year ? `<span class="meta-pill">${game.release_year}</span>` : "";
   const tags = game.tags.length
-    ? `<div class="tags">${game.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>`
+    ? `<div class="game-tags">${game.tags.slice(0, 4).map(tag => `<span class="game-tag">${escapeHtml(tag)}</span>`).join("")}</div>`
     : "";
 
   return `
-    <article class="game-card">
-      <div class="game-cover">
-        ${favorite}
+    <article class="game-card" data-card-id="${escapeAttribute(game.id)}">
+      <div class="game-cover" data-select-id="${escapeAttribute(game.id)}">
         ${cover}
+        <div class="game-card-badges">
+          <span class="corner-badge">${escapeHtml(STATUS_LABELS[game.status])}</span>
+          ${favorite}
+        </div>
       </div>
 
-      <div class="card-body">
-        <div class="card-head">
-          <h4>${escapeHtml(game.title)}</h4>
-          <div class="meta">
-            <span class="badge status-${escapeAttribute(game.status)}">${escapeHtml(STATUS_LABELS[game.status])}</span>
-            <span class="badge">${escapeHtml(rating)}</span>
-            ${platform}
-            ${year}
-          </div>
+      <div class="game-body">
+        <h3 class="game-title">${escapeHtml(game.title)}</h3>
+        <p class="game-franchise">${escapeHtml(game.franchise)}</p>
+
+        <div class="game-meta">
+          <span class="meta-pill status-${escapeAttribute(game.status)}">${escapeHtml(STATUS_LABELS[game.status])}</span>
+          ${rating}
+          ${platform}
+          ${year}
         </div>
 
-        <p class="comment">${escapeHtml(game.comment || "Aucun commentaire.")}</p>
+        <p class="game-comment">${escapeHtml(game.comment || "Aucun commentaire.")}</p>
         ${tags}
       </div>
     </article>
   `;
+}
+
+function renderCover(cover, title, fallbackClass) {
+  if (!cover) {
+    return `<div class="${fallbackClass}">Aucune image<br>${escapeHtml(title)}</div>`;
+  }
+
+  return `<img src="${escapeAttribute(cover)}" alt="Cover de ${escapeAttribute(title)}" loading="lazy" />`;
+}
+
+function formatHeroTitle(title) {
+  return title;
+}
+
+function statusTone(status) {
+  if (status === "fait") return "good";
+  if (status === "en-cours") return "warn";
+  if (status === "abandonne") return "danger";
+  return "";
+}
+
+function showGlobalError() {
+  els.heroTitle.textContent = "Erreur";
+  els.heroFranchise.textContent = "Chargement impossible";
+  els.heroSubtitle.textContent = "";
+  els.heroMeta.innerHTML = "";
+  els.heroDescription.textContent = "Vérifie le fichier data/games.json.";
+  els.heroMiniList.innerHTML = "";
+  els.heroSideCover.innerHTML = `<div class="hero-mini-fallback">Erreur</div>`;
+  els.heroSideTitle.textContent = "Impossible de charger";
+  els.heroSideInfo.textContent = "Vérifie la structure JSON.";
+  els.selectedGrid.innerHTML = `<div class="empty-state">Impossible de charger la bibliothèque.</div>`;
+  els.franchiseSections.innerHTML = "";
 }
 
 function groupBy(items, getKey) {
@@ -344,4 +526,11 @@ function escapeHtml(value) {
 
 function escapeAttribute(value) {
   return escapeHtml(value);
+}
+
+function cssEscape(value) {
+  if (window.CSS && typeof window.CSS.escape === "function") {
+    return window.CSS.escape(value);
+  }
+  return String(value).replace(/[^a-zA-Z0-9_-]/g, "\\$&");
 }
