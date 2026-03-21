@@ -9,8 +9,7 @@
 <h1 align="center">curriculum-vitae</h1>
 
 <p align="center">
-  <strong>Portfolio / CV interactif d’Alexis Campos</strong><br>
-  Alternant technicien informatique · BTS CIEL IR · Systèmes · Réseaux · Cybersécurité
+  <strong>Portfolio / CV interactif</strong><br>
 </p>
 
 <p align="center">
