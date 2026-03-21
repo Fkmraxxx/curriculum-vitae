@@ -46,6 +46,17 @@
       "favorite": false,
       "rating": 16,
       "franchise": "The Legend of Zelda"
+    },
+    {
+      "status": "fait",
+      "platform": "SWITCH",
+      "release_year": 2025,
+      "cover": "/curriculum-vitae/static/images/games/botw.png",
+      "title": "Zelda Breath Of The Wild",
+      "id": "Zelda Breath Of The Wild",
+      "favorite": false,
+      "rating": 16,
+      "franchise": "The Legend of Zelda"
     }
   ]
 }
