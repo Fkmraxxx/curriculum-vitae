@@ -1,3 +1,16 @@
 {
-  "games": []
+  "games": [
+    {
+      "status": "fait",
+      "platform": "Wii U",
+      "release_year": 2025,
+      "cover": "/curriculum-vitae/static/images/games/windwaker.png",
+      "title": "Zelda WindWaker",
+      "tags": [],
+      "id": "Zelda WindWaker",
+      "favorite": true,
+      "rating": 17,
+      "franchise": "The Legend of Zelda"
+    }
+  ]
 }
