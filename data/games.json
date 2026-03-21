@@ -57,6 +57,15 @@
       "favorite": false,
       "rating": 16,
       "franchise": "The Legend of Zelda"
+    },
+    {
+      "favorite": false,
+      "id": "Zelda Skyward Sword",
+      "title": "Zelda Skyward Sword",
+      "franchise": "The Legend of Zelda",
+      "status": "en-cours",
+      "platform": "SWITCH",
+      "cover": "/curriculum-vitae/static/images/games/skywartsword.png"
     }
   ]
 }
