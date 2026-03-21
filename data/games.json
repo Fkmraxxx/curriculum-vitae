@@ -23,6 +23,18 @@
       "rating": 15,
       "franchise": "The Legend of Zelda",
       "comment": "Zelda: Phantom Hourglass est un épisode original sur Nintendo DS, avec une aventure agréable, un style visuel réussi et de bonnes idées utilisant l’écran tactile."
+    },
+    {
+      "status": "fait",
+      "platform": "DS",
+      "release_year": 2026,
+      "cover": "/curriculum-vitae/static/images/games/the-legend-of-zelda-spirit-tracks-ds-game-us-version_b493418f-b005-476d-ac64-9d10f25693b9.d413d7250b3a34e380ca2fe67a99b7dc.png",
+      "title": "Zelda Spirit Tracks",
+      "tags": [],
+      "id": "Zelda Spirit Tracks",
+      "favorite": false,
+      "rating": 16,
+      "franchise": "The Legend of Zelda"
     }
   ]
 }
