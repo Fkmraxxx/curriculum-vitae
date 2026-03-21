@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mes jeux :</title>
+  <meta name="description" content="Bibliothèque de jeux : favoris, terminés, en cours, franchises et notes." />
+  <link rel="stylesheet" href="./static/css/game.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="back-link" href="./index.html">← Retour au CV</a>
+    <div class="brand">Game Library</div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Collection gaming</p>
+        <h1>Mes jeux</h1>
+        <p class="hero-desc">
+          Une page pour regrouper mes jeux favoris, ceux terminés, ceux en cours,
+          mes notes et les licences que j’aime.
+        </p>
+      </div>
+
+      <div class="stats">
+        <article class="stat-card">
+          <span class="stat-label">Total</span>
+          <strong id="totalCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Favoris</span>
+          <strong id="favoriteCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Terminés</span>
+          <strong id="doneCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">En cours</span>
+          <strong id="progressCount">0</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="category-tabs" id="categoryTabs">
+        <button class="tab is-active" data-category="all">Tous</button>
+        <button class="tab" data-category="favorites">Favoris</button>
+        <button class="tab" data-category="fait">Faits</button>
+        <button class="tab" data-category="en-cours">En cours</button>
+        <button class="tab" data-category="a-faire">À faire</button>
+        <button class="tab" data-category="abandonne">Abandonnés</button>
+      </div>
+
+      <div class="filters">
+        <label class="filter">
+          <span>Recherche</span>
+          <input id="searchInput" type="search" placeholder="Ex. Zelda, GTA, DS..." />
+        </label>
+
+        <label class="filter">
+          <span>Franchise</span>
+          <select id="franchiseFilter">
+            <option value="all">Toutes</option>
+          </select>
+        </label>
+
+        <label class="filter">
+          <span>Tri</span>
+          <select id="sortFilter">
+            <option value="rating-desc">Note décroissante</option>
+            <option value="title-asc">Titre A → Z</option>
+            <option value="year-desc">Année décroissante</option>
+            <option value="status-asc">Statut</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="results-bar">
+        <p id="resultsCount">0 jeu</p>
+        <button id="resetFilters" class="ghost-btn" type="button">Réinitialiser</button>
+      </div>
+    </section>
+
+    <section class="franchise-section">
+      <div class="section-head">
+        <h2>Groupes / franchises</h2>
+        <p>Cliquer sur une franchise applique le filtre.</p>
+      </div>
+      <div id="franchiseChips" class="chips"></div>
+    </section>
+
+    <section class="games-section">
+      <div id="gamesContainer" class="games-groups"></div>
+    </section>
+  </main>
+
+  <script type="module" src="./static/js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+backend:
+  name: github
+  repo: Fkmraxxx/curriculum-vitae
+  branch: main
+  base_url: https://cv-decap-oauth-proxy.fkmraxxx.workers.dev
+  auth_endpoint: auth
+
+locale: fr
+site_url: https://fkmraxxx.github.io/curriculum-vitae
+
+media_folder: "static/images/games"
+public_folder: "/curriculum-vitae/static/images/games"
+
+collections:
+  - label: "Bibliothèque de jeux"
+    name: "games_file"
+    files:
+      - label: "Jeux"
+        name: "games"
+        file: "data/games.json"
+        format: "json"
+        editor:
+          preview: false
+        fields:
+          - label: "Jeux"
+            name: "games"
+            widget: "list"
+            label_singular: "Jeu"
+            collapsed: true
+            summary: "{{fields.title}} — {{fields.status}} — {{fields.franchise}}"
+            fields:
+              - label: "ID"
+                name: "id"
+                widget: "string"
+                hint: "Exemple : zelda-spirit-tracks"
+
+              - label: "Titre"
+                name: "title"
+                widget: "string"
+
+              - label: "Franchise / groupe"
+                name: "franchise"
+                widget: "string"
+                hint: "Exemple : The Legend of Zelda"
+
+              - label: "Statut"
+                name: "status"
+                widget: "select"
+                options:
+                  - { label: "Fait", value: "fait" }
+                  - { label: "En cours", value: "en-cours" }
+                  - { label: "À faire", value: "a-faire" }
+                  - { label: "Abandonné", value: "abandonne" }
+
+              - label: "Favori"
+                name: "favorite"
+                widget: "boolean"
+                required: false
+                default: false
+
+              - label: "Note /20"
+                name: "rating"
+                widget: "number"
+                value_type: "int"
+                min: 0
+                max: 20
+                required: false
+
+              - label: "Plateforme"
+                name: "platform"
+                widget: "string"
+                required: false
+
+              - label: "Année"
+                name: "release_year"
+                widget: "number"
+                value_type: "int"
+                required: false
+
+              - label: "Cover"
+                name: "cover"
+                widget: "image"
+                required: false
+                choose_url: false
+
+              - label: "Commentaire"
+                name: "comment"
+                widget: "text"
+                required: false
+
+              - label: "Tags"
+                name: "tags"
+                widget: "list"
+                required: false

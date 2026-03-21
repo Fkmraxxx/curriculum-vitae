@@ -1,0 +1,11 @@
+{
+  "name": "cv-decap-oauth-proxy",
+  "main": "src/index.js",
+  "compatibility_date": "2026-03-21",
+  "workers_dev": true,
+  "vars": {
+    "ALLOWED_ORIGIN": "https://fkmraxxx.github.io",
+    "GITHUB_CLIENT_ID": "Ov23lifuVZIIrTsariVc",
+    "GITHUB_SCOPE": "public_repo,user"
+  }
+}
