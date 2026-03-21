@@ -2051,9 +2051,11 @@
                 <div class="qr-title">CV PDF</div>
                 <div class="qr-box" id="cvQr"></div>
                 <div class="qr-text">Scan pour télécharger le CV</div>
-              </div>
+  </div>
             </div>
           </div>
+        </aside>
+      </div>
     </section>
   </div>
 
@@ -2082,7 +2084,6 @@
       const contactCloseBtn = document.getElementById('contactCloseBtn');
       const copyEmailBtn = document.getElementById('copyEmailBtn');
       const copyPhoneBtn = document.getElementById('copyPhoneBtn');
-      const downloadVcardBtn = document.getElementById('downloadVcardBtn');
       const resetInterestedBtn = document.getElementById('resetInterestedBtn');
       const copyFeedback = document.getElementById('copyFeedback');
       const linkedinQr = document.getElementById('linkedinQr');
@@ -2450,27 +2451,37 @@
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
-      function bindContactPanelActions() {
-        contactPanelBackdrop.addEventListener('click', resetInterestedScene);
-        contactCloseBtn.addEventListener('click', resetInterestedScene);
-        resetInterestedBtn.addEventListener('click', resetInterestedScene);
+function bindContactPanelActions() {
+  if (contactPanelBackdrop) {
+    contactPanelBackdrop.addEventListener('click', resetInterestedScene);
+  }
 
-        copyEmailBtn.addEventListener('click', () => {
-          copyText(CONTACT.email, 'Email copié.');
-        });
+  if (contactCloseBtn) {
+    contactCloseBtn.addEventListener('click', resetInterestedScene);
+  }
 
-        copyPhoneBtn.addEventListener('click', () => {
-          copyText(CONTACT.phoneDisplay, 'Téléphone copié.');
-        });
+  if (resetInterestedBtn) {
+    resetInterestedBtn.addEventListener('click', resetInterestedScene);
+  }
 
-        downloadVcardBtn.addEventListener('click', downloadVCard);
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', () => {
+      copyText(CONTACT.email, 'Email copié.');
+    });
+  }
 
-        document.addEventListener('keydown', (event) => {
-          if (event.key === 'Escape' && contactPanel.classList.contains('show')) {
-            resetInterestedScene();
-          }
-        });
-      }
+  if (copyPhoneBtn) {
+    copyPhoneBtn.addEventListener('click', () => {
+      copyText(CONTACT.phoneDisplay, 'Téléphone copié.');
+    });
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && contactPanel.classList.contains('show')) {
+      resetInterestedScene();
+    }
+  });
+}
 
       function showCopyFeedback(message, isError = false) {
         clearTimeout(copyFeedbackTimer);
