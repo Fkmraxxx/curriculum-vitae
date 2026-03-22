@@ -143,6 +143,15 @@
       "status": "fait",
       "rating": 17,
       "cover": "/curriculum-vitae/static/images/games/fkzwjnjknkrflozktdeqbmub.jpg"
+    },
+    {
+      "favorite": false,
+      "id": "Resident Evil Requiem",
+      "title": "Resident Evil Requiem",
+      "franchise": "Resident Evil",
+      "status": "fait",
+      "rating": 18,
+      "cover": "/curriculum-vitae/static/images/games/images.jpg"
     }
   ]
 }
