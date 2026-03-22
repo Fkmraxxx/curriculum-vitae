@@ -66,6 +66,16 @@
       "status": "en-cours",
       "platform": "SWITCH",
       "cover": "/curriculum-vitae/static/images/games/skywartsword.png"
+    },
+    {
+      "favorite": false,
+      "cover": "/curriculum-vitae/static/images/games/0a3fc6d3f858e52566fe0390b13387a29243ddeecc70293f.avif",
+      "release_year": 2027,
+      "platform": "PC",
+      "status": "en-cours",
+      "title": "Crimson Desert",
+      "id": "Crimson Desert",
+      "franchise": "Open-World"
     }
   ]
 }
