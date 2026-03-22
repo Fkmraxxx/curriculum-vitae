@@ -124,7 +124,8 @@
       ],
       "franchise": "Resident Evil",
       "status": "fait",
-      "rating": 15
+      "rating": 15,
+      "cover": "/curriculum-vitae/static/images/games/4ezkquclavozdqzpcdtgxqxybkhchqo4.jpg"
     },
     {
       "favorite": false,
