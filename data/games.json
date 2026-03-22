@@ -86,6 +86,15 @@
       "platform": "PC",
       "release_year": "",
       "cover": "/curriculum-vitae/static/images/games/qm61goa3f6cvdcv0cpda1w1adce3osik.avif"
+    },
+    {
+      "favorite": true,
+      "id": "Resident Evil 2",
+      "title": "Resident Evil 2",
+      "franchise": "Resident Evil",
+      "status": "fait",
+      "rating": 16,
+      "cover": "/curriculum-vitae/static/images/games/6623a6b1-5f22-4f59-ac72-e251761a2ddb.jpg"
     }
   ]
 }
