@@ -105,6 +105,44 @@
       "rating": 13,
       "release_year": "",
       "cover": "/curriculum-vitae/static/images/games/wmrizbrlsexweedljoww7mdw.webp"
+    },
+    {
+      "favorite": true,
+      "id": "Resident Evil 4",
+      "title": "Resident Evil 4",
+      "rating": 19,
+      "status": "fait",
+      "franchise": "Resident Evil",
+      "cover": "/curriculum-vitae/static/images/games/resident-evil-4-pc-jeu-steam-europe-cover.jpg"
+    },
+    {
+      "favorite": false,
+      "id": "Resident Evil 5",
+      "title": "Resident Evil 5",
+      "tags": [
+        "coop"
+      ],
+      "franchise": "Resident Evil",
+      "status": "fait",
+      "rating": 15
+    },
+    {
+      "favorite": false,
+      "id": "Resident Evil 7",
+      "title": "Resident Evil 7",
+      "franchise": "Resident Evil",
+      "status": "fait",
+      "rating": 18,
+      "cover": "/curriculum-vitae/static/images/games/cxd9vkfoahvwwyg7lqkengkrfyoachnh.jpg"
+    },
+    {
+      "favorite": false,
+      "id": "Resident Evil Village",
+      "title": "Resident Evil Village",
+      "franchise": "Resident Evil",
+      "status": "fait",
+      "rating": 17,
+      "cover": "/curriculum-vitae/static/images/games/fkzwjnjknkrflozktdeqbmub.jpg"
     }
   ]
 }
