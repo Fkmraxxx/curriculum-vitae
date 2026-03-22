@@ -153,6 +153,33 @@
       "status": "fait",
       "rating": 18,
       "cover": "/curriculum-vitae/static/images/games/images.jpg"
+    },
+    {
+      "favorite": true,
+      "id": "Elden Ring ",
+      "title": "Elden Ring ",
+      "franchise": "Souls-like",
+      "status": "fait",
+      "rating": 19,
+      "cover": "/curriculum-vitae/static/images/games/er_soteedition_editionkeyartnew.webp"
+    },
+    {
+      "favorite": true,
+      "id": "Sekiro",
+      "title": "Sekiro",
+      "franchise": "Souls-like",
+      "status": "fait",
+      "rating": 20,
+      "cover": "/curriculum-vitae/static/images/games/capsule_616x353.jpg"
+    },
+    {
+      "favorite": false,
+      "cover": "/curriculum-vitae/static/images/games/egs_cyberpunk2077_cdprojektred_s1_03_2560x1440-359e77d3cd0a40aebf3bbc130d14c5c7.jpg",
+      "id": "Cyberpunk2077",
+      "title": "Cyberpunk2077",
+      "franchise": "Open-World",
+      "status": "fait",
+      "rating": 18
     }
   ]
 }
