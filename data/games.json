@@ -180,6 +180,15 @@
       "franchise": "Open-World",
       "status": "fait",
       "rating": 18
+    },
+    {
+      "favorite": false,
+      "cover": "/curriculum-vitae/static/images/games/apps.44761.13783945394833991.9c211df2-6d91-4ddb-8a9b-d22dd17d57de.jpg",
+      "id": "Wuchang",
+      "title": "Wuchang",
+      "franchise": "Souls-like",
+      "status": "fait",
+      "rating": 12
     }
   ]
 }
