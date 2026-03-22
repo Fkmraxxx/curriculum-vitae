@@ -76,6 +76,16 @@
       "title": "Crimson Desert",
       "id": "Crimson Desert",
       "franchise": "Open-World"
+    },
+    {
+      "favorite": false,
+      "id": "Resident Evil Zero",
+      "title": "Resident Evil Zero",
+      "franchise": "Resident Evil",
+      "status": "en-cours",
+      "platform": "PC",
+      "release_year": "",
+      "cover": "/curriculum-vitae/static/images/games/qm61goa3f6cvdcv0cpda1w1adce3osik.avif"
     }
   ]
 }
