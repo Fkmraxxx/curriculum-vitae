@@ -189,6 +189,23 @@
       "franchise": "Souls-like",
       "status": "fait",
       "rating": 12
+    },
+    {
+      "favorite": false,
+      "id": "Zelda Minish Cap",
+      "title": "Zelda Minish Cap",
+      "franchise": "The Legend of Zelda",
+      "status": "en-cours",
+      "cover": "/curriculum-vitae/static/images/games/legend-of-zelda-the-minish-cap-button-1559683061499.webp"
+    },
+    {
+      "favorite": false,
+      "id": "Hollow Knight",
+      "title": "Hollow Knight",
+      "franchise": "Metroidvania",
+      "status": "fait",
+      "rating": 16,
+      "cover": "/curriculum-vitae/static/images/games/download.jpg"
     }
   ]
 }
