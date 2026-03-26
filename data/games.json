@@ -59,14 +59,15 @@
       "franchise": "The Legend of Zelda"
     },
     {
-      "favorite": false,
-      "id": "Zelda Skyward Sword",
-      "title": "Zelda Skyward Sword",
-      "franchise": "The Legend of Zelda",
       "status": "fait",
       "platform": "SWITCH",
+      "release_year": 2026,
       "cover": "/curriculum-vitae/static/images/games/skywartsword.png",
-      "rating": 18
+      "title": "Zelda Skyward Sword",
+      "id": "Zelda Skyward Sword",
+      "favorite": false,
+      "rating": 18,
+      "franchise": "The Legend of Zelda"
     },
     {
       "favorite": false,
