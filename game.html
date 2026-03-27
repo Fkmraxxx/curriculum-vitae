@@ -13,29 +13,45 @@
 <body>
   <div class="page-shell">
     <header class="topbar">
-      <div class="topbar-left">
-        <a href="./index.html" class="nav-btn">← Retour CV</a>
-        <a href="./admin/" class="nav-btn nav-btn-secondary">Admin</a>
+      <div class="topbar-brand">
+        <p class="topbar-kicker">Portfolio interactif</p>
+        <h1>Bibliothèque de jeux</h1>
+        <p class="topbar-text">
+          Une collection plus claire, plus stylée et plus simple à explorer avec recherche, filtres cumulés
+          et vues adaptées à chaque envie.
+        </p>
       </div>
 
-      <div class="topbar-right">
-        <input id="searchInput" class="search-input" type="search" placeholder="Rechercher un jeu, une licence..." />
+      <div class="topbar-actions">
+        <label class="search-shell" for="searchInput">
+          <span>Recherche intelligente</span>
+          <input id="searchInput" class="search-input" type="search" placeholder="Rechercher un jeu, une licence, une plateforme ou un tag..." />
+        </label>
+
+        <div class="topbar-links">
+          <a href="./index.html" class="nav-btn">← Retour CV</a>
+          <a href="./admin/" class="nav-btn nav-btn-secondary">Admin</a>
+        </div>
       </div>
     </header>
 
-    <main class="games-page">
+    <main class="games-page view-grid">
       <section id="heroSection" class="hero-section">
         <div class="hero-backdrop" id="heroBackdrop"></div>
         <div class="hero-overlay"></div>
 
         <div class="hero-top-strip">
+          <div class="hero-strip-head">
+            <p class="section-kicker">Sélection du moment</p>
+            <span class="hero-strip-text">Choisis une cover pour mettre le jeu à la une</span>
+          </div>
           <div class="hero-mini-list" id="heroMiniList"></div>
         </div>
 
         <div class="hero-content">
           <div class="hero-main">
             <p class="hero-kicker" id="heroFranchise">Franchise</p>
-            <h1 class="hero-title" id="heroTitle">Chargement...</h1>
+            <h2 class="hero-title" id="heroTitle">Chargement...</h2>
             <p class="hero-subtitle" id="heroSubtitle">Bibliothèque de jeux</p>
 
             <div class="hero-meta" id="heroMeta"></div>
@@ -45,18 +61,29 @@
             </p>
 
             <div class="hero-actions">
-              <button id="showSelectedBtn" class="hero-btn hero-btn-primary" type="button">Voir la fiche</button>
-              <button id="showFavoritesBtn" class="hero-btn hero-btn-secondary" type="button">Favoris</button>
+              <button id="showSelectedBtn" class="hero-btn hero-btn-primary" type="button">Ouvrir la sélection</button>
+              <button id="showFavoritesBtn" class="hero-btn hero-btn-secondary" type="button">Voir les favoris</button>
             </div>
           </div>
 
-          <aside class="hero-side-card">
-            <div class="side-card-label">À la une</div>
-            <div class="side-card-cover" id="heroSideCover"></div>
-            <div class="side-card-info">
-              <div class="side-card-title" id="heroSideTitle">Chargement...</div>
-              <div class="side-card-text" id="heroSideInfo">Sélection automatique</div>
-            </div>
+          <aside class="hero-side-stack">
+            <article class="hero-side-card">
+              <div class="side-card-label">À la une</div>
+              <div class="side-card-cover" id="heroSideCover"></div>
+              <div class="side-card-info">
+                <div class="side-card-title" id="heroSideTitle">Chargement...</div>
+                <div class="side-card-text" id="heroSideInfo">Sélection automatique</div>
+              </div>
+            </article>
+
+            <article class="hero-insight-card">
+              <div class="side-card-label">Repères rapides</div>
+              <div class="hero-tag-list" id="heroTagList"></div>
+              <div class="hero-collection-line">
+                <span>Collection liée</span>
+                <strong id="heroCollectionInfo">Chargement...</strong>
+              </div>
+            </article>
           </aside>
         </div>
       </section>
@@ -92,16 +119,29 @@
       </section>
 
       <section class="control-panel sticky-controls" id="controlPanel">
+        <div class="control-panel-head">
+          <div>
+            <p class="section-kicker">Filtres & navigation</p>
+            <h2>Explore la collection</h2>
+            <p class="control-helper">Recherche multi-champs, filtres cumulables et vues adaptées à ta façon de parcourir la bibliothèque.</p>
+          </div>
+
+          <div class="control-panel-actions">
+            <p id="filtersSummary" class="filters-summary">Tous les jeux sont affichés.</p>
+            <button id="clearAllFilters" class="clear-filters-btn" type="button">Réinitialiser</button>
+          </div>
+        </div>
+
         <div class="control-row-top">
           <div class="control-block">
             <span class="control-label">Vue rapide</span>
             <div class="chip-row" id="statusTabs">
-              <button class="chip active" data-filter="all" type="button">Tous</button>
-              <button class="chip" data-filter="favorites" type="button">Favoris</button>
-              <button class="chip" data-filter="fait" type="button">Faits</button>
-              <button class="chip" data-filter="en-cours" type="button">En cours</button>
-              <button class="chip" data-filter="a-faire" type="button">À faire</button>
-              <button class="chip" data-filter="abandonne" type="button">Abandonnés</button>
+              <button class="chip active" data-filter="all" data-label="Tous" type="button">Tous</button>
+              <button class="chip" data-filter="favorites" data-label="Favoris" type="button">Favoris</button>
+              <button class="chip" data-filter="fait" data-label="Faits" type="button">Faits</button>
+              <button class="chip" data-filter="en-cours" data-label="En cours" type="button">En cours</button>
+              <button class="chip" data-filter="a-faire" data-label="À faire" type="button">À faire</button>
+              <button class="chip" data-filter="abandonne" data-label="Abandonnés" type="button">Abandonnés</button>
             </div>
           </div>
 
@@ -149,7 +189,7 @@
         </div>
 
         <div id="activeTagFilter" class="active-tag-filter" hidden>
-          <span class="control-label">Tag actif :</span>
+          <span class="control-label">Tag actif</span>
           <span id="activeTagChip" class="chip chip-tag-active"></span>
           <button id="clearTagFilter" class="chip chip-clear" type="button">✕ Effacer</button>
         </div>
@@ -167,12 +207,15 @@
       </section>
 
       <section class="section-block">
-        <div class="section-head">
+        <div class="section-head section-head-stacked">
           <div>
             <p class="section-kicker">Sélection</p>
             <h2>Jeux filtrés</h2>
           </div>
-          <p class="section-info" id="resultsInfo">0 résultat</p>
+          <div class="section-meta-stack">
+            <p class="section-info" id="resultsInfo">0 résultat</p>
+            <p class="section-subinfo" id="resultsDetails">Affichage initial de la collection.</p>
+          </div>
         </div>
 
         <div id="selectedGrid" class="game-grid"></div>
