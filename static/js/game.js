@@ -5,8 +5,8 @@ const STATUS_LABELS = {
   "abandonne": "Abandonné"
 };
 
-const REVEAL_VIEWPORT_THRESHOLD_RATIO = 0.98;
-const REVEAL_FALLBACK_DELAY_MS = 180;
+const VIEWPORT_REVEAL_THRESHOLD = 0.98;
+const REVEAL_FALLBACK_DELAY = 180;
 
 let revealObserver = null;
 let infiniteScrollObserver = null;
@@ -707,7 +707,7 @@ function setupScrollReveal() {
       }
     });
     revealFallbackTimer = null;
-  }, REVEAL_FALLBACK_DELAY_MS);
+  }, REVEAL_FALLBACK_DELAY);
 }
 
 function revealIfVisible(element) {
@@ -716,7 +716,7 @@ function revealIfVisible(element) {
 
   if (!viewportHeight) return;
 
-  if (rect.top < viewportHeight * REVEAL_VIEWPORT_THRESHOLD_RATIO && rect.bottom > 0) {
+  if (rect.top < viewportHeight * VIEWPORT_REVEAL_THRESHOLD && rect.bottom > 0) {
     element.classList.add("revealed");
     if (revealObserver) {
       revealObserver.unobserve(element);
