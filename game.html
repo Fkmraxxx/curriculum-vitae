@@ -77,23 +77,59 @@
         </article>
       </section>
 
-      <section class="control-panel">
-        <div class="control-block">
-          <span class="control-label">Vue rapide</span>
-          <div class="chip-row" id="statusTabs">
-            <button class="chip active" data-filter="all" type="button">Tous</button>
-            <button class="chip" data-filter="favorites" type="button">Favoris</button>
-            <button class="chip" data-filter="fait" type="button">Faits</button>
-            <button class="chip" data-filter="en-cours" type="button">En cours</button>
-            <button class="chip" data-filter="a-faire" type="button">À faire</button>
-            <button class="chip" data-filter="abandonne" type="button">Abandonnés</button>
+      <section class="section-block favorites-section" id="favoritesSection">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Coups de cœur</p>
+            <h2>★ Mes incontournables</h2>
+          </div>
+          <p class="section-info" id="favoritesInfo">0 jeu</p>
+        </div>
+        <div id="favoritesGrid" class="game-grid"></div>
+      </section>
+
+      <section class="control-panel sticky-controls" id="controlPanel">
+        <div class="control-row-top">
+          <div class="control-block">
+            <span class="control-label">Vue rapide</span>
+            <div class="chip-row" id="statusTabs">
+              <button class="chip active" data-filter="all" type="button">Tous</button>
+              <button class="chip" data-filter="favorites" type="button">Favoris</button>
+              <button class="chip" data-filter="fait" type="button">Faits</button>
+              <button class="chip" data-filter="en-cours" type="button">En cours</button>
+              <button class="chip" data-filter="a-faire" type="button">À faire</button>
+              <button class="chip" data-filter="abandonne" type="button">Abandonnés</button>
+            </div>
+          </div>
+
+          <div class="view-toggle-group">
+            <span class="control-label">Affichage</span>
+            <div class="view-toggle" id="viewToggle">
+              <button class="view-btn active" data-view="grid" type="button" title="Vue grille">⊞ Grille</button>
+              <button class="view-btn" data-view="compact" type="button" title="Vue compacte">☰ Compact</button>
+              <button class="view-btn" data-view="shelf" type="button" title="Vue étagère">📚 Étagère</button>
+            </div>
           </div>
         </div>
 
-        <div class="control-grid">
+        <div class="control-grid control-grid-wide">
           <label class="field">
             <span>Licence</span>
             <select id="franchiseFilter">
+              <option value="all">Toutes</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Plateforme</span>
+            <select id="platformFilter">
+              <option value="all">Toutes</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Année</span>
+            <select id="yearFilter">
               <option value="all">Toutes</option>
             </select>
           </label>
@@ -107,6 +143,12 @@
               <option value="year-desc">Année décroissante</option>
             </select>
           </label>
+        </div>
+
+        <div id="activeTagFilter" class="active-tag-filter" hidden>
+          <span class="control-label">Tag actif :</span>
+          <span id="activeTagChip" class="chip chip-tag-active"></span>
+          <button id="clearTagFilter" class="chip chip-clear" type="button">✕ Effacer</button>
         </div>
       </section>
 
@@ -131,6 +173,7 @@
         </div>
 
         <div id="selectedGrid" class="game-grid"></div>
+        <div id="scrollSentinel" class="scroll-sentinel"></div>
       </section>
 
       <section class="section-block">
