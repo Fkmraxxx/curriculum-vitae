@@ -1001,10 +1001,10 @@ body::before{
 .reveal{
   opacity: 0;
   transform: translateY(24px);
-  animation: revealRise .48s cubic-bezier(.4,0,.2,1) forwards;
 }
 
 .reveal.revealed{
+  animation: revealRise .48s cubic-bezier(.4,0,.2,1) forwards;
   opacity: 1;
   transform: translateY(0);
 }

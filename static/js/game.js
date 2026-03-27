@@ -5,10 +5,11 @@ const STATUS_LABELS = {
   "abandonne": "Abandonné"
 };
 
-const REVEAL_VIEWPORT_RATIO = 0.98;
+const REVEAL_VIEWPORT_THRESHOLD_RATIO = 0.98;
 
 let revealObserver = null;
 let infiniteScrollObserver = null;
+let revealFallbackTimer = null;
 
 const state = {
   allGames: [],
@@ -692,6 +693,20 @@ function setupScrollReveal() {
     revealObserver.observe(el);
     revealIfVisible(el);
   });
+
+  if (revealFallbackTimer) {
+    window.clearTimeout(revealFallbackTimer);
+  }
+
+  revealFallbackTimer = window.setTimeout(() => {
+    [...document.querySelectorAll(".reveal:not(.revealed)")].forEach((el) => {
+      el.classList.add("revealed");
+      if (revealObserver) {
+        revealObserver.unobserve(el);
+      }
+    });
+    revealFallbackTimer = null;
+  }, 180);
 }
 
 function revealIfVisible(element) {
@@ -700,7 +715,7 @@ function revealIfVisible(element) {
 
   if (!viewportHeight) return;
 
-  if (rect.top < viewportHeight * REVEAL_VIEWPORT_RATIO && rect.bottom > 0) {
+  if (rect.top < viewportHeight * REVEAL_VIEWPORT_THRESHOLD_RATIO && rect.bottom > 0) {
     element.classList.add("revealed");
     if (revealObserver) {
       revealObserver.unobserve(element);
