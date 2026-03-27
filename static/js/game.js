@@ -6,6 +6,7 @@ const STATUS_LABELS = {
 };
 
 const REVEAL_VIEWPORT_THRESHOLD_RATIO = 0.98;
+const REVEAL_FALLBACK_DELAY_MS = 180;
 
 let revealObserver = null;
 let infiniteScrollObserver = null;
@@ -706,7 +707,7 @@ function setupScrollReveal() {
       }
     });
     revealFallbackTimer = null;
-  }, 180);
+  }, REVEAL_FALLBACK_DELAY_MS);
 }
 
 function revealIfVisible(element) {
