@@ -999,8 +999,8 @@ body::before{
 .favorites-section .section-head h2{ color:#fff; }
 
 .reveal{
-  opacity: 0;
-  transform: translateY(24px);
+  opacity: 1;
+  transform: translateY(0);
   transition: opacity .48s cubic-bezier(.4,0,.2,1), transform .48s cubic-bezier(.4,0,.2,1);
 }
 
