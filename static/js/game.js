@@ -5,13 +5,21 @@ const STATUS_LABELS = {
   "abandonne": "Abandonné"
 };
 
+let revealObserver = null;
+let infiniteScrollObserver = null;
+
 const state = {
   allGames: [],
   selectedGameId: null,
   activeFilter: "all",
   search: "",
   franchise: "all",
-  sort: "featured"
+  platform: "all",
+  year: "all",
+  tag: "",
+  sort: "featured",
+  viewMode: "grid",
+  visibleCount: 24
 };
 
 const els = {
@@ -36,11 +44,21 @@ const els = {
   searchInput: document.getElementById("searchInput"),
   statusTabs: document.getElementById("statusTabs"),
   franchiseFilter: document.getElementById("franchiseFilter"),
+  platformFilter: document.getElementById("platformFilter"),
+  yearFilter: document.getElementById("yearFilter"),
   sortFilter: document.getElementById("sortFilter"),
+  viewToggle: document.getElementById("viewToggle"),
   franchiseChips: document.getElementById("franchiseChips"),
+  activeTagFilter: document.getElementById("activeTagFilter"),
+  activeTagChip: document.getElementById("activeTagChip"),
+  clearTagFilter: document.getElementById("clearTagFilter"),
   resultsInfo: document.getElementById("resultsInfo"),
+  favoritesGrid: document.getElementById("favoritesGrid"),
+  favoritesInfo: document.getElementById("favoritesInfo"),
   selectedGrid: document.getElementById("selectedGrid"),
-  franchiseSections: document.getElementById("franchiseSections")
+  scrollSentinel: document.getElementById("scrollSentinel"),
+  franchiseSections: document.getElementById("franchiseSections"),
+  gamesPage: document.querySelector(".games-page")
 };
 
 init();
@@ -63,8 +81,11 @@ async function init() {
     renderStats();
     renderFilterLists();
     renderHero();
+    renderFavoritesSection();
     renderSelectedGrid();
     renderFranchiseSections();
+    setupInfiniteScroll();
+    setupAmbientBg();
   } catch (error) {
     console.error(error);
     showGlobalError();
@@ -74,6 +95,7 @@ async function init() {
 function bindEvents() {
   els.searchInput.addEventListener("input", (event) => {
     state.search = event.target.value.trim().toLowerCase();
+    state.visibleCount = 24;
     renderSelectedGrid();
     renderFranchiseSections();
   });
@@ -83,6 +105,7 @@ function bindEvents() {
     if (!button) return;
 
     state.activeFilter = button.dataset.filter;
+    state.visibleCount = 24;
     [...els.statusTabs.querySelectorAll(".chip")].forEach((chip) => {
       chip.classList.toggle("active", chip.dataset.filter === state.activeFilter);
     });
@@ -93,7 +116,22 @@ function bindEvents() {
 
   els.franchiseFilter.addEventListener("change", (event) => {
     state.franchise = event.target.value;
+    state.visibleCount = 24;
     syncFranchiseChips();
+    renderSelectedGrid();
+    renderFranchiseSections();
+  });
+
+  els.platformFilter.addEventListener("change", (event) => {
+    state.platform = event.target.value;
+    state.visibleCount = 24;
+    renderSelectedGrid();
+    renderFranchiseSections();
+  });
+
+  els.yearFilter.addEventListener("change", (event) => {
+    state.year = event.target.value;
+    state.visibleCount = 24;
     renderSelectedGrid();
     renderFranchiseSections();
   });
@@ -104,13 +142,28 @@ function bindEvents() {
     renderFranchiseSections();
   });
 
+  els.viewToggle.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-view]");
+    if (!button) return;
+    setViewMode(button.dataset.view);
+  });
+
   els.franchiseChips.addEventListener("click", (event) => {
     const button = event.target.closest("[data-franchise]");
     if (!button) return;
 
     state.franchise = button.dataset.franchise;
+    state.visibleCount = 24;
     els.franchiseFilter.value = state.franchise;
     syncFranchiseChips();
+    renderSelectedGrid();
+    renderFranchiseSections();
+  });
+
+  els.clearTagFilter.addEventListener("click", () => {
+    state.tag = "";
+    state.visibleCount = 24;
+    els.activeTagFilter.hidden = true;
     renderSelectedGrid();
     renderFranchiseSections();
   });
@@ -127,11 +180,13 @@ function bindEvents() {
 
   els.showFavoritesBtn.addEventListener("click", () => {
     state.activeFilter = "favorites";
+    state.visibleCount = 24;
     [...els.statusTabs.querySelectorAll(".chip")].forEach((chip) => {
       chip.classList.toggle("active", chip.dataset.filter === "favorites");
     });
     renderSelectedGrid();
     renderFranchiseSections();
+    document.getElementById("favoritesSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
 
@@ -227,6 +282,18 @@ function renderFilterLists() {
     ${franchises.map(franchise => `<option value="${escapeHtml(franchise)}">${escapeHtml(franchise)}</option>`).join("")}
   `;
 
+  const platforms = [...new Set(state.allGames.map(g => g.platform).filter(Boolean))].sort((a, b) => a.localeCompare(b, "fr"));
+  els.platformFilter.innerHTML = `
+    <option value="all">Toutes</option>
+    ${platforms.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join("")}
+  `;
+
+  const years = [...new Set(state.allGames.map(g => g.release_year).filter(Boolean))].sort((a, b) => b - a);
+  els.yearFilter.innerHTML = `
+    <option value="all">Toutes</option>
+    ${years.map(y => `<option value="${y}">${y}</option>`).join("")}
+  `;
+
   els.franchiseChips.innerHTML = `
     <button class="franchise-filter-chip active" data-franchise="all" type="button">Toutes</button>
     ${franchises.map(franchise => {
@@ -275,6 +342,7 @@ function renderHero() {
   els.heroSideCover.innerHTML = renderCover(selected.cover, selected.title, "hero-mini-fallback");
 
   renderHeroMiniList();
+  applyAmbientColor(selected);
 }
 
 function renderHeroMiniList() {
@@ -343,8 +411,12 @@ function renderSelectedGrid() {
     return;
   }
 
-  els.selectedGrid.innerHTML = filtered.map(game => renderGameCard(game)).join("");
+  const visible = filtered.slice(0, state.visibleCount);
+  els.selectedGrid.innerHTML = visible.map(game => renderGameCard(game)).join("");
   bindCardClicks(els.selectedGrid);
+  bindTagClicks(els.selectedGrid);
+  setupTiltCards(els.selectedGrid);
+  setupScrollReveal();
 }
 
 function renderFranchiseSections() {
@@ -374,6 +446,9 @@ function renderFranchiseSections() {
     .join("");
 
   bindCardClicks(els.franchiseSections);
+  bindTagClicks(els.franchiseSections);
+  setupTiltCards(els.franchiseSections);
+  setupScrollReveal();
 }
 
 function bindCardClicks(container) {
@@ -397,6 +472,18 @@ function applyFilters(games) {
 
   if (state.franchise !== "all") {
     result = result.filter(game => game.franchise === state.franchise);
+  }
+
+  if (state.platform !== "all") {
+    result = result.filter(game => game.platform === state.platform);
+  }
+
+  if (state.year !== "all") {
+    result = result.filter(game => String(game.release_year) === state.year);
+  }
+
+  if (state.tag) {
+    result = result.filter(game => game.tags.includes(state.tag));
   }
 
   if (state.search) {
@@ -442,11 +529,11 @@ function renderGameCard(game) {
   const platform = game.platform ? `<span class="meta-pill">${escapeHtml(game.platform)}</span>` : "";
   const year = game.release_year ? `<span class="meta-pill">${game.release_year}</span>` : "";
   const tags = game.tags.length
-    ? `<div class="game-tags">${game.tags.slice(0, 4).map(tag => `<span class="game-tag">${escapeHtml(tag)}</span>`).join("")}</div>`
+    ? `<div class="game-tags">${game.tags.slice(0, 4).map(tag => `<button class="game-tag" data-tag="${escapeAttribute(tag)}" type="button">${escapeHtml(tag)}</button>`).join("")}</div>`
     : "";
 
   return `
-    <article class="game-card" data-card-id="${escapeAttribute(game.id)}">
+    <article class="game-card reveal" data-card-id="${escapeAttribute(game.id)}">
       <div class="game-cover" data-select-id="${escapeAttribute(game.id)}">
         ${cover}
         <div class="game-card-badges">
@@ -513,6 +600,163 @@ function groupBy(items, getKey) {
     acc[key].push(item);
     return acc;
   }, {});
+}
+
+function renderFavoritesSection() {
+  const favorites = state.allGames.filter(g => g.favorite);
+  const section = document.getElementById("favoritesSection");
+
+  if (!favorites.length) {
+    if (section) section.hidden = true;
+    return;
+  }
+
+  if (section) section.hidden = false;
+  if (els.favoritesInfo) {
+    els.favoritesInfo.textContent = `${favorites.length} jeu${favorites.length > 1 ? "x" : ""}`;
+  }
+
+  if (els.favoritesGrid) {
+    els.favoritesGrid.innerHTML = sortGames(favorites).map(renderGameCard).join("");
+    bindCardClicks(els.favoritesGrid);
+    bindTagClicks(els.favoritesGrid);
+    setupTiltCards(els.favoritesGrid);
+  }
+}
+
+function bindTagClicks(container) {
+  [...container.querySelectorAll("[data-tag]")].forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const tag = button.dataset.tag;
+      if (!tag) return;
+
+      state.tag = tag;
+      state.visibleCount = 24;
+      els.activeTagChip.textContent = `# ${tag}`;
+      els.activeTagFilter.hidden = false;
+      renderSelectedGrid();
+      renderFranchiseSections();
+      document.getElementById("controlPanel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+
+function setViewMode(mode) {
+  state.viewMode = mode;
+
+  [...els.viewToggle.querySelectorAll(".view-btn")].forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.view === mode);
+  });
+
+  const page = els.gamesPage;
+  page.classList.remove("view-grid", "view-compact", "view-shelf");
+  page.classList.add(`view-${mode}`);
+}
+
+function setupTiltCards(container) {
+  if (window.matchMedia("(hover: none)").matches) return;
+
+  [...container.querySelectorAll(".game-card")].forEach((card) => {
+    card.addEventListener("mousemove", (event) => {
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      card.style.setProperty("--ry", `${x * 9}deg`);
+      card.style.setProperty("--rx", `${-y * 9}deg`);
+    });
+
+    card.addEventListener("mouseleave", () => {
+      card.style.setProperty("--ry", "0deg");
+      card.style.setProperty("--rx", "0deg");
+      card.style.setProperty("--ty", "0px");
+    });
+  });
+}
+
+function setupScrollReveal() {
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+  }
+
+  [...document.querySelectorAll(".reveal:not(.revealed)")].forEach((el) => {
+    revealObserver.observe(el);
+  });
+}
+
+function setupInfiniteScroll() {
+  if (!els.scrollSentinel || infiniteScrollObserver) return;
+
+  infiniteScrollObserver = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) return;
+
+    const filtered = sortGames(applyFilters(state.allGames));
+    if (state.visibleCount >= filtered.length) return;
+
+    state.visibleCount += 12;
+    renderSelectedGrid();
+  }, { rootMargin: "200px" });
+
+  infiniteScrollObserver.observe(els.scrollSentinel);
+}
+
+function setupAmbientBg() {
+  if (!document.getElementById("ambientBg")) {
+    const div = document.createElement("div");
+    div.id = "ambientBg";
+    document.body.insertBefore(div, document.body.firstChild);
+  }
+}
+
+function applyAmbientColor(game) {
+  if (!game || !game.cover) return;
+
+  extractDominantColor(game.cover).then((color) => {
+    if (!color) return;
+    const bg = document.getElementById("ambientBg");
+    if (bg) {
+      bg.style.background = `radial-gradient(ellipse at 50% 0%, ${color}22 0%, transparent 70%)`;
+    }
+  });
+}
+
+function extractDominantColor(imageUrl) {
+  return new Promise((resolve) => {
+    if (!imageUrl) { resolve(null); return; }
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = 40;
+        canvas.height = 40;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, 40, 40);
+        const data = ctx.getImageData(0, 0, 40, 40).data;
+        let r = 0, g = 0, b = 0, count = 0;
+        for (let i = 0; i + 3 < data.length; i += 16) {
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          count++;
+        }
+        if (count === 0) { resolve(null); return; }
+        resolve(`rgb(${Math.round(r / count)},${Math.round(g / count)},${Math.round(b / count)})`);
+      } catch {
+        resolve(null);
+      }
+    };
+    img.onerror = () => resolve(null);
+    img.src = imageUrl;
+  });
 }
 
 function escapeHtml(value) {
