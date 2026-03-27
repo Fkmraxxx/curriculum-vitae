@@ -688,7 +688,18 @@ function setupScrollReveal() {
 
   [...document.querySelectorAll(".reveal:not(.revealed)")].forEach((el) => {
     revealObserver.observe(el);
+    revealIfVisible(el);
   });
+}
+
+function revealIfVisible(element) {
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+
+  if (rect.top < viewportHeight * 0.98 && rect.bottom > 0) {
+    element.classList.add("revealed");
+    revealObserver?.unobserve(element);
+  }
 }
 
 function setupInfiniteScroll() {

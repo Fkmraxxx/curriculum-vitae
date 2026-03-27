@@ -208,7 +208,7 @@ body::before{
   background-position: center;
   transform: scale(1.04);
   transition: background-image .5s ease;
-  filter: saturate(1.2) contrast(1.04) brightness(.72) blur(1px);
+  filter: saturate(1.2) contrast(1.04) brightness(.72);
 }
 
 .hero-overlay{
@@ -771,7 +771,7 @@ body::before{
   display: block;
   height: 4px;
   margin: -18px -20px 16px;
-  background: var(--accent-bar, linear-gradient(90deg, rgba(69,215,255,.45), rgba(140,99,255,.35)));
+  background: linear-gradient(90deg, rgba(69,215,255,.45), rgba(140,99,255,.35));
   transition: background .6s ease;
 }
 
@@ -999,8 +999,8 @@ body::before{
 .favorites-section .section-head h2{ color:#fff; }
 
 .reveal{
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 0;
+  transform: translateY(24px);
   transition: opacity .48s cubic-bezier(.4,0,.2,1), transform .48s cubic-bezier(.4,0,.2,1);
 }
 
