@@ -1002,11 +1002,23 @@ body::before{
   opacity: 0;
   transform: translateY(24px);
   transition: opacity .48s cubic-bezier(.4,0,.2,1), transform .48s cubic-bezier(.4,0,.2,1);
+  animation: revealRise .48s cubic-bezier(.4,0,.2,1) forwards;
 }
 
 .reveal.revealed{
   opacity: 1;
   transform: translateY(0);
+}
+
+@keyframes revealRise{
+  from{
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .game-grid .game-card:nth-child(2){ transition-delay:.05s; }
