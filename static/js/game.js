@@ -5,7 +5,7 @@ const STATUS_LABELS = {
   "abandonne": "Abandonné"
 };
 
-const VIEWPORT_REVEAL_THRESHOLD = 0.98;
+const REVEAL_VIEWPORT_RATIO = 0.98;
 
 let revealObserver = null;
 let infiniteScrollObserver = null;
@@ -696,9 +696,11 @@ function setupScrollReveal() {
 
 function revealIfVisible(element) {
   const rect = element.getBoundingClientRect();
-  const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
-  if (rect.top < viewportHeight * VIEWPORT_REVEAL_THRESHOLD && rect.bottom > 0) {
+  if (!viewportHeight) return;
+
+  if (rect.top < viewportHeight * REVEAL_VIEWPORT_RATIO && rect.bottom > 0) {
     element.classList.add("revealed");
     if (revealObserver) {
       revealObserver.unobserve(element);
