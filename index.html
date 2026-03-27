@@ -1,14 +1,489 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/styles.css" />
-    <title>Your Title Here</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV - Alexis Campos</title>
+  <link rel="stylesheet" href="static/css/styles.css" />
 </head>
+
 <body>
-    <h1>Your Content Here</h1>
-    <!-- Other body content -->
-    <script src="static/js/main.js"></script>
+  <div class="bg-life-wrap" aria-hidden="true">
+    <canvas id="lifeCanvas"></canvas>
+    <div class="bg-life-vignette"></div>
+  </div>
+
+  <div id="introScreen">
+    <button id="introPhotoBtn" type="button" aria-label="Ouvrir le CV">
+      <img src="static/photo.png" alt="Photo de Alexis Campos" />
+    </button>
+    <div id="introText">Clique sur la photo</div>
+  </div>
+
+  <main class="cv cv-hidden" id="cvContent">
+    <div class="topbar"></div>
+
+    <section class="header">
+      <div class="photo">
+        <a href="https://www.linkedin.com/in/alexis-campos-533ba7271/" target="_blank" rel="noopener noreferrer">
+          <img src="static/photo.png" alt="Photo de Alexis Campos" />
+        </a>
+      </div>
+
+      <div class="hero">
+        <h1>ALEXIS<br />CAMPOS</h1>
+        <div class="subtitle">Alternant technicien informatique</div>
+
+        <div class="meta">
+          <div class="tooltip-pill">
+            <span>19 ans</span>
+            <div class="tooltip-box">
+              Né en 2006<br />
+              Profil junior en alternance
+            </div>
+          </div>
+
+          <div class="tooltip-pill">
+            <a href="https://www.google.com/maps/search/?api=1&query=Wittelsheim+68310" target="_blank" rel="noopener noreferrer">
+              Wittelsheim (68310)
+            </a>
+            <div class="tooltip-map">
+              <div class="tooltip-map-title">📍 Wittelsheim, Haut-Rhin</div>
+              <iframe
+                src="https://www.openstreetmap.org/export/embed.html?bbox=7.2200%2C47.8000%2C7.2800%2C47.8400&layer=mapnik&marker=47.8097%2C7.2416"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+          </div>
+
+          <a
+            class="meta-link"
+            href="https://www.onisep.fr/ressources/univers-formation/formations/post-bac/bts-cybersecurite-informatique-et-reseaux-electronique-option-a-informatique-et-reseaux"
+            target="_blank"
+            rel="noopener noreferrer">
+            BTS CIEL IR
+          </a>
+
+          <span>Systèmes • Réseaux • Cybersécurité</span>
+        </div>
+
+        <p class="intro">
+          Je recherche une alternance dans les domaines des systèmes, réseaux et de la cybersécurité.
+          Motivé, autonome et rigoureux, je souhaite mettre en pratique mes compétences en support IT,
+          administration, déploiement, supervision et environnement Microsoft / Linux.
+        </p>
+      </div>
+    </section>
+
+    <section class="content">
+      <aside class="left">
+        <div class="section">
+          <h2>Coordonnées</h2>
+          <div class="contact">
+            <div class="contact-item">
+              <span class="contact-label">Adresse</span>
+              <a
+                class="contact-link"
+                href="https://www.google.com/maps/search/?api=1&query=1+rue+de+l%27%C3%AEle+au+tr%C3%A9sor+68310+Wittelsheim"
+                target="_blank"
+                rel="noopener noreferrer">
+                1 rue de l’île au trésor<br />
+                68310 Wittelsheim
+              </a>
+            </div>
+
+            <div class="contact-item">
+              <span class="contact-label">Téléphone</span>
+              +33 6 10 49 81 40
+            </div>
+
+            <div class="contact-item">
+              <span class="contact-label">Email</span>
+              <a class="contact-link" href="mailto:alexiscampos4@hotmail.com">
+                alexiscampos4@hotmail.com
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Compétences</h2>
+
+          <div class="skill-block">
+            <div class="small-title">Systèmes</div>
+            <div class="chips">
+              <span class="chip">Windows 10/11</span>
+              <span class="chip">Windows Server</span>
+              <span class="chip">Ubuntu</span>
+              <span class="chip">Debian</span>
+              <span class="chip">Raspberry Pi OS</span>
+              <span class="chip">NAS Synology</span>
+            </div>
+          </div>
+
+          <div class="skill-block">
+            <div class="small-title">Virtualisation</div>
+            <div class="chips">
+              <span class="chip">Proxmox VE</span>
+              <span class="chip">VMware ESXi</span>
+              <span class="chip">Hyper-V</span>
+              <span class="chip">Docker</span>
+            </div>
+          </div>
+
+          <div class="skill-block">
+            <div class="small-title">Réseaux</div>
+            <div class="chips">
+              <span class="chip">TCP/IP</span>
+              <span class="chip">IPv4 / IPv6</span>
+              <span class="chip">VLAN</span>
+              <span class="chip">Inter-VLAN</span>
+              <span class="chip">DHCP / DNS</span>
+              <span class="chip">NAT / PAT</span>
+              <span class="chip">OSPF</span>
+              <span class="chip">VPN</span>
+              <span class="chip">Wi-Fi</span>
+              <span class="chip">Pare-feu / ACL</span>
+            </div>
+          </div>
+
+          <div class="skill-block">
+            <div class="small-title">Support / Infra</div>
+            <div class="chips">
+              <span class="chip">Support N1 / N2</span>
+              <span class="chip">Ticketing</span>
+              <span class="chip">Active Directory</span>
+              <span class="chip">Azure AD / Entra ID</span>
+              <span class="chip">Microsoft 365</span>
+              <span class="chip">Acronis</span>
+              <span class="chip">Veeam</span>
+              <span class="chip">RMM</span>
+              <span class="chip">Déploiement postes / serveurs</span>
+            </div>
+          </div>
+
+          <div class="skill-block">
+            <div class="small-title">Cybersécurité (bases et bonnes pratiques)</div>
+            <div class="chips">
+              <span class="chip">TryHackMe</span>
+              <span class="chip">Hack The Box</span>
+              <span class="chip">Root-Me</span>
+              <span class="chip">SecNumacadémie</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Qualités</h2>
+          <ul class="list">
+            <li>Motivé et impliqué</li>
+            <li>Curieux, autonome et rigoureux</li>
+            <li>Organisé et à l’aise en équipe</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>Langues</h2>
+
+          <div class="language-block">
+            <div class="language-name">Anglais :</div>
+            <ul class="language-lines">
+              <li>Compréhension écrite/orale</li>
+              <li>Expression écrite/orale</li>
+            </ul>
+          </div>
+
+          <div class="language-block">
+            <div class="language-name">Français :</div>
+            <ul class="language-lines">
+              <li>Langue natale</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <section class="right">
+        <div class="section">
+          <h2>Profil</h2>
+          <div class="profile-box">
+            Étudiant en BTS CIEL option Informatique et Réseaux, je recherche une alternance dans les domaines
+            des systèmes, réseaux et de la cybersécurité. Sérieux, motivé et autonome, je souhaite continuer à
+            développer mes compétences techniques en support informatique, administration systèmes et réseaux,
+            déploiement et environnement Microsoft / Linux.
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Expérience professionnelle</h2>
+          <article class="card">
+            <div class="job-top">
+              <div class="job-date">Stage + Alternance BTS CIEL IR</div>
+              <div class="job-title">
+                <a class="company-link" href="https://www.c-isi.fr/" target="_blank" rel="noopener noreferrer">
+                  C-ISI
+                </a>
+                — Technicien informatique
+              </div>
+              <div class="job-sub">
+                Support, administration, déploiement, supervision et accompagnement utilisateurs en environnement professionnel.
+              </div>
+            </div>
+
+            <ul class="job-list">
+              <li>Support utilisateurs N1/N2 : diagnostic, résolution, suivi et documentation.</li>
+              <li>Administration Active Directory et Azure AD / Entra ID : comptes, groupes, droits d’accès.</li>
+              <li>Déploiement et maintenance de postes de travail et de serveurs.</li>
+              <li>Supervision du parc via outils RMM et contrôle de l’état des machines.</li>
+              <li>Microsoft 365 : licences, configuration et accompagnement utilisateurs.</li>
+              <li>Préparation, livraison et installation de matériel informatique.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="section">
+          <h2>Formation</h2>
+          <div class="edu">
+            <div class="edu-item">
+              <div class="edu-year">2024 - 2026</div>
+              <div class="edu-title">
+                <a
+                  class="company-link"
+                  href="https://www.onisep.fr/ressources/univers-formation/formations/post-bac/bts-cybersecurite-informatique-et-reseaux-electronique-option-a-informatique-et-reseaux"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  BTS CIEL option Informatique et Réseaux
+                </a>
+              </div>
+              <div class="edu-text">
+                Formation orientée systèmes, réseaux, cybersécurité, administration et support informatique.
+              </div>
+            </div>
+
+            <div class="edu-item">
+              <div class="edu-year">2022 - 2024</div>
+              <div class="edu-title">
+                <a
+                  class="company-link"
+                  href="https://www.onisep.fr/ressources/univers-formation/formations/lycees/bac-techno-sti2d-sciences-et-technologies-de-l-industrie-et-du-developpement-durable-enseignement-specifique-systemes-d-information-et-numerique"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  Bac STI2D spécialité SIN
+                </a>
+              </div>
+              <div class="edu-text">
+                Sciences et technologies de l’industrie et du développement durable, spécialité systèmes d’information et numérique.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Projets</h2>
+          <article class="card">
+            <ul class="job-list job-list-no-margin">
+              <li>
+                <a class="project-link" href="projet-licences.html" target="_blank" rel="noopener noreferrer">
+                  <strong>Projet Licences</strong>
+                </a>
+                : développement d’un outil de suivi et de centralisation de licences.
+              </li>
+              <li>
+                <a class="project-link" href="camping-mqtt.html" target="_blank" rel="noopener noreferrer">
+                  <strong>Camping MQTT</strong>
+                </a>
+                : mise en place d’échanges et supervision via MQTT.
+              </li>
+              <li>
+                <a class="project-link" href="projet-can.html" target="_blank" rel="noopener noreferrer">
+                  <strong>Projet CAN</strong>
+                </a>
+                : travail autour de la communication sur bus CAN.
+              </li>
+              <li>
+                <a class="project-link" href="skybot.html" target="_blank" rel="noopener noreferrer">
+                  <strong>Skybot</strong>
+                </a>
+                : projet technique autour de l’automatisation / robotique.
+              </li>
+              <li>
+                <a class="project-link" href="ir-game.html" target="_blank" rel="noopener noreferrer">
+                  <strong>IR Game</strong>
+                </a>
+                : projet réalisé dans le cadre de la formation.
+              </li>
+              <li>
+                <a class="project-link" href="projet-hyper-v.html" target="_blank" rel="noopener noreferrer">
+                  <strong>Projet Hyper-V</strong>
+                </a>
+                : mise en place et utilisation d’un environnement virtualisé sous Hyper-V.
+              </li>
+              <li>
+                <a class="project-link" href="projet-bot-discord.html" target="_blank" rel="noopener noreferrer">
+                  <strong>Bot Discord Docker</strong>
+                </a>
+                : projet personnel de bot Discord hébergé dans un conteneur Docker sur un NAS Synology, avec développement à distance en SSH via Visual Studio Code.
+              </li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="section">
+          <h2>Centres d’intérêt</h2>
+          <article class="card">
+            <ul class="job-list job-list-no-margin">
+              <li>Sport</li>
+              <li>Musiques</li>
+              <li><a href="game.html" target="_blank" rel="noopener noreferrer">Jeux vidéos</a></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="action-panel" id="actionPanel">
+    <button class="action-btn action-like" id="btnInterested" type="button">
+      Intéressé ?
+    </button>
+    <button class="action-btn action-dislike" id="btnReject" type="button">
+      Pas intéressé
+    </button>
+  </div>
+
+  <div id="fragmentLayer" aria-hidden="true"></div>
+
+  <div class="blackhole-scene" id="blackholeScene" aria-hidden="true">
+    <div class="blackhole-wrap">
+      <div class="blackhole-glow"></div>
+      <div class="accretion-ring"></div>
+      <div class="accretion-ring r2"></div>
+      <div class="blackhole"></div>
+    </div>
+  </div>
+
+  <div class="envelope-scene" id="envelopeScene" aria-hidden="true">
+    <div class="envelope-wrap" id="envelopeWrap">
+      <div class="envelope" aria-hidden="true">
+        <div class="envelope-shadow"></div>
+        <div class="envelope-back"></div>
+
+        <div class="envelope-paper">
+          <div class="paper-name">Alexis Campos</div>
+          <div class="paper-role">Alternant technicien informatique</div>
+          <div class="paper-sep"></div>
+
+          <div class="paper-contact">
+            <div class="paper-contact-item">✉️ alexiscampos4@hotmail.com</div>
+            <div class="paper-contact-item">📞 +33 6 10 49 81 40</div>
+            <div class="paper-contact-item">🔗 LinkedIn</div>
+          </div>
+        </div>
+
+        <div class="envelope-front"></div>
+        <div class="envelope-flap"></div>
+
+        <div class="front-contact-card">
+          <div class="front-title">Coordonnées</div>
+          <div class="front-links">
+            <div class="front-link-like">alexiscampos4@hotmail.com</div>
+            <div class="front-link-like">+33 6 10 49 81 40</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-panel" id="contactPanel" aria-hidden="true">
+    <div class="contact-panel-backdrop" id="contactPanelBackdrop"></div>
+
+    <section class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contactPanelTitle">
+      <button class="contact-close" id="contactCloseBtn" type="button" aria-label="Fermer le panel contact">×</button>
+
+      <div class="contact-modal-top">
+        <div>
+          <div class="contact-badge">Contact :</div>
+          <h2 id="contactPanelTitle">Intéressé par mon profil&nbsp;?</h2>
+          <p class="contact-subtitle">
+            Tous les accès utiles sont réunis ici :
+          </p>
+        </div>
+
+        <div class="contact-status-card">
+          <strong>Disponible</strong>
+          <span>Alternance • Échange professionnel</span>
+        </div>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-main-col">
+          <article class="contact-profile-card">
+            <div class="contact-avatar">AC</div>
+            <div>
+              <div class="contact-name">Alexis Campos</div>
+              <div class="contact-inline-list">
+                <span>📍 Wittelsheim</span>
+                <span>🛠️ Systèmes et Réseaux</span>
+              </div>
+            </div>
+          </article>
+
+          <div class="contact-action-grid">
+            <a class="contact-action contact-action-primary" href="mailto:alexiscampos4@hotmail.com">
+              <span class="contact-action-title">Envoyer un mail</span>
+              <span class="contact-action-sub">alexiscampos4@hotmail.com</span>
+            </a>
+
+            <a class="contact-action" href="tel:+33610498140">
+              <span class="contact-action-title">Appeler</span>
+              <span class="contact-action-sub">+33 6 10 49 81 40</span>
+            </a>
+
+            <a class="contact-action" href="https://www.linkedin.com/in/alexis-campos-533ba7271/" target="_blank" rel="noopener noreferrer">
+              <span class="contact-action-title">Ouvrir LinkedIn</span>
+              <span class="contact-action-sub">Profil professionnel</span>
+            </a>
+
+            <a class="contact-action" href="static/Alexis-Campos-CV.pdf" download>
+              <span class="contact-action-title">Télécharger le CV PDF</span>
+              <span class="contact-action-sub">Version imprimable</span>
+            </a>
+          </div>
+
+          <div class="contact-copy-grid">
+            <button class="contact-mini-btn" id="copyEmailBtn" type="button">Copier email</button>
+            <button class="contact-mini-btn" id="copyPhoneBtn" type="button">Copier téléphone</button>
+            <button class="contact-mini-btn contact-mini-btn-light" id="resetInterestedBtn" type="button">Retour au CV</button>
+          </div>
+
+          <div class="copy-feedback" id="copyFeedback" aria-live="polite"></div>
+        </div>
+
+        <aside class="contact-side-col">
+          <div class="contact-side-card">
+            <div class="contact-side-title">QR codes</div>
+
+            <div class="contact-qr-grid">
+              <div class="qr-card">
+                <div class="qr-title">LinkedIn</div>
+                <div class="qr-box" id="linkedinQr"></div>
+                <div class="qr-text">Scan pour ouvrir le profil</div>
+              </div>
+
+              <div class="qr-card">
+                <div class="qr-title">CV PDF</div>
+                <div class="qr-box" id="cvQr"></div>
+                <div class="qr-text">Scan pour télécharger le CV</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="static/js/main.js"></script>
 </body>
 </html>
