@@ -592,7 +592,7 @@ function renderGameCard(game) {
           <div>
             <p class="game-overline">${escapeHtml(game.franchise)}</p>
             <h3 class="game-title">${escapeHtml(game.title)}</h3>
-            <p class="game-franchise">${escapeHtml(game.comment ? "Résumé disponible" : "Aucun commentaire enregistré")}</p>
+            <p class="game-subline">${escapeHtml(game.comment ? "Résumé disponible" : "Aucun commentaire enregistré")}</p>
           </div>
           <button class="game-select-btn" data-select-id="${escapeAttribute(game.id)}" type="button">Mettre en avant</button>
         </div>
@@ -688,6 +688,7 @@ function renderFavoritesSection() {
     bindCardClicks(els.favoritesGrid);
     bindTagClicks(els.favoritesGrid);
     setupTiltCards(els.favoritesGrid);
+    setupScrollReveal();
   }
 }
 
@@ -858,7 +859,7 @@ function updateFilterSummary(totalFiltered, visibleCount) {
   if (state.tag) segments.push(`#${state.tag}`);
 
   if (!segments.length) {
-    els.filtersSummary.textContent = `Tous les jeux sont affichés • ${totalFiltered} visible${totalFiltered > 1 ? "s" : ""}.`;
+    els.filtersSummary.textContent = `Tous les jeux sont affichés • ${totalFiltered} ${totalFiltered > 1 ? "visibles" : "visible"}.`;
     els.clearAllFilters.hidden = true;
     return;
   }

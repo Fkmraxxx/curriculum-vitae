@@ -833,8 +833,8 @@ body::after{
 
 .favorites-section{
   background:
-    linear-gradient(135deg, rgba(246,184,111,.15), rgba(240,122,149,.10) 48%, rgba(154,130,255,.14) 100%) !important;
-  border-color: rgba(246,184,111,.14) !important;
+    linear-gradient(135deg, rgba(246,184,111,.15), rgba(240,122,149,.10) 48%, rgba(154,130,255,.14) 100%);
+  border-color: rgba(246,184,111,.14);
 }
 
 .game-grid{
@@ -953,7 +953,7 @@ body::after{
   letter-spacing:-.02em;
 }
 
-.game-franchise{
+.game-subline{
   margin:4px 0 0;
   color: var(--muted);
   font: 500 .84rem/1.4 var(--font);
@@ -1206,7 +1206,7 @@ body::after{
 .view-shelf .game-tags,
 .view-shelf .game-footer,
 .view-shelf .game-select-btn,
-.view-shelf .game-franchise{
+.view-shelf .game-subline{
   display:none;
 }
 
