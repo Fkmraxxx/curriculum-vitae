@@ -698,7 +698,9 @@ function revealIfVisible(element) {
 
   if (rect.top < viewportHeight * 0.98 && rect.bottom > 0) {
     element.classList.add("revealed");
-    revealObserver?.unobserve(element);
+    if (revealObserver) {
+      revealObserver.unobserve(element);
+    }
   }
 }
 
