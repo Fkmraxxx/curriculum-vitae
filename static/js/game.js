@@ -5,8 +5,12 @@ const STATUS_LABELS = {
   "abandonne": "Abandonné"
 };
 
+const VIEWPORT_REVEAL_THRESHOLD = 0.98;
+const REVEAL_FALLBACK_DELAY = 180;
+
 let revealObserver = null;
 let infiniteScrollObserver = null;
+let revealFallbackTimer = null;
 
 const state = {
   allGames: [],
@@ -688,7 +692,36 @@ function setupScrollReveal() {
 
   [...document.querySelectorAll(".reveal:not(.revealed)")].forEach((el) => {
     revealObserver.observe(el);
+    revealIfVisible(el);
   });
+
+  if (revealFallbackTimer) {
+    window.clearTimeout(revealFallbackTimer);
+  }
+
+  revealFallbackTimer = window.setTimeout(() => {
+    [...document.querySelectorAll(".reveal:not(.revealed)")].forEach((el) => {
+      el.classList.add("revealed");
+      if (revealObserver) {
+        revealObserver.unobserve(el);
+      }
+    });
+    revealFallbackTimer = null;
+  }, REVEAL_FALLBACK_DELAY);
+}
+
+function revealIfVisible(element) {
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+  if (!viewportHeight) return;
+
+  if (rect.top < viewportHeight * VIEWPORT_REVEAL_THRESHOLD && rect.bottom > 0) {
+    element.classList.add("revealed");
+    if (revealObserver) {
+      revealObserver.unobserve(element);
+    }
+  }
 }
 
 function setupInfiniteScroll() {
