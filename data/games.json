@@ -80,14 +80,15 @@
       "franchise": "Open-World"
     },
     {
-      "favorite": false,
-      "id": "Resident Evil Zero",
-      "title": "Resident Evil Zero",
-      "franchise": "Resident Evil",
       "status": "en-cours",
       "platform": "PC",
       "release_year": "",
-      "cover": "/curriculum-vitae/static/images/games/qm61goa3f6cvdcv0cpda1w1adce3osik.avif"
+      "cover": "/curriculum-vitae/static/images/games/qm61goa3f6cvdcv0cpda1w1adce3osik.avif",
+      "title": "Resident Evil Zero",
+      "id": "Resident Evil Zero",
+      "favorite": false,
+      "rating": "",
+      "franchise": "Resident Evil"
     },
     {
       "favorite": true,
@@ -96,17 +97,19 @@
       "franchise": "Resident Evil",
       "status": "fait",
       "rating": 16,
-      "cover": "/curriculum-vitae/static/images/games/6623a6b1-5f22-4f59-ac72-e251761a2ddb.jpg"
+      "cover": "/curriculum-vitae/static/images/games/6623a6b1-5f22-4f59-ac72-e251761a2ddb.jpg",
+      "platform": "PC"
     },
     {
-      "favorite": false,
-      "id": "Resident Evil 3",
-      "title": "Resident Evil 3",
-      "franchise": "Resident Evil",
       "status": "fait",
-      "rating": 13,
+      "platform": "PC",
       "release_year": "",
-      "cover": "/curriculum-vitae/static/images/games/wmrizbrlsexweedljoww7mdw.webp"
+      "cover": "/curriculum-vitae/static/images/games/wmrizbrlsexweedljoww7mdw.webp",
+      "title": "Resident Evil 3",
+      "id": "Resident Evil 3",
+      "favorite": false,
+      "rating": 13,
+      "franchise": "Resident Evil"
     },
     {
       "favorite": true,
@@ -115,19 +118,21 @@
       "rating": 19,
       "status": "fait",
       "franchise": "Resident Evil",
-      "cover": "/curriculum-vitae/static/images/games/resident-evil-4-pc-jeu-steam-europe-cover.jpg"
+      "cover": "/curriculum-vitae/static/images/games/resident-evil-4-pc-jeu-steam-europe-cover.jpg",
+      "platform": "PC"
     },
     {
-      "favorite": false,
-      "id": "Resident Evil 5",
+      "status": "fait",
+      "platform": "PC",
+      "cover": "/curriculum-vitae/static/images/games/4ezkquclavozdqzpcdtgxqxybkhchqo4.jpg",
       "title": "Resident Evil 5",
       "tags": [
         "coop"
       ],
-      "franchise": "Resident Evil",
-      "status": "fait",
+      "id": "Resident Evil 5",
+      "favorite": false,
       "rating": 15,
-      "cover": "/curriculum-vitae/static/images/games/4ezkquclavozdqzpcdtgxqxybkhchqo4.jpg"
+      "franchise": "Resident Evil"
     },
     {
       "favorite": false,
@@ -136,7 +141,8 @@
       "franchise": "Resident Evil",
       "status": "fait",
       "rating": 18,
-      "cover": "/curriculum-vitae/static/images/games/cxd9vkfoahvwwyg7lqkengkrfyoachnh.jpg"
+      "cover": "/curriculum-vitae/static/images/games/cxd9vkfoahvwwyg7lqkengkrfyoachnh.jpg",
+      "platform": "PC"
     },
     {
       "favorite": false,
@@ -145,7 +151,8 @@
       "franchise": "Resident Evil",
       "status": "fait",
       "rating": 17,
-      "cover": "/curriculum-vitae/static/images/games/fkzwjnjknkrflozktdeqbmub.jpg"
+      "cover": "/curriculum-vitae/static/images/games/fkzwjnjknkrflozktdeqbmub.jpg",
+      "platform": "PC"
     },
     {
       "favorite": false,
@@ -154,7 +161,8 @@
       "franchise": "Resident Evil",
       "status": "fait",
       "rating": 18,
-      "cover": "/curriculum-vitae/static/images/games/images.jpg"
+      "cover": "/curriculum-vitae/static/images/games/images.jpg",
+      "platform": "PC"
     },
     {
       "favorite": true,
@@ -163,7 +171,8 @@
       "franchise": "Souls-like",
       "status": "fait",
       "rating": 19,
-      "cover": "/curriculum-vitae/static/images/games/er_soteedition_editionkeyartnew.webp"
+      "cover": "/curriculum-vitae/static/images/games/er_soteedition_editionkeyartnew.webp",
+      "platform": "PC"
     },
     {
       "favorite": true,
@@ -172,16 +181,18 @@
       "franchise": "Souls-like",
       "status": "fait",
       "rating": 20,
-      "cover": "/curriculum-vitae/static/images/games/capsule_616x353.jpg"
+      "cover": "/curriculum-vitae/static/images/games/capsule_616x353.jpg",
+      "platform": "PC"
     },
     {
       "favorite": false,
       "cover": "/curriculum-vitae/static/images/games/egs_cyberpunk2077_cdprojektred_s1_03_2560x1440-359e77d3cd0a40aebf3bbc130d14c5c7.jpg",
-      "id": "Cyberpunk2077",
+      "id": "Cyberpunk2077 + Phantom Liberty",
       "title": "Cyberpunk2077",
       "franchise": "Open-World",
       "status": "fait",
-      "rating": 18
+      "rating": 18,
+      "platform": "PC"
     },
     {
       "favorite": false,
@@ -190,15 +201,18 @@
       "title": "Wuchang",
       "franchise": "Souls-like",
       "status": "fait",
-      "rating": 12
+      "rating": 12,
+      "platform": "PC"
     },
     {
       "favorite": false,
       "id": "Zelda Minish Cap",
       "title": "Zelda Minish Cap",
       "franchise": "The Legend of Zelda",
-      "status": "en-cours",
-      "cover": "/curriculum-vitae/static/images/games/legend-of-zelda-the-minish-cap-button-1559683061499.webp"
+      "status": "fait",
+      "cover": "/curriculum-vitae/static/images/games/legend-of-zelda-the-minish-cap-button-1559683061499.webp",
+      "rating": 17,
+      "platform": "GBA"
     },
     {
       "favorite": false,
@@ -207,7 +221,8 @@
       "franchise": "Metroidvania",
       "status": "fait",
       "rating": 16,
-      "cover": "/curriculum-vitae/static/images/games/download.jpg"
+      "cover": "/curriculum-vitae/static/images/games/download.jpg",
+      "platform": "PC"
     }
   ]
 }
