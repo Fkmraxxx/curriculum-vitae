@@ -223,6 +223,15 @@
       "rating": 16,
       "cover": "/curriculum-vitae/static/images/games/download.jpg",
       "platform": "PC"
+    },
+    {
+      "favorite": false,
+      "rating": 10,
+      "status": "fait",
+      "franchise": "The Legend of Zelda",
+      "id": "Four Swords",
+      "title": "Four Swords",
+      "cover": "/curriculum-vitae/static/images/games/7.png"
     }
   ]
 }
