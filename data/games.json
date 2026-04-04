@@ -229,9 +229,18 @@
       "rating": 10,
       "status": "fait",
       "franchise": "The Legend of Zelda",
-      "id": "Four Swords",
-      "title": "Four Swords",
+      "id": "Zelda Four Swords",
+      "title": "Zelda Four Swords",
       "cover": "/curriculum-vitae/static/images/games/7.png"
+    },
+    {
+      "favorite": false,
+      "id": "Zelda Ocarina of Time",
+      "title": "Zelda Ocarina of Time",
+      "franchise": "The Legend of Zelda",
+      "status": "en-cours",
+      "platform": "3DS",
+      "cover": "/curriculum-vitae/static/images/games/si_3ds_thelegendofzeldaocarinaoftime3d_image1600w.jpg"
     }
   ]
 }
