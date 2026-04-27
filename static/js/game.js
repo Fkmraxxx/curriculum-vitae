@@ -10,6 +10,7 @@ const REVEAL_FALLBACK_DELAY = 180;
 
 let revealObserver = null;
 let infiniteScrollObserver = null;
+let countUpObserver = null;
 let revealFallbackTimer = null;
 
 const state = {
@@ -31,14 +32,8 @@ const els = {
   heroMiniList: document.getElementById("heroMiniList"),
   heroFranchise: document.getElementById("heroFranchise"),
   heroTitle: document.getElementById("heroTitle"),
-  heroSubtitle: document.getElementById("heroSubtitle"),
   heroMeta: document.getElementById("heroMeta"),
   heroDescription: document.getElementById("heroDescription"),
-  heroSideCover: document.getElementById("heroSideCover"),
-  heroSideTitle: document.getElementById("heroSideTitle"),
-  heroSideInfo: document.getElementById("heroSideInfo"),
-  heroTagList: document.getElementById("heroTagList"),
-  heroCollectionInfo: document.getElementById("heroCollectionInfo"),
   showSelectedBtn: document.getElementById("showSelectedBtn"),
   showFavoritesBtn: document.getElementById("showFavoritesBtn"),
 
@@ -95,6 +90,7 @@ async function init() {
     renderFranchiseSections();
     setupInfiniteScroll();
     setupAmbientBg();
+    setupCountUpObserver();
   } catch (error) {
     console.error(error);
     showGlobalError();
@@ -273,30 +269,79 @@ function getSelectedGame() {
 }
 
 function renderStats() {
-  els.statTotal.textContent = state.allGames.length;
-  els.statFavorites.textContent = state.allGames.filter(g => g.favorite).length;
-  els.statDone.textContent = state.allGames.filter(g => g.status === "fait").length;
-  els.statProgress.textContent = state.allGames.filter(g => g.status === "en-cours").length;
+  const total = state.allGames.length;
+  const favorites = state.allGames.filter(g => g.favorite).length;
+  const done = state.allGames.filter(g => g.status === "fait").length;
+  const progress = state.allGames.filter(g => g.status === "en-cours").length;
+
+  els.statTotal.dataset.target = total;
+  els.statFavorites.dataset.target = favorites;
+  els.statDone.dataset.target = done;
+  els.statProgress.dataset.target = progress;
+
+  els.statTotal.textContent = total;
+  els.statFavorites.textContent = favorites;
+  els.statDone.textContent = done;
+  els.statProgress.textContent = progress;
+
   renderStatusTabCounts();
+}
+
+function setupCountUpObserver() {
+  const strip = document.getElementById("statsStrip");
+  if (!strip) return;
+
+  countUpObserver = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) return;
+    countUpObserver.disconnect();
+
+    [...strip.querySelectorAll(".stat-number")].forEach((el) => {
+      const target = Number(el.dataset.target) || 0;
+      animateCountUp(el, target);
+    });
+  }, { threshold: 0.4 });
+
+  countUpObserver.observe(strip);
+}
+
+function animateCountUp(el, target) {
+  if (target === 0) { el.textContent = "0"; return; }
+
+  const duration = 900;
+  const start = performance.now();
+
+  function step(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(eased * target);
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      el.textContent = target;
+    }
+  }
+
+  requestAnimationFrame(step);
 }
 
 function renderFilterLists() {
   const franchises = [...new Set(state.allGames.map(game => game.franchise))].sort((a, b) => a.localeCompare(b, "fr"));
 
   els.franchiseFilter.innerHTML = `
-    <option value="all">Toutes</option>
+    <option value="all">Toutes licences</option>
     ${franchises.map(franchise => `<option value="${escapeHtml(franchise)}">${escapeHtml(franchise)}</option>`).join("")}
   `;
 
   const platforms = [...new Set(state.allGames.map(g => g.platform).filter(Boolean))].sort((a, b) => a.localeCompare(b, "fr"));
   els.platformFilter.innerHTML = `
-    <option value="all">Toutes</option>
+    <option value="all">Toutes plateformes</option>
     ${platforms.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join("")}
   `;
 
   const years = [...new Set(state.allGames.map(g => g.release_year).filter(Boolean))].sort((a, b) => b - a);
   els.yearFilter.innerHTML = `
-    <option value="all">Toutes</option>
+    <option value="all">Toutes années</option>
     ${years.map(y => `<option value="${y}">${y}</option>`).join("")}
   `;
 
@@ -304,7 +349,7 @@ function renderFilterLists() {
     <button class="franchise-filter-chip active" data-franchise="all" type="button">Toutes</button>
     ${franchises.map(franchise => {
       const total = state.allGames.filter(game => game.franchise === franchise).length;
-      return `<button class="franchise-filter-chip" data-franchise="${escapeHtml(franchise)}" type="button">${escapeHtml(franchise)} (${total})</button>`;
+      return `<button class="franchise-filter-chip" data-franchise="${escapeHtml(franchise)}" type="button">${escapeHtml(franchise)} <strong>${total}</strong></button>`;
     }).join("")}
   `;
 
@@ -324,15 +369,9 @@ function renderHero() {
     els.heroBackdrop.style.backgroundImage = "none";
     els.heroTitle.textContent = "Aucun jeu";
     els.heroFranchise.textContent = "Bibliothèque vide";
-    els.heroSubtitle.textContent = "";
     els.heroMeta.innerHTML = "";
     els.heroDescription.textContent = "Ajoute des jeux dans l'admin pour remplir cette page.";
     els.heroMiniList.innerHTML = "";
-    els.heroSideCover.innerHTML = `<div class="hero-mini-fallback">Aucune image</div>`;
-    els.heroSideTitle.textContent = "Aucun jeu";
-    els.heroSideInfo.textContent = "Ajoute du contenu dans l'admin.";
-    els.heroTagList.innerHTML = `<span class="hero-tag-chip">Bibliothèque vide</span>`;
-    els.heroCollectionInfo.textContent = "Ajoute des jeux pour lancer la collection.";
     return;
   }
 
@@ -342,14 +381,8 @@ function renderHero() {
 
   els.heroFranchise.textContent = selected.franchise;
   els.heroTitle.textContent = formatHeroTitle(selected.title);
-  els.heroSubtitle.textContent = selected.platform || "Bibliothèque de jeux";
   els.heroMeta.innerHTML = buildHeroMeta(selected);
   els.heroDescription.textContent = selected.comment || "Aucun commentaire pour ce jeu.";
-  els.heroSideTitle.textContent = selected.title;
-  els.heroSideInfo.textContent = buildSideInfo(selected);
-  els.heroSideCover.innerHTML = renderCover(selected.cover, selected.title, "hero-mini-fallback");
-  els.heroTagList.innerHTML = buildHeroTags(selected);
-  els.heroCollectionInfo.textContent = buildCollectionInfo(selected);
 
   renderHeroMiniList();
   applyAmbientColor(selected);
@@ -404,36 +437,6 @@ function buildHeroMeta(game) {
   return items.join("");
 }
 
-function buildSideInfo(game) {
-  const parts = [];
-  if (game.platform) parts.push(game.platform);
-  if (game.release_year) parts.push(String(game.release_year));
-  if (game.rating !== null) parts.push(`${game.rating}/20`);
-  return parts.join(" • ") || "Sélection automatique";
-}
-
-function buildHeroTags(game) {
-  const items = [
-    game.favorite ? "★ Favori" : null,
-    STATUS_LABELS[game.status],
-    ...game.tags.slice(0, 4)
-  ].filter(Boolean);
-
-  if (!items.length) {
-    return `<span class="hero-tag-chip">Sans tag</span>`;
-  }
-
-  return items
-    .map((item) => `<span class="hero-tag-chip">${escapeHtml(item)}</span>`)
-    .join("");
-}
-
-function buildCollectionInfo(game) {
-  const relatedCount = state.allGames.filter((entry) => entry.franchise === game.franchise).length;
-  const platformText = game.platform || "plateforme non précisée";
-  return `${relatedCount} jeu${relatedCount > 1 ? "x" : ""} dans ${game.franchise} • ${platformText}`;
-}
-
 function renderSelectedGrid() {
   const filtered = sortGames(applyFilters(state.allGames));
   const visible = filtered.slice(0, state.visibleCount);
@@ -474,24 +477,46 @@ function renderFranchiseSections() {
 
   els.franchiseSections.innerHTML = Object.entries(grouped)
     .sort(([a], [b]) => a.localeCompare(b, "fr"))
-    .map(([franchise, games]) => `
-      <section class="franchise-block">
-        <div class="franchise-head">
-          <h3>${escapeHtml(franchise)}</h3>
-          <span>${games.length} jeu${games.length > 1 ? "x" : ""}</span>
+    .map(([franchise, games], index) => `
+      <section class="franchise-block ${index === 0 ? "is-open" : ""}" data-franchise-block>
+        <div class="franchise-head" role="button" aria-expanded="${index === 0}" tabindex="0">
+          <div class="franchise-head-left">
+            <h3>${escapeHtml(franchise)}</h3>
+            <span class="franchise-head-count">${games.length} jeu${games.length > 1 ? "x" : ""}</span>
+          </div>
+          <span class="franchise-head-chevron" aria-hidden="true">▾</span>
         </div>
-
-        <div class="franchise-rail">
-          ${sortGames(games).slice(0, 8).map(renderGameCard).join("")}
+        <div class="franchise-body">
+          <div class="franchise-rail">
+            ${sortGames(games).slice(0, 8).map(renderGameCard).join("")}
+          </div>
         </div>
       </section>
     `)
     .join("");
 
+  // Bind accordion toggles
+  [...els.franchiseSections.querySelectorAll("[data-franchise-block]")].forEach((block) => {
+    const head = block.querySelector(".franchise-head");
+    head.addEventListener("click", () => toggleFranchiseBlock(block));
+    head.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleFranchiseBlock(block);
+      }
+    });
+  });
+
   bindCardClicks(els.franchiseSections);
   bindTagClicks(els.franchiseSections);
   setupTiltCards(els.franchiseSections);
   setupScrollReveal();
+}
+
+function toggleFranchiseBlock(block) {
+  const isOpen = block.classList.toggle("is-open");
+  const head = block.querySelector(".franchise-head");
+  head.setAttribute("aria-expanded", String(isOpen));
 }
 
 function bindCardClicks(container) {
@@ -641,15 +666,9 @@ function statusTone(status) {
 function showGlobalError() {
   els.heroTitle.textContent = "Erreur";
   els.heroFranchise.textContent = "Chargement impossible";
-  els.heroSubtitle.textContent = "";
   els.heroMeta.innerHTML = "";
   els.heroDescription.textContent = "Vérifie le fichier data/games.json.";
   els.heroMiniList.innerHTML = "";
-  els.heroSideCover.innerHTML = `<div class="hero-mini-fallback">Erreur</div>`;
-  els.heroSideTitle.textContent = "Impossible de charger";
-  els.heroSideInfo.textContent = "Vérifie la structure JSON.";
-  els.heroTagList.innerHTML = `<span class="hero-tag-chip">Erreur de chargement</span>`;
-  els.heroCollectionInfo.textContent = "Vérifie les données du fichier JSON.";
   els.selectedGrid.innerHTML = `<div class="empty-state">Impossible de charger la bibliothèque.</div>`;
   els.franchiseSections.innerHTML = "";
   if (els.resultsDetails) {
@@ -859,7 +878,7 @@ function updateFilterSummary(totalFiltered, visibleCount) {
   if (state.tag) segments.push(`#${state.tag}`);
 
   if (!segments.length) {
-    els.filtersSummary.textContent = `Tous les jeux sont affichés • ${totalFiltered} ${totalFiltered > 1 ? "visibles" : "visible"}.`;
+    els.filtersSummary.textContent = "";
     els.clearAllFilters.hidden = true;
     return;
   }

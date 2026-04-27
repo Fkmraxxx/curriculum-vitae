@@ -11,229 +11,172 @@
   <link rel="stylesheet" href="./static/css/game.css" />
 </head>
 <body>
-  <div class="page-shell">
-    <header class="topbar">
-      <div class="topbar-brand">
-        <p class="topbar-kicker">Portfolio interactif</p>
-        <h1>Bibliothèque de jeux</h1>
-        <p class="topbar-text">
-          Une collection plus claire, plus stylée et plus simple à explorer avec recherche, filtres cumulés
-          et vues adaptées à chaque envie.
-        </p>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a class="navbar-brand" href="./index.html" aria-label="Retour accueil">
+        <span class="navbar-icon">🎮</span>
+        <span class="navbar-title">Game Library</span>
+      </a>
+
+      <div class="navbar-search">
+        <span class="navbar-search-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input id="searchInput" class="search-input" type="search" placeholder="Jeu, licence, plateforme, tag…" autocomplete="off" />
       </div>
 
-      <div class="topbar-actions">
-        <label class="search-shell" for="searchInput">
-          <span>Recherche intelligente</span>
-          <input id="searchInput" class="search-input" type="search" placeholder="Rechercher un jeu, une licence, une plateforme ou un tag..." />
-        </label>
+      <div class="navbar-links">
+        <a href="./index.html" class="nav-btn">← CV</a>
+        <a href="./admin/" class="nav-btn nav-btn-ghost">Admin</a>
+      </div>
+    </div>
+  </nav>
 
-        <div class="topbar-links">
-          <a href="./index.html" class="nav-btn">← Retour CV</a>
-          <a href="./admin/" class="nav-btn nav-btn-secondary">Admin</a>
+  <!-- ═══ HERO CINEMATIC ═══ -->
+  <section id="heroSection" class="hero-section">
+    <div class="hero-backdrop" id="heroBackdrop"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <p class="hero-kicker" id="heroFranchise">Franchise</p>
+      <h1 class="hero-title" id="heroTitle">Chargement…</h1>
+
+      <div class="hero-meta" id="heroMeta"></div>
+
+      <p class="hero-description" id="heroDescription">Chargement de la bibliothèque…</p>
+
+      <div class="hero-actions">
+        <button id="showSelectedBtn" class="hero-btn hero-btn-primary" type="button">Voir dans la liste</button>
+        <button id="showFavoritesBtn" class="hero-btn hero-btn-secondary" type="button">Mes favoris</button>
+      </div>
+    </div>
+
+    <div class="hero-carousel-strip">
+      <p class="hero-carousel-label">Sélection du moment — choisis une cover</p>
+      <div class="hero-mini-list" id="heroMiniList"></div>
+    </div>
+  </section>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="games-page view-grid">
+
+    <!-- STATS STRIP -->
+    <section class="stats-strip" id="statsStrip">
+      <article class="stat-box">
+        <strong id="statTotal" class="stat-number" data-target="0">0</strong>
+        <span>Jeux</span>
+      </article>
+      <article class="stat-box">
+        <strong id="statFavorites" class="stat-number" data-target="0">0</strong>
+        <span>Favoris</span>
+      </article>
+      <article class="stat-box">
+        <strong id="statDone" class="stat-number" data-target="0">0</strong>
+        <span>Terminés</span>
+      </article>
+      <article class="stat-box">
+        <strong id="statProgress" class="stat-number" data-target="0">0</strong>
+        <span>En cours</span>
+      </article>
+    </section>
+
+    <!-- FILTER BAR -->
+    <section class="filter-bar sticky-filter-bar" id="controlPanel">
+      <div class="filter-bar-inner">
+
+        <div class="filter-chips-wrap">
+          <div class="chip-row" id="statusTabs">
+            <button class="chip active" data-filter="all" data-label="Tous" type="button">Tous</button>
+            <button class="chip" data-filter="favorites" data-label="Favoris" type="button">Favoris</button>
+            <button class="chip" data-filter="fait" data-label="Faits" type="button">Faits</button>
+            <button class="chip" data-filter="en-cours" data-label="En cours" type="button">En cours</button>
+            <button class="chip" data-filter="a-faire" data-label="À faire" type="button">À faire</button>
+            <button class="chip" data-filter="abandonne" data-label="Abandonnés" type="button">Abandonnés</button>
+          </div>
+        </div>
+
+        <div class="filter-selects-wrap">
+          <select id="franchiseFilter" class="filter-select" aria-label="Licence">
+            <option value="all">Toutes licences</option>
+          </select>
+          <select id="platformFilter" class="filter-select" aria-label="Plateforme">
+            <option value="all">Toutes plateformes</option>
+          </select>
+          <select id="yearFilter" class="filter-select" aria-label="Année">
+            <option value="all">Toutes années</option>
+          </select>
+          <select id="sortFilter" class="filter-select" aria-label="Tri">
+            <option value="featured">Mis en avant</option>
+            <option value="rating-desc">Note ↓</option>
+            <option value="title-asc">Titre A→Z</option>
+            <option value="year-desc">Année ↓</option>
+          </select>
+        </div>
+
+        <div class="filter-bar-end">
+          <div class="view-toggle" id="viewToggle">
+            <button class="view-btn active" data-view="grid" type="button" title="Vue grille">⊞</button>
+            <button class="view-btn" data-view="compact" type="button" title="Vue liste">☰</button>
+            <button class="view-btn" data-view="shelf" type="button" title="Vue étagère">📚</button>
+          </div>
+          <button id="clearAllFilters" class="clear-filters-btn" type="button" hidden title="Réinitialiser les filtres">✕</button>
+        </div>
+
+      </div>
+
+      <div id="activeTagFilter" class="active-tag-filter" hidden>
+        <span class="filter-tag-label">Tag :</span>
+        <span id="activeTagChip" class="chip chip-tag-active"></span>
+        <button id="clearTagFilter" class="chip chip-clear" type="button">✕</button>
+        <span id="filtersSummary" class="filters-summary"></span>
+      </div>
+    </section>
+
+    <!-- FAVORITES SPOTLIGHT -->
+    <section class="section-block favorites-section" id="favoritesSection">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Coups de cœur</p>
+          <h2>★ Mes incontournables</h2>
+        </div>
+        <p class="section-info" id="favoritesInfo">0 jeu</p>
+      </div>
+      <div id="favoritesGrid" class="favorites-rail"></div>
+    </section>
+
+    <!-- MAIN GRID -->
+    <section class="section-block results-section">
+      <div class="section-head section-head-stacked">
+        <div>
+          <p class="section-kicker">Sélection</p>
+          <h2>Jeux filtrés</h2>
+        </div>
+        <div class="section-meta-stack">
+          <p class="section-info" id="resultsInfo">0 résultat</p>
+          <p class="section-subinfo" id="resultsDetails">Affichage initial de la collection.</p>
         </div>
       </div>
-    </header>
+      <div id="selectedGrid" class="game-grid"></div>
+      <div id="scrollSentinel" class="scroll-sentinel"></div>
+    </section>
 
-    <main class="games-page view-grid">
-      <section id="heroSection" class="hero-section">
-        <div class="hero-backdrop" id="heroBackdrop"></div>
-        <div class="hero-overlay"></div>
-
-        <div class="hero-top-strip">
-          <div class="hero-strip-head">
-            <p class="section-kicker">Sélection du moment</p>
-            <span class="hero-strip-text">Choisis une cover pour mettre le jeu à la une</span>
-          </div>
-          <div class="hero-mini-list" id="heroMiniList"></div>
+    <!-- BY FRANCHISE -->
+    <section class="section-block franchise-section">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Organisation</p>
+          <h2>Par licence</h2>
         </div>
+      </div>
 
-        <div class="hero-content">
-          <div class="hero-main">
-            <p class="hero-kicker" id="heroFranchise">Franchise</p>
-            <h2 class="hero-title" id="heroTitle">Chargement...</h2>
-            <p class="hero-subtitle" id="heroSubtitle">Bibliothèque de jeux</p>
+      <div id="franchiseChips" class="franchise-chips"></div>
 
-            <div class="hero-meta" id="heroMeta"></div>
+      <div id="franchiseSections" class="franchise-sections"></div>
+    </section>
 
-            <p class="hero-description" id="heroDescription">
-              Chargement de la bibliothèque...
-            </p>
-
-            <div class="hero-actions">
-              <button id="showSelectedBtn" class="hero-btn hero-btn-primary" type="button">Ouvrir la sélection</button>
-              <button id="showFavoritesBtn" class="hero-btn hero-btn-secondary" type="button">Voir les favoris</button>
-            </div>
-          </div>
-
-          <aside class="hero-side-stack">
-            <article class="hero-side-card">
-              <div class="side-card-label">À la une</div>
-              <div class="side-card-cover" id="heroSideCover"></div>
-              <div class="side-card-info">
-                <div class="side-card-title" id="heroSideTitle">Chargement...</div>
-                <div class="side-card-text" id="heroSideInfo">Sélection automatique</div>
-              </div>
-            </article>
-
-            <article class="hero-insight-card">
-              <div class="side-card-label">Repères rapides</div>
-              <div class="hero-tag-list" id="heroTagList"></div>
-              <div class="hero-collection-line">
-                <span>Collection liée</span>
-                <strong id="heroCollectionInfo">Chargement...</strong>
-              </div>
-            </article>
-          </aside>
-        </div>
-      </section>
-
-      <section class="stats-bar">
-        <article class="stat-box">
-          <span>Total</span>
-          <strong id="statTotal">0</strong>
-        </article>
-        <article class="stat-box">
-          <span>Favoris</span>
-          <strong id="statFavorites">0</strong>
-        </article>
-        <article class="stat-box">
-          <span>Terminés</span>
-          <strong id="statDone">0</strong>
-        </article>
-        <article class="stat-box">
-          <span>En cours</span>
-          <strong id="statProgress">0</strong>
-        </article>
-      </section>
-
-      <section class="section-block favorites-section" id="favoritesSection">
-        <div class="section-head">
-          <div>
-            <p class="section-kicker">Coups de cœur</p>
-            <h2>★ Mes incontournables</h2>
-          </div>
-          <p class="section-info" id="favoritesInfo">0 jeu</p>
-        </div>
-        <div id="favoritesGrid" class="game-grid"></div>
-      </section>
-
-      <section class="control-panel sticky-controls" id="controlPanel">
-        <div class="control-panel-head">
-          <div>
-            <p class="section-kicker">Filtres & navigation</p>
-            <h2>Explore la collection</h2>
-            <p class="control-helper">Recherche multi-champs, filtres cumulables et vues adaptées à ta façon de parcourir la bibliothèque.</p>
-          </div>
-
-          <div class="control-panel-actions">
-            <p id="filtersSummary" class="filters-summary">Tous les jeux sont affichés.</p>
-            <button id="clearAllFilters" class="clear-filters-btn" type="button">Réinitialiser</button>
-          </div>
-        </div>
-
-        <div class="control-row-top">
-          <div class="control-block">
-            <span class="control-label">Vue rapide</span>
-            <div class="chip-row" id="statusTabs">
-              <button class="chip active" data-filter="all" data-label="Tous" type="button">Tous</button>
-              <button class="chip" data-filter="favorites" data-label="Favoris" type="button">Favoris</button>
-              <button class="chip" data-filter="fait" data-label="Faits" type="button">Faits</button>
-              <button class="chip" data-filter="en-cours" data-label="En cours" type="button">En cours</button>
-              <button class="chip" data-filter="a-faire" data-label="À faire" type="button">À faire</button>
-              <button class="chip" data-filter="abandonne" data-label="Abandonnés" type="button">Abandonnés</button>
-            </div>
-          </div>
-
-          <div class="view-toggle-group">
-            <span class="control-label">Affichage</span>
-            <div class="view-toggle" id="viewToggle">
-              <button class="view-btn active" data-view="grid" type="button" title="Vue grille">⊞ Grille</button>
-              <button class="view-btn" data-view="compact" type="button" title="Vue compacte">☰ Compact</button>
-              <button class="view-btn" data-view="shelf" type="button" title="Vue étagère">📚 Étagère</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="control-grid control-grid-wide">
-          <label class="field">
-            <span>Licence</span>
-            <select id="franchiseFilter">
-              <option value="all">Toutes</option>
-            </select>
-          </label>
-
-          <label class="field">
-            <span>Plateforme</span>
-            <select id="platformFilter">
-              <option value="all">Toutes</option>
-            </select>
-          </label>
-
-          <label class="field">
-            <span>Année</span>
-            <select id="yearFilter">
-              <option value="all">Toutes</option>
-            </select>
-          </label>
-
-          <label class="field">
-            <span>Tri</span>
-            <select id="sortFilter">
-              <option value="featured">Mis en avant</option>
-              <option value="rating-desc">Note décroissante</option>
-              <option value="title-asc">Titre A → Z</option>
-              <option value="year-desc">Année décroissante</option>
-            </select>
-          </label>
-        </div>
-
-        <div id="activeTagFilter" class="active-tag-filter" hidden>
-          <span class="control-label">Tag actif</span>
-          <span id="activeTagChip" class="chip chip-tag-active"></span>
-          <button id="clearTagFilter" class="chip chip-clear" type="button">✕ Effacer</button>
-        </div>
-      </section>
-
-      <section class="franchise-panel">
-        <div class="section-head">
-          <div>
-            <p class="section-kicker">Organisation</p>
-            <h2>Licences / groupes</h2>
-          </div>
-        </div>
-
-        <div id="franchiseChips" class="franchise-chips"></div>
-      </section>
-
-      <section class="section-block">
-        <div class="section-head section-head-stacked">
-          <div>
-            <p class="section-kicker">Sélection</p>
-            <h2>Jeux filtrés</h2>
-          </div>
-          <div class="section-meta-stack">
-            <p class="section-info" id="resultsInfo">0 résultat</p>
-            <p class="section-subinfo" id="resultsDetails">Affichage initial de la collection.</p>
-          </div>
-        </div>
-
-        <div id="selectedGrid" class="game-grid"></div>
-        <div id="scrollSentinel" class="scroll-sentinel"></div>
-      </section>
-
-      <section class="section-block">
-        <div class="section-head">
-          <div>
-            <p class="section-kicker">Bibliothèque</p>
-            <h2>Par licence</h2>
-          </div>
-        </div>
-
-        <div id="franchiseSections" class="franchise-sections"></div>
-      </section>
-    </main>
-  </div>
+  </main>
 
   <script type="module" src="./static/js/game.js"></script>
 </body>
