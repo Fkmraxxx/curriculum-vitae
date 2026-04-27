@@ -57,6 +57,7 @@
   --filter-h: 64px;
   --max-w: 1480px;
   --gutter: clamp(16px, 3vw, 36px);
+  --favorites-card-w: 220px;
 
   /* Typography */
   --font: "Inter", "Segoe UI", system-ui, sans-serif;
@@ -820,7 +821,7 @@ body::before {
 }
 
 .favorites-rail .game-card {
-  flex: 0 0 220px;
+  flex: 0 0 var(--favorites-card-w);
 }
 
 /* ═══════════════════════════════════════════
@@ -1273,7 +1274,7 @@ body::before {
 
 /* Favorites rail – always show in compact form */
 .favorites-rail .game-card {
-  flex: 0 0 220px;
+  flex: 0 0 var(--favorites-card-w);
 }
 
 /* ═══════════════════════════════════════════

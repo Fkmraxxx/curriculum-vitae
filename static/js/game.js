@@ -7,6 +7,8 @@ const STATUS_LABELS = {
 
 const VIEWPORT_REVEAL_THRESHOLD = 0.98;
 const REVEAL_FALLBACK_DELAY = 180;
+const COUNTUP_INTERSECTION_THRESHOLD = 0.4;
+const COUNTUP_ANIMATION_DURATION_MS = 900;
 
 let revealObserver = null;
 let infiniteScrollObserver = null;
@@ -299,7 +301,7 @@ function setupCountUpObserver() {
       const target = Number(el.dataset.target) || 0;
       animateCountUp(el, target);
     });
-  }, { threshold: 0.4 });
+  }, { threshold: COUNTUP_INTERSECTION_THRESHOLD });
 
   countUpObserver.observe(strip);
 }
@@ -307,7 +309,7 @@ function setupCountUpObserver() {
 function animateCountUp(el, target) {
   if (target === 0) { el.textContent = "0"; return; }
 
-  const duration = 900;
+  const duration = COUNTUP_ANIMATION_DURATION_MS;
   const start = performance.now();
 
   function step(now) {
@@ -878,6 +880,7 @@ function updateFilterSummary(totalFiltered, visibleCount) {
   if (state.tag) segments.push(`#${state.tag}`);
 
   if (!segments.length) {
+    // No active filters — summary is intentionally left empty; the results count in the section header is sufficient
     els.filtersSummary.textContent = "";
     els.clearAllFilters.hidden = true;
     return;
