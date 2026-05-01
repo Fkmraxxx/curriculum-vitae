@@ -97,7 +97,7 @@ Chaque page présente :
 - CSS3
 - JavaScript vanilla
 
-### Déploiement
+### Déploiement :
 - GitHub Pages
 
 ### Gestion de contenu
