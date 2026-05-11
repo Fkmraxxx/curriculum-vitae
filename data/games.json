@@ -241,6 +241,15 @@
       "status": "en-cours",
       "platform": "3DS",
       "cover": "/curriculum-vitae/static/images/games/si_3ds_thelegendofzeldaocarinaoftime3d_image1600w.jpg"
+    },
+    {
+      "favorite": false,
+      "status": "fait",
+      "franchise": "The Legend of Zelda",
+      "id": "Zelda A Link To The Past",
+      "title": "Zelda A Link To The Past",
+      "rating": 18,
+      "cover": "/curriculum-vitae/static/images/games/h2x1_snes_thelegendofzeldaalinktothepast_image1600w-1-.jpg"
     }
   ]
 }
